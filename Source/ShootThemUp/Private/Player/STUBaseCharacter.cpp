@@ -5,10 +5,12 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Components/STUCharacterMovementComponent.h"
 #include "Input/InputDataConfig.h"
 
 // Sets default values
-ASTUBaseCharacter::ASTUBaseCharacter()
+ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjectInitializer)
+    : Super(ObjectInitializer.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
@@ -30,6 +32,9 @@ ASTUBaseCharacter::ASTUBaseCharacter()
 void ASTUBaseCharacter::BeginPlay()
 {
     Super::BeginPlay();
+
+    bIsSprinting = false;
+    bIsMovingForward = false;
 }
 
 // Called every frame
@@ -52,11 +57,21 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
     Input->BindAction(InputDataConfig->Move, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Move);
     Input->BindAction(InputDataConfig->Look, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Look);
+    // Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Fire);
+    Input->BindAction(InputDataConfig->Jump, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Jump);
+    Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Started, this, &ASTUBaseCharacter::StartSprint);
+    Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Completed, this, &ASTUBaseCharacter::StopSprint);
+}
+
+bool ASTUBaseCharacter::IsSprintingForward() const
+{
+    return bIsSprinting && bIsMovingForward && !GetVelocity().IsZero();
 }
 
 void ASTUBaseCharacter::Move(const FInputActionValue& Value)
 {
     const FVector2D MovementVector = Value.Get<FVector2D>();
+    bIsMovingForward = MovementVector.Y > 0.0f;
 
     const FRotator CameraRotation = Camera->GetComponentRotation();
     const FRotator CameraYawRotation(0, CameraRotation.Yaw, 0);
@@ -79,4 +94,14 @@ void ASTUBaseCharacter::Look(const FInputActionValue& Value)
 
     const float LookAmount = LookAxisVector.Y * CameraMovementRate * CameraSensitivity * GetWorld()->GetDeltaSeconds();
     AddControllerPitchInput(LookAmount);
+}
+
+void ASTUBaseCharacter::StartSprint()
+{
+    bIsSprinting = true;
+}
+
+void ASTUBaseCharacter::StopSprint()
+{
+    bIsSprinting = false;
 }
