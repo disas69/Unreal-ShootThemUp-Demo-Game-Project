@@ -30,6 +30,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Movement")
     bool IsSprintingForward() const;
 
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    float GetMovementDirectionAngle() const;
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USpringArmComponent* SpringArm = nullptr;

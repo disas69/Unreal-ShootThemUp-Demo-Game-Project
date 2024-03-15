@@ -10,7 +10,7 @@
 
 // Sets default values
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjectInitializer)
-    : Super(ObjectInitializer.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
+    : Super(ObjectInitializer.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(CharacterMovementComponentName))
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
@@ -66,6 +66,28 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 bool ASTUBaseCharacter::IsSprintingForward() const
 {
     return bIsSprinting && bIsMovingForward && !GetVelocity().IsZero();
+}
+
+float ASTUBaseCharacter::GetMovementDirectionAngle() const
+{
+    if (GetVelocity().IsZero())
+    {
+        return 0.0f;
+    }
+
+    const FVector Forward = GetActorForwardVector();
+    const FVector VelocityNormal = GetVelocity().GetSafeNormal();
+
+    // Calculate the angle between the forward vector and the velocity vector
+    const float DotProduct = FVector::DotProduct(Forward, VelocityNormal);
+    const float Angle = FMath::Acos(DotProduct);  // in radians
+
+    // Calculate the direction of the angle
+    const FVector CrossProduct = FVector::CrossProduct(Forward, VelocityNormal);
+    const float Direction = FMath::Sign(CrossProduct.Z);
+
+    // Convert the angle to degrees and multiply by the direction
+    return FMath::RadiansToDegrees(Angle) * Direction;
 }
 
 void ASTUBaseCharacter::Move(const FInputActionValue& Value)
