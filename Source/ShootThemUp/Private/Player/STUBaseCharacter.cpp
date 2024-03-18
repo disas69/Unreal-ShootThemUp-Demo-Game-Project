@@ -93,7 +93,7 @@ float ASTUBaseCharacter::GetMovementDirectionAngle() const
 void ASTUBaseCharacter::Move(const FInputActionValue& Value)
 {
     const FVector2D MovementVector = Value.Get<FVector2D>();
-    bIsMovingForward = MovementVector.Y > 0.0f;
+    bIsMovingForward = MovementVector.Y > 0.0f && FMath::IsNearlyZero(MovementVector.X);
 
     const FRotator CameraRotation = Camera->GetComponentRotation();
     const FRotator CameraYawRotation(0, CameraRotation.Yaw, 0);
