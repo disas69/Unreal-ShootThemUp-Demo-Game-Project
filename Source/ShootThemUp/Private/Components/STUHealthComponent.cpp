@@ -10,6 +10,7 @@ USTUHealthComponent::USTUHealthComponent()
 void USTUHealthComponent::BeginPlay()
 {
     Super::BeginPlay();
+
     Health = MaxHealth;
 
     AActor* ComponentOwner = GetOwner();
@@ -21,10 +22,16 @@ void USTUHealthComponent::BeginPlay()
 
 void USTUHealthComponent::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-    if (Damage <= 0.0f || Health <= 0.0f || GetOwner() != DamagedActor)
+    if (Damage <= 0.0f || !IsAlive())
     {
         return;
     }
 
     Health = FMath::Clamp(Health - Damage, 0.0f, MaxHealth);
+    OnHealthChanged.Broadcast(Health);
+
+    if (!IsAlive())
+    {
+        OnDeath.Broadcast();
+    }
 }

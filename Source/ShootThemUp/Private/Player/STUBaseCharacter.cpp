@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/STUCharacterMovementComponent.h"
 #include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -41,15 +42,16 @@ void ASTUBaseCharacter::BeginPlay()
 
     bIsSprinting = false;
     bIsMovingForward = false;
+
+    OnHealthChanged(HealthComponent->GetHealth());
+    HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
+    HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
 }
 
 // Called every frame
 void ASTUBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-
-    const float Health = HealthComponent->GetHealth();
-    HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 // Called to bind functionality to input
@@ -135,4 +137,24 @@ void ASTUBaseCharacter::StartSprint()
 void ASTUBaseCharacter::StopSprint()
 {
     bIsSprinting = false;
+}
+
+void ASTUBaseCharacter::OnHealthChanged(float NewHealth)
+{
+    HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), NewHealth)));
+}
+
+void ASTUBaseCharacter::OnDeath()
+{
+    DisableInput(nullptr);
+    
+    GetCharacterMovement()->DisableMovement();
+    GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    PlayAnimMontage(DeathAnimation);
+
+    if (Controller != nullptr)
+    {
+        Controller->ChangeState(NAME_Spectating);
+    }
 }

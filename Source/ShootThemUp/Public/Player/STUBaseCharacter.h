@@ -60,6 +60,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
     float CameraSensitivity = 1.0f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+    UAnimMontage* DeathAnimation = nullptr;
+
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
@@ -75,4 +78,7 @@ private:
 
     void StartSprint();
     void StopSprint();
+
+    void OnHealthChanged(float NewHealth);
+    void OnDeath();
 };
