@@ -62,7 +62,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
     UAnimMontage* DeathAnimation = nullptr;
-
+    
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
@@ -79,6 +79,9 @@ private:
     void StartSprint();
     void StopSprint();
 
+    UFUNCTION()
     void OnHealthChanged(float NewHealth);
+
+    UFUNCTION()
     void OnDeath();
 };

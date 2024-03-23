@@ -43,9 +43,9 @@ void ASTUBaseCharacter::BeginPlay()
     bIsSprinting = false;
     bIsMovingForward = false;
 
-    OnHealthChanged(HealthComponent->GetHealth());
     HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
     HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
+    OnHealthChanged(HealthComponent->GetHealth());
 }
 
 // Called every frame
@@ -147,7 +147,7 @@ void ASTUBaseCharacter::OnHealthChanged(float NewHealth)
 void ASTUBaseCharacter::OnDeath()
 {
     DisableInput(nullptr);
-    
+
     GetCharacterMovement()->DisableMovement();
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
