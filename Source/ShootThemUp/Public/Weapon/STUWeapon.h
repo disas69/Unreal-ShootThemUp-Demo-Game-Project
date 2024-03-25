@@ -18,6 +18,7 @@ public:
 
     virtual void Fire();
     void FireSingle();
+    void TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation);
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")

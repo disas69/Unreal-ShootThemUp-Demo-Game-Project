@@ -26,6 +26,29 @@ void ASTUWeapon::Fire()
 
 void ASTUWeapon::FireSingle()
 {
+    const FTransform SocketTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
+    const FVector SocketLocation = SocketTransform.GetLocation();
+    
+    FHitResult HitResult;
+    FVector TraceEndLocation;
+    TraceWeapon(SocketLocation, HitResult, TraceEndLocation);
+
+    DrawDebugLine(GetWorld(), SocketLocation, TraceEndLocation, FColor::Red, false, 2.0f, 0, 2.0f);
+
+    if (HitResult.bBlockingHit)
+    {
+        DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f, 0, 2.0f);
+
+        AActor* HitActor = HitResult.GetActor();
+        if (HitActor != nullptr)
+        {
+            UE_LOG(LogTemp, Display, TEXT("Hit actor: %s"), *HitActor->GetName());
+        }
+    }
+}
+
+void ASTUWeapon::TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation)
+{
     FVector ViewLocation;
     FRotator ViewDirection;
     GetPlayerController()->GetPlayerViewPoint(ViewLocation, ViewDirection);
@@ -33,15 +56,11 @@ void ASTUWeapon::FireSingle()
     // Trace from the crosshair to the target location
     const FVector StartLocation = ViewLocation;
     const FVector EndLocation = StartLocation + ViewDirection.Vector() * FireRange;
-    FVector TraceEndLocation = EndLocation;
+    TraceEndLocation = EndLocation;
 
     FCollisionQueryParams CollisionQueryParams;
     CollisionQueryParams.AddIgnoredActor(Character);
-
-    const FTransform SocketTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
-    const FVector SocketLocation = SocketTransform.GetLocation();
-
-    FHitResult HitResult;
+    
     FHitResult ScreenTraceResult;
     if (Character->GetWorld()->LineTraceSingleByChannel(ScreenTraceResult, StartLocation, EndLocation, ECC_Visibility, CollisionQueryParams))
     {
@@ -55,19 +74,6 @@ void ASTUWeapon::FireSingle()
     {
         HitResult = WeaponTraceResult;
         TraceEndLocation = WeaponTraceResult.ImpactPoint;
-    }
-
-    DrawDebugLine(GetWorld(), SocketLocation, TraceEndLocation, FColor::Red, false, 2.0f, 0, 2.0f);
-
-    if (HitResult.bBlockingHit)
-    {
-        DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f, 0, 2.0f);
-
-        AActor* HitActor = HitResult.GetActor();
-        if (HitActor != nullptr)
-        {
-            UE_LOG(LogTemp, Display, TEXT("Hit actor: %s"), *HitActor->GetName());
-        }
     }
 }
 
