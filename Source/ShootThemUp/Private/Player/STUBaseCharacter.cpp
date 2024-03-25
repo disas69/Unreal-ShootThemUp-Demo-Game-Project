@@ -10,6 +10,7 @@
 #include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Input/InputDataConfig.h"
+#include "Weapon/STUWeapon.h"
 
 // Sets default values
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -46,6 +47,8 @@ void ASTUBaseCharacter::BeginPlay()
     HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
     HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
     OnHealthChanged(HealthComponent->GetHealth());
+
+    SpawnWeapon();
 }
 
 // Called every frame
@@ -156,5 +159,17 @@ void ASTUBaseCharacter::OnDeath()
     if (Controller != nullptr)
     {
         Controller->ChangeState(NAME_Spectating);
+    }
+}
+
+void ASTUBaseCharacter::SpawnWeapon() const
+{
+    if (WeaponClass != nullptr)
+    {
+        AActor* Weapon = GetWorld()->SpawnActor(WeaponClass);
+        if (Weapon != nullptr)
+        {
+            Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "WeaponSocket");
+        }
     }
 }

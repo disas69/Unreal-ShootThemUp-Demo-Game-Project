@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "STUBaseCharacter.generated.h"
 
+class ASTUWeapon;
 class UTextRenderComponent;
 class USTUHealthComponent;
 class USpringArmComponent;
@@ -62,6 +63,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
     UAnimMontage* DeathAnimation = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+    TSubclassOf<ASTUWeapon> WeaponClass;
     
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
@@ -84,4 +88,6 @@ private:
 
     UFUNCTION()
     void OnDeath();
+
+    void SpawnWeapon() const;
 };
