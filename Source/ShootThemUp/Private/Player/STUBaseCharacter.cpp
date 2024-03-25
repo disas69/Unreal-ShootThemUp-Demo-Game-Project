@@ -10,7 +10,7 @@
 #include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Input/InputDataConfig.h"
-#include "Weapon/STUWeapon.h"
+#include "Weapon/STUWeaponComponent.h"
 
 // Sets default values
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -34,6 +34,8 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjectInitializer
     HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("HealthComponent");
     HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
     HealthTextComponent->SetupAttachment(GetRootComponent());
+
+    WeaponComponent = CreateDefaultSubobject<USTUWeaponComponent>("WeaponComponent");
 }
 
 // Called when the game starts or when spawned
@@ -48,7 +50,7 @@ void ASTUBaseCharacter::BeginPlay()
     HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
     OnHealthChanged(HealthComponent->GetHealth());
 
-    SpawnWeapon();
+    WeaponComponent->SpawnWeapon();
 }
 
 // Called every frame
@@ -71,10 +73,10 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
     Input->BindAction(InputDataConfig->Move, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Move);
     Input->BindAction(InputDataConfig->Look, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Look);
-    // Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Fire);
     Input->BindAction(InputDataConfig->Jump, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Jump);
     Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Started, this, &ASTUBaseCharacter::StartSprint);
     Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Completed, this, &ASTUBaseCharacter::StopSprint);
+    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Triggered, WeaponComponent, &USTUWeaponComponent::Fire);
 }
 
 bool ASTUBaseCharacter::IsSprintingForward() const
@@ -159,17 +161,5 @@ void ASTUBaseCharacter::OnDeath()
     if (Controller != nullptr)
     {
         Controller->ChangeState(NAME_Spectating);
-    }
-}
-
-void ASTUBaseCharacter::SpawnWeapon() const
-{
-    if (WeaponClass != nullptr)
-    {
-        AActor* Weapon = GetWorld()->SpawnActor(WeaponClass);
-        if (Weapon != nullptr)
-        {
-            Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "WeaponSocket");
-        }
     }
 }
