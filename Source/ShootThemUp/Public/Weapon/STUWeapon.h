@@ -19,6 +19,7 @@ public:
     virtual void Fire();
     void FireSingle();
     void TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation);
+    void ApplyDamage(const FHitResult& HitResult);
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
@@ -26,6 +27,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
     FName MuzzleSocketName = "MuzzleSocket";
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
+    float Damage = 35.0f;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
     float FireRange = 10000.0f;

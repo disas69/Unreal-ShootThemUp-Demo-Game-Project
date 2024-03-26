@@ -3,6 +3,7 @@
 #include "Weapon/STUWeapon.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "Engine/DamageEvents.h"
 #include "GameFramework/Character.h"
 
 ASTUWeapon::ASTUWeapon()
@@ -34,17 +35,7 @@ void ASTUWeapon::FireSingle()
     TraceWeapon(SocketLocation, HitResult, TraceEndLocation);
 
     DrawDebugLine(GetWorld(), SocketLocation, TraceEndLocation, FColor::Red, false, 2.0f, 0, 2.0f);
-
-    if (HitResult.bBlockingHit)
-    {
-        DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f, 0, 2.0f);
-
-        AActor* HitActor = HitResult.GetActor();
-        if (HitActor != nullptr)
-        {
-            UE_LOG(LogTemp, Display, TEXT("Hit actor: %s"), *HitActor->GetName());
-        }
-    }
+    ApplyDamage(HitResult);
 }
 
 void ASTUWeapon::TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation)
@@ -74,6 +65,21 @@ void ASTUWeapon::TraceWeapon(const FVector& SocketLocation, FHitResult& HitResul
     {
         HitResult = WeaponTraceResult;
         TraceEndLocation = WeaponTraceResult.ImpactPoint;
+    }
+}
+
+void ASTUWeapon::ApplyDamage(const FHitResult& HitResult)
+{
+    if (HitResult.bBlockingHit)
+    {
+        DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f, 0, 2.0f);
+
+        AActor* HitActor = HitResult.GetActor();
+        if (HitActor != nullptr)
+        {
+            HitActor->TakeDamage(Damage, FDamageEvent(), GetPlayerController(), this);
+            UE_LOG(LogTemp, Display, TEXT("Hit actor: %s"), *HitActor->GetName());
+        }
     }
 }
 
