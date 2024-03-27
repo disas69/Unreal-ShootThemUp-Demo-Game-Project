@@ -16,11 +16,19 @@ void USTUWeaponComponent::BeginPlay()
     Character = Cast<ASTUBaseCharacter>(GetOwner());
 }
 
-void USTUWeaponComponent::Fire()
+void USTUWeaponComponent::StartFire()
 {
     if (CurrentWeapon != nullptr)
     {
-        CurrentWeapon->Fire();
+        CurrentWeapon->StartFire();
+    }
+}
+
+void USTUWeaponComponent::StopFire()
+{
+    if (CurrentWeapon != nullptr)
+    {
+        CurrentWeapon->StopFire();
     }
 }
 

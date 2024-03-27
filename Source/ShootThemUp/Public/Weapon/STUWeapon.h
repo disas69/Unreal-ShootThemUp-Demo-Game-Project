@@ -16,27 +16,35 @@ class SHOOTTHEMUP_API ASTUWeapon : public AActor
 public:
     ASTUWeapon();
 
-    virtual void Fire();
+    virtual void StartFire();
+    virtual void StopFire();
     void FireSingle();
     void TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation);
     void ApplyDamage(const FHitResult& HitResult);
 
 protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     USkeletalMeshComponent* WeaponMesh = nullptr;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     FName MuzzleSocketName = "MuzzleSocket";
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     float Damage = 35.0f;
-
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
-    float FireRange = 10000.0f;
+    float Range = 10000.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+    float Rate = 0.25f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+    float BulletSpread = 1.5f;
     
     virtual void BeginPlay() override;
 
 private:
+    FTimerHandle FireTimerHandle;
+    
     UPROPERTY()
     ACharacter* Character = nullptr;
 

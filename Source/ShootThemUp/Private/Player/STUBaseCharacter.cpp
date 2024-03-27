@@ -76,7 +76,8 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     Input->BindAction(InputDataConfig->Jump, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Jump);
     Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Started, this, &ASTUBaseCharacter::StartSprint);
     Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Completed, this, &ASTUBaseCharacter::StopSprint);
-    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Triggered, WeaponComponent, &USTUWeaponComponent::Fire);
+    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Started, WeaponComponent, &USTUWeaponComponent::StartFire);
+    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Completed, WeaponComponent, &USTUWeaponComponent::StopFire);
 }
 
 bool ASTUBaseCharacter::IsSprintingForward() const
@@ -153,6 +154,7 @@ void ASTUBaseCharacter::OnDeath()
 {
     DisableInput(nullptr);
 
+    WeaponComponent->StopFire();
     GetCharacterMovement()->DisableMovement();
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 

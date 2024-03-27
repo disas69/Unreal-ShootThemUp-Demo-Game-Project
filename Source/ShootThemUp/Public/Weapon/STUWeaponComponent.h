@@ -26,7 +26,10 @@ public:
     void SpawnWeapon();
 
     UFUNCTION()
-    void Fire();
+    void StartFire();
+
+    UFUNCTION()
+    void StopFire();
 
 protected:
     UPROPERTY()

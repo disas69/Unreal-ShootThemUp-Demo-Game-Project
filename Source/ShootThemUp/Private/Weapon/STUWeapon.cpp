@@ -20,9 +20,15 @@ void ASTUWeapon::BeginPlay()
     Character = Cast<ACharacter>(GetOwner());
 }
 
-void ASTUWeapon::Fire()
+void ASTUWeapon::StartFire()
 {
     FireSingle();
+    GetWorldTimerManager().SetTimer(FireTimerHandle, this, &ASTUWeapon::FireSingle, Rate, true);
+}
+
+void ASTUWeapon::StopFire()
+{
+    GetWorldTimerManager().ClearTimer(FireTimerHandle);
 }
 
 void ASTUWeapon::FireSingle()
@@ -46,7 +52,8 @@ void ASTUWeapon::TraceWeapon(const FVector& SocketLocation, FHitResult& HitResul
 
     // Trace from the crosshair to the target location
     const FVector StartLocation = ViewLocation;
-    const FVector EndLocation = StartLocation + ViewDirection.Vector() * FireRange;
+    const FVector Direction = FMath::VRandCone(ViewDirection.Vector(), FMath::DegreesToRadians(BulletSpread));
+    const FVector EndLocation = StartLocation + Direction * Range;
     TraceEndLocation = EndLocation;
 
     FCollisionQueryParams CollisionQueryParams;
