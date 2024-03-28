@@ -22,26 +22,14 @@ void ASTUWeapon::BeginPlay()
 
 void ASTUWeapon::StartFire()
 {
-    FireSingle();
-    GetWorldTimerManager().SetTimer(FireTimerHandle, this, &ASTUWeapon::FireSingle, Rate, true);
 }
 
 void ASTUWeapon::StopFire()
 {
-    GetWorldTimerManager().ClearTimer(FireTimerHandle);
 }
 
-void ASTUWeapon::FireSingle()
+void ASTUWeapon::FireInternal()
 {
-    const FTransform SocketTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
-    const FVector SocketLocation = SocketTransform.GetLocation();
-    
-    FHitResult HitResult;
-    FVector TraceEndLocation;
-    TraceWeapon(SocketLocation, HitResult, TraceEndLocation);
-
-    DrawDebugLine(GetWorld(), SocketLocation, TraceEndLocation, FColor::Red, false, 2.0f, 0, 2.0f);
-    ApplyDamage(HitResult);
 }
 
 void ASTUWeapon::TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation)

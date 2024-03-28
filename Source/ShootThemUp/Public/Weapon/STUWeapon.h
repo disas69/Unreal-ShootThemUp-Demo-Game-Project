@@ -18,9 +18,6 @@ public:
 
     virtual void StartFire();
     virtual void StopFire();
-    void FireSingle();
-    void TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation);
-    void ApplyDamage(const FHitResult& HitResult);
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
@@ -41,10 +38,12 @@ protected:
     float BulletSpread = 1.5f;
     
     virtual void BeginPlay() override;
+    virtual void FireInternal();
+    
+    void TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation);
+    void ApplyDamage(const FHitResult& HitResult);
 
 private:
-    FTimerHandle FireTimerHandle;
-    
     UPROPERTY()
     ACharacter* Character = nullptr;
 
