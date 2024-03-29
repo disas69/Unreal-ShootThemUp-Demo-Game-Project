@@ -56,9 +56,6 @@ protected:
     float BulletSpread = 1.5f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-    UAnimMontage* ReloadAnimation = nullptr;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     FAmmoData DefaultAmmo;
     
     virtual void BeginPlay() override;

@@ -10,6 +10,18 @@ struct FInputActionValue;
 class ASTUBaseCharacter;
 class ASTUWeapon;
 
+USTRUCT(BlueprintType)
+struct FWeaponData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+    TSubclassOf<ASTUWeapon> WeaponClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+    UAnimMontage* ReloadAnimation = nullptr;
+};
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class SHOOTTHEMUP_API USTUWeaponComponent : public UActorComponent
 {
@@ -19,7 +31,7 @@ public:
     USTUWeaponComponent();
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
-    TArray<TSubclassOf<ASTUWeapon>> WeaponClasses;
+    TArray<FWeaponData> WeaponData;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
     FName WeaponEquippedSocketName = "WeaponSocket";
@@ -52,6 +64,9 @@ protected:
     ASTUWeapon* CurrentWeapon = nullptr;
 
     UPROPERTY()
+    UAnimMontage* CurrentReloadAnimation = nullptr;
+
+    UPROPERTY()
     TArray<ASTUWeapon*> Weapons = {};
     
     virtual void BeginPlay() override;
@@ -61,7 +76,7 @@ private:
     int32 PreviousWeaponIndex = -1;
     bool bIsEquipInProgress = false;
     bool bIsReloadInProgress = false;
-
+    
     void InitAnimations();
     void OnEquipFinished(USkeletalMeshComponent* MeshComp);
     void EquipWeapon(int32 WeaponIndex);

@@ -54,6 +54,7 @@ void USTUWeaponComponent::Reload()
     {
         bIsReloadInProgress = true;
         CurrentWeapon->Reload();
+        PlayAnimMontage(CurrentReloadAnimation);
         bIsReloadInProgress = false;
     }
 }
@@ -75,7 +76,7 @@ void USTUWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void USTUWeaponComponent::SpawnWeapon()
 {
-    if (WeaponClasses.Num() == 0 || Character == nullptr)
+    if (WeaponData.Num() == 0 || Character == nullptr)
     {
         return;
     }
@@ -83,14 +84,14 @@ void USTUWeaponComponent::SpawnWeapon()
     FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
     SpawnParameters.Owner = Character;
 
-    for (auto WeaponClass : WeaponClasses)
+    for (auto Data : WeaponData)
     {
-        if (WeaponClass == nullptr)
+        if (Data.WeaponClass == nullptr)
         {
             continue;
         }
 
-        ASTUWeapon* Weapon = GetWorld()->SpawnActor<ASTUWeapon>(WeaponClass, SpawnParameters);
+        ASTUWeapon* Weapon = GetWorld()->SpawnActor<ASTUWeapon>(Data.WeaponClass, SpawnParameters);
         if (Weapon != nullptr)
         {
             Weapon->SetActorHiddenInGame(true);
@@ -142,6 +143,7 @@ void USTUWeaponComponent::EquipWeapon(int32 NewWeaponIndex)
         NewWeapon->SetActorHiddenInGame(false);
         AttachWeaponToSocket(NewWeapon, WeaponEquippedSocketName);
         CurrentWeapon = NewWeapon;
+        CurrentReloadAnimation = WeaponData[CurrentWeaponIndex].ReloadAnimation;
     }
 
     PlayAnimMontage(EquipAnimMontage);

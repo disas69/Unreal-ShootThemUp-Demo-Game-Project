@@ -114,8 +114,6 @@ void ASTUWeapon::Reload()
     {
         CurrentAmmo.Clips = FMath::Max(CurrentAmmo.Clips - 1, 0);
     }
-
-    Character->PlayAnimMontage(ReloadAnimation);
 }
 
 bool ASTUWeapon::IsFullAmmo() const
