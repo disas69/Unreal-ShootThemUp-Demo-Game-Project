@@ -18,7 +18,8 @@ void ASTURifleWeapon::StopFire()
 void ASTURifleWeapon::FireInternal()
 {
     Super::FireInternal();
-    const FTransform SocketTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
+    
+    const FTransform SocketTransform = GetMuzzleSocketTransform();
     const FVector SocketLocation = SocketTransform.GetLocation();
     
     FHitResult HitResult;

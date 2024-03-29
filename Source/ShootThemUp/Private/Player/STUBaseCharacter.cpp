@@ -78,6 +78,7 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Completed, this, &ASTUBaseCharacter::StopSprint);
     Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Started, WeaponComponent, &USTUWeaponComponent::StartFire);
     Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Completed, WeaponComponent, &USTUWeaponComponent::StopFire);
+    Input->BindAction(InputDataConfig->SwitchWeapon, ETriggerEvent::Triggered, WeaponComponent, &USTUWeaponComponent::SwitchWeapon);
 }
 
 bool ASTUBaseCharacter::IsSprintingForward() const

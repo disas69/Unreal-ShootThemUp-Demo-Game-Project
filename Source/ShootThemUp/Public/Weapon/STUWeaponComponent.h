@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "STUWeaponComponent.generated.h"
 
+struct FInputActionValue;
 class ASTUBaseCharacter;
 class ASTUWeapon;
 
@@ -18,12 +19,19 @@ public:
     USTUWeaponComponent();
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
-    TSubclassOf<ASTUWeapon> WeaponClass;
+    TArray<TSubclassOf<ASTUWeapon>> WeaponClasses;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
-    FName WeaponSocketName = "WeaponSocket";
+    FName WeaponEquippedSocketName = "WeaponSocket";
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+    FName WeaponArmorySocketName = "ArmorySocket";
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+    UAnimMontage* EquipAnimMontage = nullptr;
+    
     void SpawnWeapon();
+    void SwitchWeapon(const FInputActionValue& Value);
 
     UFUNCTION()
     void StartFire();
@@ -31,13 +39,26 @@ public:
     UFUNCTION()
     void StopFire();
 
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 protected:
     UPROPERTY()
     ASTUBaseCharacter* Character = nullptr;
 
     UPROPERTY()
     ASTUWeapon* CurrentWeapon = nullptr;
+
+    UPROPERTY()
+    TArray<ASTUWeapon*> Weapons = {};
     
     virtual void BeginPlay() override;
 
+private:
+    int32 CurrentWeaponIndex = -1;
+    int32 PreviousWeaponIndex = -1;
+    
+    void EquipWeapon(int32 WeaponIndex);
+    void HandlePreviousWeapon();
+    void AttachWeaponToSocket(ASTUWeapon* Weapon, const FName& SocketName) const;
+    void PlayAnimMontage(UAnimMontage* AnimMontage) const;
 };

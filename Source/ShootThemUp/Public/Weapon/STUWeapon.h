@@ -42,6 +42,7 @@ protected:
     
     void TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation);
     void ApplyDamage(const FHitResult& HitResult);
+    FTransform GetMuzzleSocketTransform() const;
 
 private:
     UPROPERTY()

@@ -78,6 +78,11 @@ void ASTUWeapon::ApplyDamage(const FHitResult& HitResult)
     }
 }
 
+FTransform ASTUWeapon::GetMuzzleSocketTransform() const
+{
+    return WeaponMesh->GetSocketTransform(MuzzleSocketName);
+}
+
 APlayerController* ASTUWeapon::GetPlayerController()
 {
     if (Controller == nullptr)

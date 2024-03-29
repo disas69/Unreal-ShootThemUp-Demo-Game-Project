@@ -17,7 +17,6 @@ public:
 
 protected:
     virtual void FireInternal() override;
-
 private:
     FTimerHandle FireTimerHandle;
 };
