@@ -18,6 +18,12 @@ void ASTULauncherWeapon::FireInternal()
 {
     Super::FireInternal();
 
+    if (IsAmmoEmpty())
+    {
+        StopFire();
+        return;
+    }
+
     const FTransform SocketTransform = GetMuzzleSocketTransform();
     const FVector SocketLocation = SocketTransform.GetLocation();
     
@@ -29,10 +35,11 @@ void ASTULauncherWeapon::FireInternal()
 
     FVector ShootDirection = (TraceEndLocation - SocketLocation).GetSafeNormal();
     ASTUProjectile* Projectile = GetWorld()->SpawnActor<ASTUProjectile>(ProjectileClass, SocketTransform);
-
     if (Projectile != nullptr)
     {
         Projectile->SetOwner(GetOwner());
         Projectile->Launch(ShootDirection, Damage, DamageRadius);
     }
+
+    DecreaseAmmo();
 }

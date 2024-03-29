@@ -8,6 +8,21 @@
 
 class ASTUGameHUD;
 
+USTRUCT(BlueprintType)
+struct FAmmoData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+    int32 Bullets;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon", meta = (EditCondition = "!bIsUnlimited"))
+    int32 Clips;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+    bool bIsUnlimited = false;
+};
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUWeapon : public AActor
 {
@@ -36,6 +51,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     float BulletSpread = 1.5f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+    FAmmoData DefaultAmmo;
     
     virtual void BeginPlay() override;
     virtual void FireInternal();
@@ -44,12 +62,19 @@ protected:
     void ApplyDamage(const FHitResult& HitResult);
     FTransform GetMuzzleSocketTransform() const;
 
+    void DecreaseAmmo();
+    bool IsAmmoEmpty() const;
+    bool IsClipEmpty() const;
+    void Reload();
+
 private:
     UPROPERTY()
     ACharacter* Character = nullptr;
 
     UPROPERTY()
     APlayerController* Controller = nullptr;
+
+    FAmmoData CurrentAmmo;
 
     APlayerController* GetPlayerController();
 };

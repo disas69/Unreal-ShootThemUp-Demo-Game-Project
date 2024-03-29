@@ -18,6 +18,12 @@ void ASTURifleWeapon::StopFire()
 void ASTURifleWeapon::FireInternal()
 {
     Super::FireInternal();
+
+    if (IsAmmoEmpty())
+    {
+        StopFire();
+        return;
+    }
     
     const FTransform SocketTransform = GetMuzzleSocketTransform();
     const FVector SocketLocation = SocketTransform.GetLocation();
@@ -28,4 +34,5 @@ void ASTURifleWeapon::FireInternal()
 
     DrawDebugLine(GetWorld(), SocketLocation, TraceEndLocation, FColor::Red, false, 2.0f, 0, 2.0f);
     ApplyDamage(HitResult);
+    DecreaseAmmo();
 }

@@ -18,19 +18,14 @@ void ASTUWeapon::BeginPlay()
 {
     Super::BeginPlay();
     Character = Cast<ACharacter>(GetOwner());
+    CurrentAmmo = DefaultAmmo;
 }
 
-void ASTUWeapon::StartFire()
-{
-}
+void ASTUWeapon::StartFire() {}
 
-void ASTUWeapon::StopFire()
-{
-}
+void ASTUWeapon::StopFire() {}
 
-void ASTUWeapon::FireInternal()
-{
-}
+void ASTUWeapon::FireInternal() {}
 
 void ASTUWeapon::TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation)
 {
@@ -46,7 +41,7 @@ void ASTUWeapon::TraceWeapon(const FVector& SocketLocation, FHitResult& HitResul
 
     FCollisionQueryParams CollisionQueryParams;
     CollisionQueryParams.AddIgnoredActor(Character);
-    
+
     FHitResult ScreenTraceResult;
     if (Character->GetWorld()->LineTraceSingleByChannel(ScreenTraceResult, StartLocation, EndLocation, ECC_Visibility, CollisionQueryParams))
     {
@@ -81,6 +76,46 @@ void ASTUWeapon::ApplyDamage(const FHitResult& HitResult)
 FTransform ASTUWeapon::GetMuzzleSocketTransform() const
 {
     return WeaponMesh->GetSocketTransform(MuzzleSocketName);
+}
+
+void ASTUWeapon::DecreaseAmmo()
+{
+    CurrentAmmo.Bullets = FMath::Max(CurrentAmmo.Bullets - 1, 0);
+    
+    if (IsClipEmpty() && !IsAmmoEmpty())
+    {
+        Reload();
+    }
+
+    FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + "/" + FString::FromInt(CurrentAmmo.Clips);
+    UE_LOG(LogTemp, Display, TEXT("%s"), *AmmoInfo);
+}
+
+bool ASTUWeapon::IsAmmoEmpty() const
+{
+    return !CurrentAmmo.bIsUnlimited && CurrentAmmo.Clips == 0 && CurrentAmmo.Bullets == 0;
+}
+
+bool ASTUWeapon::IsClipEmpty() const
+{
+    return CurrentAmmo.Bullets == 0;
+}
+
+void ASTUWeapon::Reload()
+{
+    if (IsAmmoEmpty())
+    {
+        return;
+    }
+
+    CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+
+    if (!CurrentAmmo.bIsUnlimited)
+    {
+        CurrentAmmo.Clips = FMath::Max(CurrentAmmo.Clips - 1, 0);
+    }
+
+    UE_LOG(LogTemp, Display, TEXT("Reloaded"));
 }
 
 APlayerController* ASTUWeapon::GetPlayerController()
