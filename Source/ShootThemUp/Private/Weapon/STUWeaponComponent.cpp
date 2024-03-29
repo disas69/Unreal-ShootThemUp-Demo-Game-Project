@@ -47,6 +47,17 @@ void USTUWeaponComponent::StopFire()
         CurrentWeapon->StopFire();
     }
 }
+
+void USTUWeaponComponent::Reload()
+{
+    if (CanReload())
+    {
+        bIsReloadInProgress = true;
+        CurrentWeapon->Reload();
+        bIsReloadInProgress = false;
+    }
+}
+
 void USTUWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     Super::EndPlay(EndPlayReason);
@@ -202,4 +213,9 @@ bool USTUWeaponComponent::CanFire() const
 bool USTUWeaponComponent::CanEquip() const
 {
     return !bIsEquipInProgress;
+}
+
+bool USTUWeaponComponent::CanReload() const
+{
+    return CurrentWeapon != nullptr && !CurrentWeapon->IsFullAmmo() && !bIsReloadInProgress;
 }

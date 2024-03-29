@@ -115,7 +115,12 @@ void ASTUWeapon::Reload()
         CurrentAmmo.Clips = FMath::Max(CurrentAmmo.Clips - 1, 0);
     }
 
-    UE_LOG(LogTemp, Display, TEXT("Reloaded"));
+    Character->PlayAnimMontage(ReloadAnimation);
+}
+
+bool ASTUWeapon::IsFullAmmo() const
+{
+    return CurrentAmmo.Bullets == DefaultAmmo.Bullets;
 }
 
 APlayerController* ASTUWeapon::GetPlayerController()

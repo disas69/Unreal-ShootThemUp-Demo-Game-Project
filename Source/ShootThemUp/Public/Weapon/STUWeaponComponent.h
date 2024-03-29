@@ -38,6 +38,9 @@ public:
 
     UFUNCTION()
     void StopFire();
+    
+    UFUNCTION()
+    void Reload();
 
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
@@ -57,6 +60,7 @@ private:
     int32 CurrentWeaponIndex = -1;
     int32 PreviousWeaponIndex = -1;
     bool bIsEquipInProgress = false;
+    bool bIsReloadInProgress = false;
 
     void InitAnimations();
     void OnEquipFinished(USkeletalMeshComponent* MeshComp);
@@ -66,4 +70,5 @@ private:
     void PlayAnimMontage(UAnimMontage* AnimMontage) const;
     bool CanFire() const;
     bool CanEquip() const;
+    bool CanReload() const;
 };

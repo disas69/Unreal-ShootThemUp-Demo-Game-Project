@@ -33,6 +33,8 @@ public:
 
     virtual void StartFire();
     virtual void StopFire();
+    void Reload();
+    bool IsFullAmmo() const;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
@@ -43,6 +45,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     float Damage = 35.0f;
+
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
     float Range = 10000.0f;
 
@@ -51,6 +54,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     float BulletSpread = 1.5f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+    UAnimMontage* ReloadAnimation = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     FAmmoData DefaultAmmo;
@@ -65,7 +71,6 @@ protected:
     void DecreaseAmmo();
     bool IsAmmoEmpty() const;
     bool IsClipEmpty() const;
-    void Reload();
 
 private:
     UPROPERTY()

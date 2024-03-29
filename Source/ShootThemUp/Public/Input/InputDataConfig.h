@@ -31,4 +31,7 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* SwitchWeapon = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+    UInputAction* Reload = nullptr;
 };
