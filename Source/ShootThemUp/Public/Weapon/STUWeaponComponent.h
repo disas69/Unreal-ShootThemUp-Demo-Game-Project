@@ -56,9 +56,14 @@ protected:
 private:
     int32 CurrentWeaponIndex = -1;
     int32 PreviousWeaponIndex = -1;
-    
+    bool bIsEquipInProgress = false;
+
+    void InitAnimations();
+    void OnEquipFinished(USkeletalMeshComponent* MeshComp);
     void EquipWeapon(int32 WeaponIndex);
     void HandlePreviousWeapon();
     void AttachWeaponToSocket(ASTUWeapon* Weapon, const FName& SocketName) const;
     void PlayAnimMontage(UAnimMontage* AnimMontage) const;
+    bool CanFire() const;
+    bool CanEquip() const;
 };
