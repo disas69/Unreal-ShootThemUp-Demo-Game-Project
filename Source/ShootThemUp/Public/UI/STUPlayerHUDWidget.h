@@ -18,5 +18,8 @@ public:
     float GetHealthPercent() const;
 
     UFUNCTION(BlueprintCallable, Category = "UI")
+    FString GetAmmoText() const;
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
     ASTUWeapon* GetCurrentWeapon() const;
 };

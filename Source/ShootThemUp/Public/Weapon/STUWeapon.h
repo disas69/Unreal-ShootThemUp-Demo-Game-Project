@@ -53,9 +53,13 @@ public:
     bool IsFullAmmo() const;
     bool IsAmmoEmpty() const;
     bool IsClipEmpty() const;
+    bool CanReload() const;
 
     UFUNCTION(BlueprintCallable, Category = "Weapon")
     FAmmoData& GetDefaultAmmoData() { return DefaultAmmo; }
+
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
+    FAmmoData& GetCurrentAmmoData() { return CurrentAmmo; }
 
     UFUNCTION(BlueprintCallable, Category = "Weapon")
     FWeaponImageData& GetWeaponImageData() { return WeaponImageData; }

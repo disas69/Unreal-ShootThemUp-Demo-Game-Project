@@ -258,5 +258,5 @@ bool USTUWeaponComponent::CanEquip() const
 
 bool USTUWeaponComponent::CanReload() const
 {
-    return CurrentWeapon != nullptr && !CurrentWeapon->IsFullAmmo() && !bIsReloadInProgress;
+    return CurrentWeapon != nullptr && CurrentWeapon->CanReload() && !bIsReloadInProgress;
 }

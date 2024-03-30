@@ -99,6 +99,11 @@ bool ASTUWeapon::IsClipEmpty() const
     return CurrentAmmo.Bullets == 0;
 }
 
+bool ASTUWeapon::CanReload() const
+{
+    return (CurrentAmmo.bIsUnlimited || CurrentAmmo.Clips > 0) && CurrentAmmo.Bullets < DefaultAmmo.Bullets;
+}
+
 void ASTUWeapon::Reload()
 {
     CurrentAmmo.Bullets = DefaultAmmo.Bullets;
