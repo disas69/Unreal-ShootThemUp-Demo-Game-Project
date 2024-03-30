@@ -1,8 +1,8 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
-
 #include "UI/STUGameHUD.h"
-#include "Engine/Canvas.h"
+#include "Blueprint/UserWidget.h"
+#include "UI/STUPlayerHUDWidget.h"
 
 void ASTUGameHUD::DrawHUD()
 {
@@ -18,12 +18,23 @@ FVector2D ASTUGameHUD::GetCrossHairPosition() const
     return Center + CrossHairOffset;
 }
 
+void ASTUGameHUD::BeginPlay()
+{
+    Super::BeginPlay();
+
+    USTUPlayerHUDWidget* PlayerHUDWidget = CreateWidget<USTUPlayerHUDWidget>(GetWorld(), PlayerHUDWidgetClass);
+    if (PlayerHUDWidget != nullptr)
+    {
+        PlayerHUDWidget->AddToViewport();
+    }
+}
+
 void ASTUGameHUD::DrawCrossHair()
 {
     const FVector2D Center = GetCrossHairPosition();
-    
-    const float LineSize = 20.0f;
-    const float LineThickness = 2.0f;
+
+    constexpr float LineSize = 20.0f;
+    constexpr float LineThickness = 2.0f;
     const FLinearColor LineColor = FLinearColor::White;
 
     DrawLine(Center.X - LineSize / 2.0f, Center.Y, Center.X + LineSize / 2.0f, Center.Y, LineColor, LineThickness);

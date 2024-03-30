@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "STUGameHUD.generated.h"
 
+class USTUPlayerHUDWidget;
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUGameHUD : public AHUD
 {
@@ -18,6 +20,12 @@ public:
     virtual void DrawHUD() override;
 
     FVector2D GetCrossHairPosition() const;
+
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<USTUPlayerHUDWidget> PlayerHUDWidgetClass;
+
+    virtual void BeginPlay() override;
 
 private:
     void DrawCrossHair();
