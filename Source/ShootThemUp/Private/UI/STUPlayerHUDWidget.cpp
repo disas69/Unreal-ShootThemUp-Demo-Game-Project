@@ -1,13 +1,14 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "UI/STUPlayerHUDWidget.h"
+#include "STUUtils.h"
 #include "Components/STUHealthComponent.h"
 #include "Weapon/STUWeapon.h"
 #include "Weapon/STUWeaponComponent.h"
 
 float USTUPlayerHUDWidget::GetHealthPercent() const
 {
-    const USTUHealthComponent* HealthComponent = GetHealthComponent();
+    const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
     if (HealthComponent != nullptr)
     {
         return HealthComponent->GetHealthPercent();
@@ -35,7 +36,7 @@ FString USTUPlayerHUDWidget::GetAmmoText() const
 
 ASTUWeapon* USTUPlayerHUDWidget::GetCurrentWeapon() const
 {
-    const USTUWeaponComponent* WeaponComponent = GetWeaponComponent();
+    const USTUWeaponComponent* WeaponComponent = FSTUUtils::GetPlayerComponent<USTUWeaponComponent>(GetOwningPlayerPawn());
     if (WeaponComponent != nullptr)
     {
         return WeaponComponent->GetCurrentWeapon();
@@ -46,7 +47,7 @@ ASTUWeapon* USTUPlayerHUDWidget::GetCurrentWeapon() const
 
 bool USTUPlayerHUDWidget::IsPlayerAlive() const
 {
-    const USTUHealthComponent* HealthComponent = GetHealthComponent();
+    const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
     if (HealthComponent != nullptr)
     {
         return HealthComponent->IsAlive();
@@ -64,26 +65,4 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
     }
 
     return false;
-}
-
-USTUHealthComponent* USTUPlayerHUDWidget::GetHealthComponent() const
-{
-    const APawn* PlayerPawn = GetOwningPlayerPawn();
-    if (PlayerPawn != nullptr)
-    {
-        return PlayerPawn->FindComponentByClass<USTUHealthComponent>();
-    }
-
-    return nullptr;
-}
-
-USTUWeaponComponent* USTUPlayerHUDWidget::GetWeaponComponent() const
-{
-    const APawn* PlayerPawn = GetOwningPlayerPawn();
-    if (PlayerPawn != nullptr)
-    {
-        return PlayerPawn->FindComponentByClass<USTUWeaponComponent>();
-    }
-
-    return nullptr;
 }
