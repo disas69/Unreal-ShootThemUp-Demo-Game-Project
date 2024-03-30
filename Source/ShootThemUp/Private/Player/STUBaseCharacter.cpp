@@ -57,6 +57,12 @@ void ASTUBaseCharacter::BeginPlay()
 void ASTUBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    // Stop sprinting if the character is firing
+    if (bIsSprinting && WeaponComponent->IsFireInProgress())
+    {
+        StopSprint();
+    }
 }
 
 // Called to bind functionality to input
@@ -139,6 +145,11 @@ void ASTUBaseCharacter::Look(const FInputActionValue& Value)
 
 void ASTUBaseCharacter::StartSprint()
 {
+    if (WeaponComponent->IsFireInProgress())
+    {
+        return;
+    }
+    
     bIsSprinting = true;
 }
 

@@ -56,6 +56,8 @@ void USTUWeaponComponent::InitAnimations()
 
 void USTUWeaponComponent::StartFire()
 {
+    bIsFireInProgress = true;
+
     if (CanFire())
     {
         CurrentWeapon->StartFire();
@@ -64,6 +66,8 @@ void USTUWeaponComponent::StartFire()
 
 void USTUWeaponComponent::StopFire()
 {
+    bIsFireInProgress = false;
+    
     if (CurrentWeapon != nullptr)
     {
         CurrentWeapon->StopFire();

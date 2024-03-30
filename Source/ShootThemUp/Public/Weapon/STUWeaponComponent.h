@@ -54,6 +54,8 @@ public:
     UFUNCTION()
     void Reload();
 
+    bool IsFireInProgress() const { return bIsFireInProgress; }
+
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 protected:
@@ -74,6 +76,7 @@ protected:
 private:
     int32 CurrentWeaponIndex = -1;
     int32 PreviousWeaponIndex = -1;
+    bool bIsFireInProgress = false;
     bool bIsEquipInProgress = false;
     bool bIsReloadInProgress = false;
 
