@@ -47,9 +47,6 @@ protected:
     USTUHealthComponent* HealthComponent = nullptr;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    UTextRenderComponent* HealthTextComponent = nullptr;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTUWeaponComponent* WeaponComponent = nullptr;
     
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
@@ -82,9 +79,6 @@ private:
 
     void StartSprint();
     void StopSprint();
-
-    UFUNCTION()
-    void OnHealthChanged(float NewHealth);
 
     UFUNCTION()
     void OnDeath();

@@ -32,8 +32,6 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjectInitializer
     Camera->bUsePawnControlRotation = false;
 
     HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("HealthComponent");
-    HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
-    HealthTextComponent->SetupAttachment(GetRootComponent());
 
     WeaponComponent = CreateDefaultSubobject<USTUWeaponComponent>("WeaponComponent");
 }
@@ -46,10 +44,7 @@ void ASTUBaseCharacter::BeginPlay()
     bIsSprinting = false;
     bIsMovingForward = false;
 
-    HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
     HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
-    OnHealthChanged(HealthComponent->GetHealth());
-
     WeaponComponent->Initialize();
 }
 
@@ -156,11 +151,6 @@ void ASTUBaseCharacter::StartSprint()
 void ASTUBaseCharacter::StopSprint()
 {
     bIsSprinting = false;
-}
-
-void ASTUBaseCharacter::OnHealthChanged(float NewHealth)
-{
-    HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), NewHealth)));
 }
 
 void ASTUBaseCharacter::OnDeath()
