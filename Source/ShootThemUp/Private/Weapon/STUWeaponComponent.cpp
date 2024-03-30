@@ -2,6 +2,7 @@
 
 #include "Weapon/STUWeaponComponent.h"
 #include "InputActionValue.h"
+#include "Animation/AnimUtils.h"
 #include "Animation/STUAnimationFinishedAnimNotify.h"
 #include "Player/STUBaseCharacter.h"
 #include "Weapon/STUWeapon.h"
@@ -31,7 +32,7 @@ void USTUWeaponComponent::Initialize()
 void USTUWeaponComponent::InitAnimations()
 {
     // Subscribe to the equip animation finished event
-    USTUAnimationFinishedAnimNotify* EquipFinishedNotify = FindAnimNotify<USTUAnimationFinishedAnimNotify>(EquipAnimMontage);
+    USTUAnimationFinishedAnimNotify* EquipFinishedNotify = FAnimUtils::FindAnimNotify<USTUAnimationFinishedAnimNotify>(EquipAnimMontage);
     if (EquipFinishedNotify != nullptr)
     {
         EquipFinishedNotify->OnNotify.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
@@ -45,7 +46,7 @@ void USTUWeaponComponent::InitAnimations()
         }
 
         // Subscribe to the reload animation finished event
-        USTUAnimationFinishedAnimNotify* ReloadFinishedNotify = FindAnimNotify<USTUAnimationFinishedAnimNotify>(Data.ReloadAnimation);
+        USTUAnimationFinishedAnimNotify* ReloadFinishedNotify = FAnimUtils::FindAnimNotify<USTUAnimationFinishedAnimNotify>(Data.ReloadAnimation);
         if (ReloadFinishedNotify != nullptr)
         {
             ReloadFinishedNotify->OnNotify.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);

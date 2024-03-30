@@ -88,23 +88,4 @@ private:
     bool CanFire() const;
     bool CanEquip() const;
     bool CanReload() const;
-
-    template<typename T>
-    T* FindAnimNotify(UAnimSequenceBase* Animation) const
-    {
-        if (Animation != nullptr)
-        {
-            TArray<FAnimNotifyEvent> NotifyEvents = Animation->Notifies;
-            for (const FAnimNotifyEvent& NotifyEvent : NotifyEvents)
-            {
-                T* TargetAnimNotify = Cast<T>(NotifyEvent.Notify);
-                if (TargetAnimNotify != nullptr)
-                {
-                    return TargetAnimNotify;
-                }
-            }
-        }
-        
-        return nullptr;
-    }
 };
