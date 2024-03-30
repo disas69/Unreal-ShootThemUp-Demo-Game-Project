@@ -28,5 +28,8 @@ protected:
     virtual void BeginPlay() override;
 
 private:
-    void DrawCrossHair();
+    UPROPERTY()
+    USTUPlayerHUDWidget* PlayerHUDWidget = nullptr;
+    
+    void DrawDebugCrossHair();
 };

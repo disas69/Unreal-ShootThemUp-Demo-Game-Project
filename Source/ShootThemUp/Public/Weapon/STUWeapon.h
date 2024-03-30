@@ -25,6 +25,18 @@ struct FAmmoData
     bool bIsUnlimited = false;
 };
 
+USTRUCT(BlueprintType)
+struct FWeaponImageData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    UTexture2D* PreviewImage = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    UTexture2D* CrossHairImage = nullptr;
+};
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUWeapon : public AActor
 {
@@ -33,6 +45,8 @@ class SHOOTTHEMUP_API ASTUWeapon : public AActor
 public:
     ASTUWeapon();
 
+    FOnClipEmpty OnClipEmpty;
+
     virtual void StartFire();
     virtual void StopFire();
     void Reload();
@@ -40,7 +54,11 @@ public:
     bool IsAmmoEmpty() const;
     bool IsClipEmpty() const;
 
-    FOnClipEmpty OnClipEmpty;
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
+    FAmmoData& GetDefaultAmmoData() { return DefaultAmmo; }
+
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
+    FWeaponImageData& GetWeaponImageData() { return WeaponImageData; }
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
@@ -63,6 +81,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     FAmmoData DefaultAmmo;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+    FWeaponImageData WeaponImageData;
     
     virtual void BeginPlay() override;
     virtual void FireInternal();

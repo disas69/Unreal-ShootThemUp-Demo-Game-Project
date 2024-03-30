@@ -7,7 +7,6 @@
 void ASTUGameHUD::DrawHUD()
 {
     Super::DrawHUD();
-    DrawCrossHair();
 }
 
 FVector2D ASTUGameHUD::GetCrossHairPosition() const
@@ -22,14 +21,14 @@ void ASTUGameHUD::BeginPlay()
 {
     Super::BeginPlay();
 
-    USTUPlayerHUDWidget* PlayerHUDWidget = CreateWidget<USTUPlayerHUDWidget>(GetWorld(), PlayerHUDWidgetClass);
+    PlayerHUDWidget = CreateWidget<USTUPlayerHUDWidget>(GetWorld(), PlayerHUDWidgetClass);
     if (PlayerHUDWidget != nullptr)
     {
         PlayerHUDWidget->AddToViewport();
     }
 }
 
-void ASTUGameHUD::DrawCrossHair()
+void ASTUGameHUD::DrawDebugCrossHair()
 {
     const FVector2D Center = GetCrossHairPosition();
 

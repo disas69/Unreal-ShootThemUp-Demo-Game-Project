@@ -2,6 +2,8 @@
 
 #include "UI/STUPlayerHUDWidget.h"
 #include "Components/STUHealthComponent.h"
+#include "Weapon/STUWeapon.h"
+#include "Weapon/STUWeaponComponent.h"
 
 float USTUPlayerHUDWidget::GetHealthPercent() const
 {
@@ -16,4 +18,19 @@ float USTUPlayerHUDWidget::GetHealthPercent() const
     }
 
     return 0.0f;
+}
+
+ASTUWeapon* USTUPlayerHUDWidget::GetCurrentWeapon() const
+{
+    const APawn* PlayerPawn = GetOwningPlayerPawn();
+    if (PlayerPawn != nullptr)
+    {
+        const USTUWeaponComponent* WeaponComponent = PlayerPawn->FindComponentByClass<USTUWeaponComponent>();
+        if (WeaponComponent != nullptr)
+        {
+            return WeaponComponent->GetCurrentWeapon();
+        }
+    }
+
+    return nullptr;
 }

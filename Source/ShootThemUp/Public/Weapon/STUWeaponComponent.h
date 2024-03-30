@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "STUWeaponComponent.generated.h"
 
+struct FWeaponImageData;
 struct FInputActionValue;
 class ASTUBaseCharacter;
 class ASTUWeapon;
@@ -55,6 +56,7 @@ public:
     void Reload();
 
     bool IsFireInProgress() const { return bIsFireInProgress; }
+    ASTUWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
 
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
