@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "STUPlayerHUDWidget.generated.h"
 
+class USTUHealthComponent;
+class USTUWeaponComponent;
 class ASTUWeapon;
 
 UCLASS()
@@ -22,4 +24,14 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "UI")
     ASTUWeapon* GetCurrentWeapon() const;
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    bool IsPlayerAlive() const;
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    bool IsPlayerSpectating() const;
+
+private:
+    USTUHealthComponent* GetHealthComponent() const;
+    USTUWeaponComponent* GetWeaponComponent() const;
 };

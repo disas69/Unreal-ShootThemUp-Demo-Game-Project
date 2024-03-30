@@ -7,14 +7,10 @@
 
 float USTUPlayerHUDWidget::GetHealthPercent() const
 {
-    const APawn* PlayerPawn = GetOwningPlayerPawn();
-    if (PlayerPawn != nullptr)
+    const USTUHealthComponent* HealthComponent = GetHealthComponent();
+    if (HealthComponent != nullptr)
     {
-        const USTUHealthComponent* HealthComponent = PlayerPawn->FindComponentByClass<USTUHealthComponent>();
-        if (HealthComponent != nullptr)
-        {
-            return HealthComponent->GetHealthPercent();
-        }
+        return HealthComponent->GetHealthPercent();
     }
 
     return 0.0f;
@@ -39,14 +35,54 @@ FString USTUPlayerHUDWidget::GetAmmoText() const
 
 ASTUWeapon* USTUPlayerHUDWidget::GetCurrentWeapon() const
 {
+    const USTUWeaponComponent* WeaponComponent = GetWeaponComponent();
+    if (WeaponComponent != nullptr)
+    {
+        return WeaponComponent->GetCurrentWeapon();
+    }
+
+    return nullptr;
+}
+
+bool USTUPlayerHUDWidget::IsPlayerAlive() const
+{
+    const USTUHealthComponent* HealthComponent = GetHealthComponent();
+    if (HealthComponent != nullptr)
+    {
+        return HealthComponent->IsAlive();
+    }
+
+    return false;
+}
+
+bool USTUPlayerHUDWidget::IsPlayerSpectating() const
+{
+    const AController* PlayerController = GetOwningPlayer();
+    if (PlayerController != nullptr)
+    {
+        return PlayerController->GetStateName() == NAME_Spectating;
+    }
+
+    return false;
+}
+
+USTUHealthComponent* USTUPlayerHUDWidget::GetHealthComponent() const
+{
     const APawn* PlayerPawn = GetOwningPlayerPawn();
     if (PlayerPawn != nullptr)
     {
-        const USTUWeaponComponent* WeaponComponent = PlayerPawn->FindComponentByClass<USTUWeaponComponent>();
-        if (WeaponComponent != nullptr)
-        {
-            return WeaponComponent->GetCurrentWeapon();
-        }
+        return PlayerPawn->FindComponentByClass<USTUHealthComponent>();
+    }
+
+    return nullptr;
+}
+
+USTUWeaponComponent* USTUPlayerHUDWidget::GetWeaponComponent() const
+{
+    const APawn* PlayerPawn = GetOwningPlayerPawn();
+    if (PlayerPawn != nullptr)
+    {
+        return PlayerPawn->FindComponentByClass<USTUWeaponComponent>();
     }
 
     return nullptr;
