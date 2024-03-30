@@ -82,13 +82,11 @@ void ASTUWeapon::DecreaseAmmo()
 {
     CurrentAmmo.Bullets = FMath::Max(CurrentAmmo.Bullets - 1, 0);
     
-    if (IsClipEmpty() && !IsAmmoEmpty())
+    if (IsClipEmpty())
     {
-        Reload();
+        StopFire();
+        OnClipEmpty.Broadcast();
     }
-
-    FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + "/" + FString::FromInt(CurrentAmmo.Clips);
-    UE_LOG(LogTemp, Display, TEXT("%s"), *AmmoInfo);
 }
 
 bool ASTUWeapon::IsAmmoEmpty() const
@@ -103,11 +101,6 @@ bool ASTUWeapon::IsClipEmpty() const
 
 void ASTUWeapon::Reload()
 {
-    if (IsAmmoEmpty())
-    {
-        return;
-    }
-
     CurrentAmmo.Bullets = DefaultAmmo.Bullets;
 
     if (!CurrentAmmo.bIsUnlimited)

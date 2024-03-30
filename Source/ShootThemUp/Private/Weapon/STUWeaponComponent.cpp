@@ -1,9 +1,8 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Weapon/STUWeaponComponent.h"
-
 #include "InputActionValue.h"
-#include "Animation/STUEquipFinishedAnimNotify.h"
+#include "Animation/STUAnimationFinishedAnimNotify.h"
 #include "Player/STUBaseCharacter.h"
 #include "Weapon/STUWeapon.h"
 
@@ -16,18 +15,40 @@ void USTUWeaponComponent::BeginPlay()
 {
     Super::BeginPlay();
     Character = Cast<ASTUBaseCharacter>(GetOwner());
+}
+
+void USTUWeaponComponent::Initialize()
+{
+    SpawnWeapon();
     InitAnimations();
+
+    if (Weapons.Num() > 0)
+    {
+        EquipWeapon(0);
+    }
 }
 
 void USTUWeaponComponent::InitAnimations()
 {
-    TArray<FAnimNotifyEvent> EquipNotifyEvents = EquipAnimMontage->Notifies;
-    for (FAnimNotifyEvent& NotifyEvent : EquipNotifyEvents)
+    // Subscribe to the equip animation finished event
+    USTUAnimationFinishedAnimNotify* EquipFinishedNotify = FindAnimNotify<USTUAnimationFinishedAnimNotify>(EquipAnimMontage);
+    if (EquipFinishedNotify != nullptr)
     {
-        USTUEquipFinishedAnimNotify* EquipFinishedNotify = Cast<USTUEquipFinishedAnimNotify>(NotifyEvent.Notify);
-        if (EquipFinishedNotify != nullptr)
+        EquipFinishedNotify->OnNotify.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
+    }
+
+    for (const FWeaponData& Data : WeaponData)
+    {
+        if (Data.ReloadAnimation == nullptr)
         {
-            EquipFinishedNotify->OnNotify.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
+            continue;
+        }
+
+        // Subscribe to the reload animation finished event
+        USTUAnimationFinishedAnimNotify* ReloadFinishedNotify = FindAnimNotify<USTUAnimationFinishedAnimNotify>(Data.ReloadAnimation);
+        if (ReloadFinishedNotify != nullptr)
+        {
+            ReloadFinishedNotify->OnNotify.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
         }
     }
 }
@@ -52,10 +73,17 @@ void USTUWeaponComponent::Reload()
 {
     if (CanReload())
     {
-        bIsReloadInProgress = true;
-        CurrentWeapon->Reload();
-        PlayAnimMontage(CurrentReloadAnimation);
-        bIsReloadInProgress = false;
+        if (CurrentWeapon->IsAmmoEmpty())
+        {
+            UE_LOG(LogTemp, Display, TEXT("Ammo is empty"));
+        }
+        else
+        {
+            StopFire();
+            bIsReloadInProgress = true;
+            PlayAnimMontage(CurrentReloadAnimation);
+            CurrentWeapon->Reload();
+        }
     }
 }
 
@@ -94,14 +122,10 @@ void USTUWeaponComponent::SpawnWeapon()
         ASTUWeapon* Weapon = GetWorld()->SpawnActor<ASTUWeapon>(Data.WeaponClass, SpawnParameters);
         if (Weapon != nullptr)
         {
+            Weapon->OnClipEmpty.AddUObject(this, &USTUWeaponComponent::Reload);
             Weapon->SetActorHiddenInGame(true);
             Weapons.Add(Weapon);
         }
-    }
-
-    if (Weapons.Num() > 0)
-    {
-        EquipWeapon(0);
     }
 }
 
@@ -124,7 +148,7 @@ void USTUWeaponComponent::SwitchWeapon(const FInputActionValue& Value)
 void USTUWeaponComponent::EquipWeapon(int32 NewWeaponIndex)
 {
     bIsEquipInProgress = true;
-    
+
     if (NewWeaponIndex < 0)
     {
         NewWeaponIndex = Weapons.Num() - 1;
@@ -159,6 +183,16 @@ void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
     }
 
     bIsEquipInProgress = false;
+}
+
+void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
+{
+    if (MeshComp != Character->GetMesh())
+    {
+        return;
+    }
+
+    bIsReloadInProgress = false;
 }
 
 void USTUWeaponComponent::HandlePreviousWeapon()
@@ -209,12 +243,12 @@ void USTUWeaponComponent::PlayAnimMontage(UAnimMontage* AnimMontage) const
 
 bool USTUWeaponComponent::CanFire() const
 {
-    return CurrentWeapon != nullptr && !bIsEquipInProgress;
+    return CurrentWeapon != nullptr && !bIsEquipInProgress && !bIsReloadInProgress;
 }
 
 bool USTUWeaponComponent::CanEquip() const
 {
-    return !bIsEquipInProgress;
+    return !bIsEquipInProgress && !bIsReloadInProgress;
 }
 
 bool USTUWeaponComponent::CanReload() const

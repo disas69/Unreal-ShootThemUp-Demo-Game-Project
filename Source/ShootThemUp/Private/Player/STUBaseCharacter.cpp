@@ -50,7 +50,7 @@ void ASTUBaseCharacter::BeginPlay()
     HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
     OnHealthChanged(HealthComponent->GetHealth());
 
-    WeaponComponent->SpawnWeapon();
+    WeaponComponent->Initialize();
 }
 
 // Called every frame

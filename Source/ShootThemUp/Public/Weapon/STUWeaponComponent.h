@@ -41,8 +41,8 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
     UAnimMontage* EquipAnimMontage = nullptr;
-    
-    void SpawnWeapon();
+
+    void Initialize();
     void SwitchWeapon(const FInputActionValue& Value);
 
     UFUNCTION()
@@ -76,9 +76,11 @@ private:
     int32 PreviousWeaponIndex = -1;
     bool bIsEquipInProgress = false;
     bool bIsReloadInProgress = false;
-    
+
+    void SpawnWeapon();
     void InitAnimations();
     void OnEquipFinished(USkeletalMeshComponent* MeshComp);
+    void OnReloadFinished(USkeletalMeshComponent* MeshComp);
     void EquipWeapon(int32 WeaponIndex);
     void HandlePreviousWeapon();
     void AttachWeaponToSocket(ASTUWeapon* Weapon, const FName& SocketName) const;
@@ -86,4 +88,23 @@ private:
     bool CanFire() const;
     bool CanEquip() const;
     bool CanReload() const;
+
+    template<typename T>
+    T* FindAnimNotify(UAnimSequenceBase* Animation) const
+    {
+        if (Animation != nullptr)
+        {
+            TArray<FAnimNotifyEvent> NotifyEvents = Animation->Notifies;
+            for (const FAnimNotifyEvent& NotifyEvent : NotifyEvents)
+            {
+                T* TargetAnimNotify = Cast<T>(NotifyEvent.Notify);
+                if (TargetAnimNotify != nullptr)
+                {
+                    return TargetAnimNotify;
+                }
+            }
+        }
+        
+        return nullptr;
+    }
 };

@@ -8,6 +8,8 @@
 
 class ASTUGameHUD;
 
+DECLARE_MULTICAST_DELEGATE(FOnClipEmpty);
+
 USTRUCT(BlueprintType)
 struct FAmmoData
 {
@@ -35,6 +37,10 @@ public:
     virtual void StopFire();
     void Reload();
     bool IsFullAmmo() const;
+    bool IsAmmoEmpty() const;
+    bool IsClipEmpty() const;
+
+    FOnClipEmpty OnClipEmpty;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
@@ -66,8 +72,6 @@ protected:
     FTransform GetMuzzleSocketTransform() const;
 
     void DecreaseAmmo();
-    bool IsAmmoEmpty() const;
-    bool IsClipEmpty() const;
 
 private:
     UPROPERTY()

@@ -5,8 +5,8 @@
 void ASTURifleWeapon::StartFire()
 {
     Super::StartFire();
-    FireInternal();
     GetWorldTimerManager().SetTimer(FireTimerHandle, this, &ASTURifleWeapon::FireInternal, Rate, true);
+    FireInternal();
 }
 
 void ASTURifleWeapon::StopFire()
