@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Pickups/STUAmmoPickup.h"
 #include "STUWeaponComponent.generated.h"
 
 struct FWeaponImageData;
@@ -57,6 +58,7 @@ public:
 
     bool IsFireInProgress() const { return bIsFireInProgress; }
     ASTUWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
+    bool AddAmmo(TSubclassOf<ASTUWeapon> WeaponType, int32 ClipsAmount);
 
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
@@ -93,4 +95,5 @@ private:
     bool CanFire() const;
     bool CanEquip() const;
     bool CanReload() const;
+    void TryReload(ASTUWeapon* EmptyWeapon);
 };

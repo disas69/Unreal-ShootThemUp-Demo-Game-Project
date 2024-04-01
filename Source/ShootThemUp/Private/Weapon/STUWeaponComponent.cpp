@@ -76,20 +76,23 @@ void USTUWeaponComponent::StopFire()
 
 void USTUWeaponComponent::Reload()
 {
-    if (CanReload())
+    if (CurrentWeapon != nullptr)
     {
-        if (CurrentWeapon->IsAmmoEmpty())
+        TryReload(CurrentWeapon);
+    }
+}
+
+bool USTUWeaponComponent::AddAmmo(TSubclassOf<ASTUWeapon> WeaponType, int32 ClipsAmount)
+{
+    for (ASTUWeapon* Weapon : Weapons)
+    {
+        if (Weapon != nullptr && Weapon->IsA(WeaponType))
         {
-            UE_LOG(LogTemp, Display, TEXT("Ammo is empty"));
-        }
-        else
-        {
-            StopFire();
-            bIsReloadInProgress = true;
-            PlayAnimMontage(CurrentReloadAnimation);
-            CurrentWeapon->Reload();
+            return Weapon->AddAmmo(ClipsAmount);
         }
     }
+
+    return false;
 }
 
 void USTUWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -127,7 +130,7 @@ void USTUWeaponComponent::SpawnWeapon()
         ASTUWeapon* Weapon = GetWorld()->SpawnActor<ASTUWeapon>(Data.WeaponClass, SpawnParameters);
         if (Weapon != nullptr)
         {
-            Weapon->OnClipEmpty.AddUObject(this, &USTUWeaponComponent::Reload);
+            Weapon->OnClipEmpty.AddUObject(this, &USTUWeaponComponent::TryReload);
             Weapon->SetActorHiddenInGame(true);
             Weapons.Add(Weapon);
         }
@@ -259,4 +262,35 @@ bool USTUWeaponComponent::CanEquip() const
 bool USTUWeaponComponent::CanReload() const
 {
     return CurrentWeapon != nullptr && CurrentWeapon->CanReload() && !bIsReloadInProgress;
+}
+
+void USTUWeaponComponent::TryReload(ASTUWeapon* EmptyWeapon)
+{
+    if (CurrentWeapon == EmptyWeapon)
+    {
+        if (CanReload())
+        {
+            if (CurrentWeapon->IsAmmoEmpty())
+            {
+                UE_LOG(LogTemp, Display, TEXT("Ammo is empty"));
+            }
+            else
+            {
+                StopFire();
+                bIsReloadInProgress = true;
+                PlayAnimMontage(CurrentReloadAnimation);
+                CurrentWeapon->Reload();
+            }
+        }
+    }
+    else
+    {
+        for (ASTUWeapon* Weapon : Weapons)
+        {
+            if (Weapon == EmptyWeapon)
+            {
+                Weapon->Reload();
+            }
+        }
+    }
 }

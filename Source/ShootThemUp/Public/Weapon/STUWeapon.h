@@ -7,8 +7,9 @@
 #include "STUWeapon.generated.h"
 
 class ASTUGameHUD;
+class ASTUWeapon;
 
-DECLARE_MULTICAST_DELEGATE(FOnClipEmpty);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmpty, ASTUWeapon*);
 
 USTRUCT(BlueprintType)
 struct FAmmoData
@@ -63,6 +64,8 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Weapon")
     FWeaponImageData& GetWeaponImageData() { return WeaponImageData; }
+
+    bool AddAmmo(int32 ClipsAmount);
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
