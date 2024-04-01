@@ -19,9 +19,16 @@ public:
     UPROPERTY(VisibleAnywhere, Category = "Pickup")
     USphereComponent* SphereComponent = nullptr;
 
-    UPROPERTY(VisibleAnywhere, Category = "Pickup")
+    UPROPERTY(EditAnywhere, Category = "Pickup")
     float RespawnTime = 5.0f;
 
+    UPROPERTY(EditAnywhere, Category = "Pickup")
+    float FloatingOffset = 100.0f;
+
+    UPROPERTY(EditAnywhere, Category = "Pickup")
+    float FloatingSpeed = 10.0f;
+
+    virtual void Tick(float DeltaTime) override;
     virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 protected:
@@ -29,6 +36,8 @@ protected:
     virtual bool TryCollectPickup(APawn* CollectorPawn);
 
 private:
+    FVector InitialLocation = FVector::ZeroVector;
+    
     void Collect();
     void Respawn() const;
 };

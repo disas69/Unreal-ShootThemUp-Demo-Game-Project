@@ -5,13 +5,22 @@
 
 ASTUPickup::ASTUPickup()
 {
-    PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bCanEverTick = true;
 
     SphereComponent = CreateDefaultSubobject<USphereComponent>("SphereComponent");
     SphereComponent->InitSphereRadius(50.0f);
     SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     SetRootComponent(SphereComponent);
+}
+
+void ASTUPickup::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+    FVector CurrentLocation = GetActorLocation();
+    CurrentLocation.Z = InitialLocation.Z + FloatingOffset * FMath::Sin(FloatingSpeed * GetWorld()->TimeSeconds);
+    SetActorLocation(CurrentLocation);
 }
 
 void ASTUPickup::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -28,6 +37,7 @@ void ASTUPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 void ASTUPickup::BeginPlay()
 {
     Super::BeginPlay();
+    InitialLocation = GetActorLocation();
 }
 
 bool ASTUPickup::TryCollectPickup(APawn* CollectorPawn)
