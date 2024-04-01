@@ -7,6 +7,17 @@ USTUHealthComponent::USTUHealthComponent()
     PrimaryComponentTick.bCanEverTick = false;
 }
 
+bool USTUHealthComponent::AddHealth(float HealthAmount)
+{
+    if (!IsAlive() || Health >= MaxHealth)
+    {
+        return false;
+    }
+
+    SetHealth(Health + HealthAmount);
+    return true;
+}
+
 void USTUHealthComponent::BeginPlay()
 {
     Super::BeginPlay();
