@@ -10,4 +10,7 @@ UCLASS()
 class SHOOTTHEMUP_API ASTUAmmoPickup : public ASTUPickup
 {
     GENERATED_BODY()
+
+protected:
+    virtual bool TryCollectPickup(APawn* CollectorPawn) override;
 };

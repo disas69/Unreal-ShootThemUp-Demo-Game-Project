@@ -18,11 +18,34 @@ void ASTUPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 {
     Super::NotifyActorBeginOverlap(OtherActor);
 
-    UE_LOG(LogTemp, Display, TEXT("Pickup overlapped with %s"), *OtherActor->GetName());
-    Destroy();
+    APawn* OtherPawn = Cast<APawn>(OtherActor);
+    if (OtherPawn != nullptr && TryCollectPickup(OtherPawn))
+    {
+        Collect();
+    }
 }
 
 void ASTUPickup::BeginPlay()
 {
     Super::BeginPlay();
+}
+
+bool ASTUPickup::TryCollectPickup(APawn* CollectorPawn)
+{
+    return false;
+}
+
+void ASTUPickup::Collect()
+{
+    SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    GetRootComponent()->SetVisibility(false, true);
+
+    FTimerHandle RespawnTimerHandle;
+    GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASTUPickup::Respawn, RespawnTime, false);
+}
+
+void ASTUPickup::Respawn() const
+{
+    SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+    GetRootComponent()->SetVisibility(true, true);
 }

@@ -19,8 +19,16 @@ public:
     UPROPERTY(VisibleAnywhere, Category = "Pickup")
     USphereComponent* SphereComponent = nullptr;
 
+    UPROPERTY(VisibleAnywhere, Category = "Pickup")
+    float RespawnTime = 5.0f;
+
     virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 protected:
     virtual void BeginPlay() override;
+    virtual bool TryCollectPickup(APawn* CollectorPawn);
+
+private:
+    void Collect();
+    void Respawn() const;
 };
