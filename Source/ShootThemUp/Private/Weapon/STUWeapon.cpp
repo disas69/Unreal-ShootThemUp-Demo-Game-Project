@@ -62,8 +62,6 @@ void ASTUWeapon::ApplyDamage(const FHitResult& HitResult)
 {
     if (HitResult.bBlockingHit)
     {
-        DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f, 0, 2.0f);
-
         AActor* HitActor = HitResult.GetActor();
         if (HitActor != nullptr)
         {

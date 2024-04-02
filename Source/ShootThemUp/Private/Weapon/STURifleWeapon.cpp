@@ -1,6 +1,12 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Weapon/STURifleWeapon.h"
+#include "Weapon/Components/STUWeaponFXComponent.h"
+
+ASTURifleWeapon::ASTURifleWeapon()
+{
+    WeaponFX = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFX");
+}
 
 void ASTURifleWeapon::StartFire()
 {
@@ -33,6 +39,12 @@ void ASTURifleWeapon::FireInternal()
     TraceWeapon(SocketLocation, HitResult, TraceEndLocation);
 
     DrawDebugLine(GetWorld(), SocketLocation, TraceEndLocation, FColor::Red, false, 2.0f, 0, 2.0f);
+
+    if (HitResult.bBlockingHit)
+    {
+        WeaponFX->PlayImpactFX(HitResult);
+    }
+    
     ApplyDamage(HitResult);
     DecreaseAmmo();
 }

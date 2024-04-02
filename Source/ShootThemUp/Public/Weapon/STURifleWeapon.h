@@ -6,17 +6,25 @@
 #include "Weapon/STUWeapon.h"
 #include "STURifleWeapon.generated.h"
 
+class USTUWeaponFXComponent;
+
 UCLASS()
 class SHOOTTHEMUP_API ASTURifleWeapon : public ASTUWeapon
 {
 	GENERATED_BODY()
 
 public:
+    ASTURifleWeapon();
+    
     virtual void StartFire() override;
     virtual void StopFire() override;
 
 protected:
+    UPROPERTY(VisibleAnywhere, Category = "Weapon")
+    USTUWeaponFXComponent* WeaponFX = nullptr;
+    
     virtual void FireInternal() override;
+
 private:
     FTimerHandle FireTimerHandle;
 };
