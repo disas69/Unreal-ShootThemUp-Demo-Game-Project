@@ -11,5 +11,16 @@ USTUWeaponFXComponent::USTUWeaponFXComponent()
 
 void USTUWeaponFXComponent::PlayImpactFX(const FHitResult& Hit)
 {
+    UNiagaraSystem* ImpactEffect = DefaultImpactEffect;
+
+    if (Hit.PhysMaterial.IsValid())
+    {
+        const UPhysicalMaterial* PhysMaterial = Hit.PhysMaterial.Get();
+        if (ImpactEffects.Contains(PhysMaterial))
+        {
+            ImpactEffect = ImpactEffects[PhysMaterial];
+        }
+    }
+    
     UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
 }

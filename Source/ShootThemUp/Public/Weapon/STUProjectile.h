@@ -31,7 +31,7 @@ protected:
     float LifeSpanSeconds = 5.0f;
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
-    USTUWeaponFXComponent* WeaponFX = nullptr;
+    USTUWeaponFXComponent* WeaponFXComponent = nullptr;
 
     UFUNCTION()
     void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

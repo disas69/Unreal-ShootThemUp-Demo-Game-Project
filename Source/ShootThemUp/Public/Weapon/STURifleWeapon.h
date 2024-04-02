@@ -21,7 +21,7 @@ public:
 
 protected:
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
-    USTUWeaponFXComponent* WeaponFX = nullptr;
+    USTUWeaponFXComponent* WeaponFXComponent = nullptr;
     
     virtual void FireInternal() override;
 

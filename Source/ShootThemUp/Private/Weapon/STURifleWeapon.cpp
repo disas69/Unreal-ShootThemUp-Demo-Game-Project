@@ -5,7 +5,7 @@
 
 ASTURifleWeapon::ASTURifleWeapon()
 {
-    WeaponFX = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFX");
+    WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFX");
 }
 
 void ASTURifleWeapon::StartFire()
@@ -42,7 +42,7 @@ void ASTURifleWeapon::FireInternal()
 
     if (HitResult.bBlockingHit)
     {
-        WeaponFX->PlayImpactFX(HitResult);
+        WeaponFXComponent->PlayImpactFX(HitResult);
     }
     
     ApplyDamage(HitResult);

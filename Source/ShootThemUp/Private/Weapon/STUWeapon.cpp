@@ -41,6 +41,7 @@ void ASTUWeapon::TraceWeapon(const FVector& SocketLocation, FHitResult& HitResul
 
     FCollisionQueryParams CollisionQueryParams;
     CollisionQueryParams.AddIgnoredActor(Character);
+    CollisionQueryParams.bReturnPhysicalMaterial = true;
 
     FHitResult ScreenTraceResult;
     if (Character->GetWorld()->LineTraceSingleByChannel(ScreenTraceResult, StartLocation, EndLocation, ECC_Visibility, CollisionQueryParams))

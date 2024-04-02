@@ -14,12 +14,13 @@ ASTUProjectile::ASTUProjectile()
     SphereComponent->InitSphereRadius(5.0f);
     SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     SphereComponent->SetCollisionResponseToAllChannels(ECR_Block);
+    SphereComponent->bReturnMaterialOnMove = true;
     SetRootComponent(SphereComponent);
 
     MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComponent");
     MovementComponent->bAutoActivate = false;
 
-    WeaponFX = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFX");
+    WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFX");
 }
 
 void ASTUProjectile::Launch(const FVector& LaunchDirection, float Damage, float Radius)
@@ -42,7 +43,7 @@ void ASTUProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* 
     UGameplayStatics::ApplyRadialDamage(GetWorld(), DamageAmount, GetActorLocation(), DamageRadius, nullptr, TArray<AActor*>(), this, nullptr, false);
 
     DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 2.0f, 0, 2.0f);
-    WeaponFX->PlayImpactFX(Hit);
+    WeaponFXComponent->PlayImpactFX(Hit);
     Destroy();
 }
 
