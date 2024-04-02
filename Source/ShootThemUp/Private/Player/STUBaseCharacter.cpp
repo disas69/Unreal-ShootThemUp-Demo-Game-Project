@@ -8,7 +8,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/STUCharacterMovementComponent.h"
 #include "Components/STUHealthComponent.h"
-#include "Components/TextRenderComponent.h"
 #include "Input/InputDataConfig.h"
 #include "Weapon/STUWeaponComponent.h"
 
@@ -160,11 +159,18 @@ void ASTUBaseCharacter::OnDeath()
     WeaponComponent->StopFire();
     GetCharacterMovement()->DisableMovement();
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-    PlayAnimMontage(DeathAnimation);
-
+    
     if (Controller != nullptr)
     {
         Controller->ChangeState(NAME_Spectating);
+    }
+
+    // PlayAnimMontage(DeathAnimation);
+
+    USkeletalMeshComponent* CharacterMesh = GetMesh();
+    if (CharacterMesh != nullptr)
+    {
+        CharacterMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+        CharacterMesh->SetSimulatePhysics(true);
     }
 }
