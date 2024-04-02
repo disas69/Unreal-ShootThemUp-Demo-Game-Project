@@ -63,6 +63,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
     UAnimMontage* DeathAnimation = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
+    TSubclassOf<UCameraShakeBase> DamageCameraShake;
     
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
@@ -81,5 +84,10 @@ private:
     void StopSprint();
 
     UFUNCTION()
+    void OnHealthChanged(float PreviousHealth, float NewHealth);
+
+    UFUNCTION()
     void OnDeath();
+
+    void PlayCameraShake(TSubclassOf<UCameraShakeBase> CameraShake);
 };

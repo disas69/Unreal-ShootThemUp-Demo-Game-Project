@@ -43,6 +43,7 @@ void ASTUBaseCharacter::BeginPlay()
     bIsSprinting = false;
     bIsMovingForward = false;
 
+    HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
     HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
     WeaponComponent->Initialize();
 }
@@ -152,6 +153,14 @@ void ASTUBaseCharacter::StopSprint()
     bIsSprinting = false;
 }
 
+void ASTUBaseCharacter::OnHealthChanged(float PreviousHealth, float NewHealth)
+{
+    if (HealthComponent->IsAlive() && NewHealth < PreviousHealth)
+    {
+        PlayCameraShake(DamageCameraShake);
+    }
+}
+
 void ASTUBaseCharacter::OnDeath()
 {
     DisableInput(nullptr);
@@ -159,7 +168,7 @@ void ASTUBaseCharacter::OnDeath()
     WeaponComponent->StopFire();
     GetCharacterMovement()->DisableMovement();
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    
+
     if (Controller != nullptr)
     {
         Controller->ChangeState(NAME_Spectating);
@@ -172,5 +181,14 @@ void ASTUBaseCharacter::OnDeath()
     {
         CharacterMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
         CharacterMesh->SetSimulatePhysics(true);
+    }
+}
+
+void ASTUBaseCharacter::PlayCameraShake(TSubclassOf<UCameraShakeBase> CameraShake)
+{
+    APlayerController* PlayerController = Cast<APlayerController>(GetController());
+    if (PlayerController != nullptr && PlayerController->PlayerCameraManager != nullptr)
+    {
+        PlayerController->PlayerCameraManager->StartCameraShake(CameraShake);
     }
 }

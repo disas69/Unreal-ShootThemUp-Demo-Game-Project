@@ -71,7 +71,8 @@ void USTUHealthComponent::HealUpdate()
 
 void USTUHealthComponent::SetHealth(const float NewHealth)
 {
+    const float PreviousHealth = Health;
     Health = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
-    OnHealthChanged.Broadcast(Health);
+    OnHealthChanged.Broadcast(PreviousHealth, Health);
 }
 
