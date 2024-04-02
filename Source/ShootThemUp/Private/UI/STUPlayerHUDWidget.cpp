@@ -6,6 +6,17 @@
 #include "Weapon/STUWeapon.h"
 #include "Weapon/STUWeaponComponent.h"
 
+bool USTUPlayerHUDWidget::Initialize()
+{
+    USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
+    if (HealthComponent != nullptr)
+    {
+        HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged);
+    }
+    
+    return Super::Initialize();
+}
+
 float USTUPlayerHUDWidget::GetHealthPercent() const
 {
     const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
@@ -65,4 +76,12 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
     }
 
     return false;
+}
+
+void USTUPlayerHUDWidget::OnHealthChanged(float NewHealth, float HealthDelta)
+{
+    if (HealthDelta < 0.0f)
+    {
+        OnTakeDamage();
+    }
 }

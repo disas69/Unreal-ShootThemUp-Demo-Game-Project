@@ -153,9 +153,9 @@ void ASTUBaseCharacter::StopSprint()
     bIsSprinting = false;
 }
 
-void ASTUBaseCharacter::OnHealthChanged(float PreviousHealth, float NewHealth)
+void ASTUBaseCharacter::OnHealthChanged(float NewHealth, float HealthDelta)
 {
-    if (HealthComponent->IsAlive() && NewHealth < PreviousHealth)
+    if (HealthComponent->IsAlive() && HealthDelta < 0.0f)
     {
         PlayCameraShake(DamageCameraShake);
     }

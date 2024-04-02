@@ -84,7 +84,7 @@ private:
     void StopSprint();
 
     UFUNCTION()
-    void OnHealthChanged(float PreviousHealth, float NewHealth);
+    void OnHealthChanged(float NewHealth, float HealthDelta);
 
     UFUNCTION()
     void OnDeath();
