@@ -27,4 +27,9 @@ protected:
 
 private:
     FTimerHandle FireTimerHandle;
+
+    UPROPERTY()
+    UNiagaraComponent* MuzzleFXComponent = nullptr;
+
+    void SetMuzzleFXActive(bool IsActive);
 };

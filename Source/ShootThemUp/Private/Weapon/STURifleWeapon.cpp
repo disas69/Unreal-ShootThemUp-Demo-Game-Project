@@ -1,6 +1,7 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Weapon/STURifleWeapon.h"
+#include "NiagaraComponent.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
 
 ASTURifleWeapon::ASTURifleWeapon()
@@ -11,6 +12,13 @@ ASTURifleWeapon::ASTURifleWeapon()
 void ASTURifleWeapon::StartFire()
 {
     Super::StartFire();
+
+    if (MuzzleFXComponent == nullptr)
+    {
+        MuzzleFXComponent = SpawnMuzzleFX();
+    }
+    
+    SetMuzzleFXActive(true);
     GetWorldTimerManager().SetTimer(FireTimerHandle, this, &ASTURifleWeapon::FireInternal, Rate, true);
     FireInternal();
 }
@@ -18,6 +26,7 @@ void ASTURifleWeapon::StartFire()
 void ASTURifleWeapon::StopFire()
 {
     Super::StopFire();
+    SetMuzzleFXActive(false);
     GetWorldTimerManager().ClearTimer(FireTimerHandle);
 }
 
@@ -30,10 +39,10 @@ void ASTURifleWeapon::FireInternal()
         StopFire();
         return;
     }
-    
+
     const FTransform SocketTransform = GetMuzzleSocketTransform();
     const FVector SocketLocation = SocketTransform.GetLocation();
-    
+
     FHitResult HitResult;
     FVector TraceEndLocation;
     TraceWeapon(SocketLocation, HitResult, TraceEndLocation);
@@ -44,7 +53,16 @@ void ASTURifleWeapon::FireInternal()
     {
         WeaponFXComponent->PlayImpactFX(HitResult);
     }
-    
+
     ApplyDamage(HitResult);
     DecreaseAmmo();
+}
+
+void ASTURifleWeapon::SetMuzzleFXActive(bool IsActive)
+{
+    if (MuzzleFXComponent != nullptr)
+    {
+        MuzzleFXComponent->SetPaused(!IsActive);
+        MuzzleFXComponent->SetVisibility(IsActive, true);
+    }
 }

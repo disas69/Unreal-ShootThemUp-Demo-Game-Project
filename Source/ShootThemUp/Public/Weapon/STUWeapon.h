@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "STUWeapon.generated.h"
 
+class UNiagaraComponent;
+class UNiagaraSystem;
 class ASTUGameHUD;
 class ASTUWeapon;
 
@@ -91,6 +93,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     FWeaponImageData WeaponImageData;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+    UNiagaraSystem* MuzzleFX = nullptr;
     
     virtual void BeginPlay() override;
     virtual void FireInternal();
@@ -100,6 +105,7 @@ protected:
     FTransform GetMuzzleSocketTransform() const;
 
     void DecreaseAmmo();
+    UNiagaraComponent* SpawnMuzzleFX() const;
 
 private:
     UPROPERTY()

@@ -42,4 +42,5 @@ void ASTULauncherWeapon::FireInternal()
     }
 
     DecreaseAmmo();
+    SpawnMuzzleFX();
 }

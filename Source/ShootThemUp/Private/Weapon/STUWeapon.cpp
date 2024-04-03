@@ -3,6 +3,8 @@
 #include "Weapon/STUWeapon.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Engine/DamageEvents.h"
 #include "GameFramework/Character.h"
 
@@ -146,4 +148,9 @@ APlayerController* ASTUWeapon::GetPlayerController()
     }
 
     return Controller;
+}
+
+UNiagaraComponent* ASTUWeapon::SpawnMuzzleFX() const
+{
+    return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX, WeaponMesh, MuzzleSocketName, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget, true);
 }
