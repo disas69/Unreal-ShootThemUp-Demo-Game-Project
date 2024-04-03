@@ -30,9 +30,7 @@ void ASTULauncherWeapon::FireInternal()
     FHitResult HitResult;
     FVector TraceEndLocation;
     TraceWeapon(SocketLocation, HitResult, TraceEndLocation);
-
-    DrawDebugLine(GetWorld(), SocketLocation, TraceEndLocation, FColor::Red, false, 2.0f, 0, 2.0f);
-
+    
     FVector ShootDirection = (TraceEndLocation - SocketLocation).GetSafeNormal();
     ASTUProjectile* Projectile = GetWorld()->SpawnActor<ASTUProjectile>(ProjectileClass, SocketTransform);
     if (Projectile != nullptr)

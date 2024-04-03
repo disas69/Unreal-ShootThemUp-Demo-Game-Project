@@ -7,6 +7,7 @@
 #include "STURifleWeapon.generated.h"
 
 class USTUWeaponFXComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTURifleWeapon : public ASTUWeapon
@@ -22,6 +23,12 @@ public:
 protected:
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
     USTUWeaponFXComponent* WeaponFXComponent = nullptr;
+
+    UPROPERTY(EditAnywhere, Category = "VFX")
+    UNiagaraSystem* TraceFX = nullptr;
+
+    UPROPERTY(EditAnywhere, Category = "VFX")
+    FString TraceTargetName = "TraceTarget";
     
     virtual void FireInternal() override;
 
@@ -32,4 +39,5 @@ private:
     UNiagaraComponent* MuzzleFXComponent = nullptr;
 
     void SetMuzzleFXActive(bool IsActive);
+    void SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
 };

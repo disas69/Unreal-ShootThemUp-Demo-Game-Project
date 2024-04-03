@@ -42,7 +42,7 @@ void ASTUProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* 
     MovementComponent->StopMovementImmediately();
     UGameplayStatics::ApplyRadialDamage(GetWorld(), DamageAmount, GetActorLocation(), DamageRadius, nullptr, TArray<AActor*>(), this, nullptr, false);
 
-    DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 2.0f, 0, 2.0f);
+    // DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 2.0f, 0, 2.0f);
     WeaponFXComponent->PlayImpactFX(Hit);
     Destroy();
 }
