@@ -73,6 +73,7 @@ protected:
 private:
     bool bIsSprinting = false;
     bool bIsMovingForward = false;
+    bool bIsFireInProgress = false;
 
     UFUNCTION()
     void Move(const FInputActionValue& Value);
@@ -82,6 +83,9 @@ private:
 
     void StartSprint();
     void StopSprint();
+
+    void StartFire();
+    void StopFire();
 
     UFUNCTION()
     void OnHealthChanged(float NewHealth, float HealthDelta);

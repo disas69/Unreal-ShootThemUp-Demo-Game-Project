@@ -54,9 +54,15 @@ void ASTUBaseCharacter::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     // Stop sprinting if the character is firing
-    if (bIsSprinting && WeaponComponent->IsFireInProgress())
+    if (bIsSprinting && bIsFireInProgress)
     {
         StopSprint();
+    }
+
+    // Try to start firing if there's pending player input
+    if (bIsFireInProgress && !WeaponComponent->IsFireInProgress())
+    {
+        WeaponComponent->StartFire();
     }
 }
 
@@ -77,8 +83,8 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     Input->BindAction(InputDataConfig->Jump, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Jump);
     Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Started, this, &ASTUBaseCharacter::StartSprint);
     Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Completed, this, &ASTUBaseCharacter::StopSprint);
-    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Started, WeaponComponent, &USTUWeaponComponent::StartFire);
-    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Completed, WeaponComponent, &USTUWeaponComponent::StopFire);
+    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Started, this, &ASTUBaseCharacter::StartFire);
+    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Completed, this, &ASTUBaseCharacter::StopFire);
     Input->BindAction(InputDataConfig->SwitchWeapon, ETriggerEvent::Triggered, WeaponComponent, &USTUWeaponComponent::SwitchWeapon);
     Input->BindAction(InputDataConfig->Reload, ETriggerEvent::Triggered, WeaponComponent, &USTUWeaponComponent::Reload);
 }
@@ -151,6 +157,18 @@ void ASTUBaseCharacter::StartSprint()
 void ASTUBaseCharacter::StopSprint()
 {
     bIsSprinting = false;
+}
+
+void ASTUBaseCharacter::StartFire()
+{
+    bIsFireInProgress = true;
+    WeaponComponent->StartFire();
+}
+
+void ASTUBaseCharacter::StopFire()
+{
+    bIsFireInProgress = false;
+    WeaponComponent->StopFire();
 }
 
 void ASTUBaseCharacter::OnHealthChanged(float NewHealth, float HealthDelta)
