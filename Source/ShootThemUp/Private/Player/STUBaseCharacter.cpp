@@ -31,7 +31,6 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjectInitializer
     Camera->bUsePawnControlRotation = false;
 
     HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("HealthComponent");
-
     WeaponComponent = CreateDefaultSubobject<USTUWeaponComponent>("WeaponComponent");
 }
 
