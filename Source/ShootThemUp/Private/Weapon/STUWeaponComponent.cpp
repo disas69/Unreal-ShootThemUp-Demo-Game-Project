@@ -189,6 +189,11 @@ void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
         return;
     }
 
+    if (CurrentWeapon != nullptr)
+    {
+        CurrentWeapon->OnEquipFinished();
+    }
+
     bIsEquipInProgress = false;
 }
 
@@ -199,6 +204,11 @@ void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
         return;
     }
 
+    if (CurrentWeapon != nullptr)
+    {
+        CurrentWeapon->Reload();
+    }
+    
     bIsReloadInProgress = false;
 }
 
@@ -206,6 +216,9 @@ void USTUWeaponComponent::HandlePreviousWeapon()
 {
     if (PreviousWeaponIndex != -1)
     {
+        // Reset the reloading state
+        bIsReloadInProgress = false;
+
         // Hide the previous weapon
         ASTUWeapon* PreviousWeapon = Weapons[PreviousWeaponIndex];
         if (PreviousWeapon != nullptr)
@@ -255,7 +268,7 @@ bool USTUWeaponComponent::CanFire() const
 
 bool USTUWeaponComponent::CanEquip() const
 {
-    return !bIsEquipInProgress && !bIsReloadInProgress;
+    return !bIsEquipInProgress;
 }
 
 bool USTUWeaponComponent::CanReload() const
@@ -278,7 +291,6 @@ void USTUWeaponComponent::TryReload(ASTUWeapon* EmptyWeapon)
                 StopFire();
                 bIsReloadInProgress = true;
                 PlayAnimMontage(CurrentReloadAnimation);
-                CurrentWeapon->Reload();
             }
         }
     }

@@ -69,6 +69,7 @@ public:
     FWeaponImageData& GetWeaponImageData() { return WeaponImageData; }
 
     bool AddAmmo(int32 ClipsAmount);
+    void OnEquipFinished();
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")

@@ -131,8 +131,16 @@ bool ASTUWeapon::AddAmmo(int32 ClipsAmount)
     {
         CurrentAmmo.Clips = FMath::Clamp(CurrentAmmo.Clips + ClipsAmount, 0, DefaultAmmo.Clips);
     }
-    
+
     return true;
+}
+
+void ASTUWeapon::OnEquipFinished()
+{
+    if (IsClipEmpty())
+    {
+        OnClipEmpty.Broadcast(this);
+    }
 }
 
 void ASTUWeapon::Reload()
