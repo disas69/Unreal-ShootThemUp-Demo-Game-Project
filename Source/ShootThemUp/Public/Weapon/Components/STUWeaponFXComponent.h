@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Weapon/STUWeapon.h"
 #include "STUWeaponFXComponent.generated.h"
 
+class UNiagaraComponent;
 class UNiagaraSystem;
 
 USTRUCT(BlueprintType)
@@ -46,6 +48,10 @@ class SHOOTTHEMUP_API USTUWeaponFXComponent : public UActorComponent
 public:
     USTUWeaponFXComponent();
 
+    void Initialize(USkeletalMeshComponent* Mesh, FName SocketName);
+    void PlayFireFX();
+    void StopFireFX();
+    void PlayTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
     void PlayImpactFX(const FHitResult& Hit);
 
 protected:
@@ -54,4 +60,25 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     TMap<UPhysicalMaterial*, FImpactData> ImpactEffectsData;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+    UNiagaraSystem* MuzzleFX = nullptr;
+
+    UPROPERTY(EditAnywhere, Category = "VFX")
+    UNiagaraSystem* TraceFX = nullptr;
+
+    UPROPERTY(EditAnywhere, Category = "VFX")
+    FString TraceTargetName = "TraceTarget";
+
+private:
+    UPROPERTY()
+    USkeletalMeshComponent* WeaponMesh = nullptr;
+    
+    FName MuzzleSocketName = "";
+
+    UPROPERTY()
+    UNiagaraComponent* MuzzleFXComponent = nullptr;
+    
+    UNiagaraComponent* SpawnMuzzleFX(USkeletalMeshComponent* Mesh, const FName& SocketName) const;
+    void SetMuzzleFXActive(bool IsActive);
 };

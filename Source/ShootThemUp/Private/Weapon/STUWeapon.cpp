@@ -3,10 +3,9 @@
 #include "Weapon/STUWeapon.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
-#include "NiagaraComponent.h"
-#include "NiagaraFunctionLibrary.h"
 #include "Engine/DamageEvents.h"
 #include "GameFramework/Character.h"
+#include "Weapon/Components/STUWeaponFXComponent.h"
 
 ASTUWeapon::ASTUWeapon()
 {
@@ -14,18 +13,29 @@ ASTUWeapon::ASTUWeapon()
 
     WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
     SetRootComponent(WeaponMesh);
+
+    WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFX");
 }
 
 void ASTUWeapon::BeginPlay()
 {
     Super::BeginPlay();
+    
     Character = Cast<ACharacter>(GetOwner());
     CurrentAmmo = DefaultAmmo;
+
+    WeaponFXComponent->Initialize(WeaponMesh, MuzzleSocketName);
 }
 
-void ASTUWeapon::StartFire() {}
+void ASTUWeapon::StartFire()
+{
+    WeaponFXComponent->PlayFireFX();
+}
 
-void ASTUWeapon::StopFire() {}
+void ASTUWeapon::StopFire()
+{
+    WeaponFXComponent->StopFireFX();
+}
 
 void ASTUWeapon::FireInternal() {}
 
@@ -148,9 +158,4 @@ APlayerController* ASTUWeapon::GetPlayerController()
     }
 
     return Controller;
-}
-
-UNiagaraComponent* ASTUWeapon::SpawnMuzzleFX() const
-{
-    return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX, WeaponMesh, MuzzleSocketName, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget, true);
 }
