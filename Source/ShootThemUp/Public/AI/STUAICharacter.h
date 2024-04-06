@@ -19,6 +19,8 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     UBehaviorTree* BehaviorTree = nullptr;
 
+    virtual void Tick(float DeltaTime) override;
+
 protected:
     virtual void BeginPlay() override;
 };

@@ -19,6 +19,11 @@ ASTUAICharacter::ASTUAICharacter(const FObjectInitializer& ObjectInitializer) : 
     }
 }
 
+void ASTUAICharacter::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+}
+
 void ASTUAICharacter::BeginPlay()
 {
     Super::BeginPlay();
