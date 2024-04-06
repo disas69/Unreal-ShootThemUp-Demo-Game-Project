@@ -21,6 +21,12 @@ public:
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTUAIPerceptionComponent* STUAIPerceptionComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+    FName EnemyActorKey = "EnemyActor";
     
     virtual void OnPossess(APawn* InPawn) override;
+
+private:
+    AActor* GetClosestEnemy() const;
 };

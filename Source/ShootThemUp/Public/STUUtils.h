@@ -6,13 +6,13 @@ class FSTUUtils
 {
 public:
     template <typename T>
-    static T* GetPlayerComponent(APawn* PlayerPawn)
+    static T* GetPlayerComponent(AActor* PlayerActor)
     {
-        if (!PlayerPawn)
+        if (!PlayerActor)
         {
             return nullptr;
         }
 
-        return PlayerPawn->FindComponentByClass<T>();
+        return PlayerActor->FindComponentByClass<T>();
     }
 };
