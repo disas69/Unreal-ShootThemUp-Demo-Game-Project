@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "STUWeapon.generated.h"
 
+class ASTUBaseCharacter;
 class USTUWeaponFXComponent;
 class UNiagaraComponent;
 class UNiagaraSystem;
@@ -110,12 +111,13 @@ protected:
 
 private:
     UPROPERTY()
-    ACharacter* Character = nullptr;
+    ASTUBaseCharacter* Character = nullptr;
 
     UPROPERTY()
-    APlayerController* Controller = nullptr;
+    AController* Controller = nullptr;
 
     FAmmoData CurrentAmmo;
 
-    APlayerController* GetPlayerController();
+    void GetPlayerViewPoint(FVector& Location, FRotator& Rotation);
+    AController* GetPlayerController();
 };

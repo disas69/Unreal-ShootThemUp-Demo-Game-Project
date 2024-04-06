@@ -22,7 +22,6 @@ void USTUFindEnemyService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* No
         if (BlackboardComponent != nullptr && PerceptionComponent != nullptr)
         {
             BlackboardComponent->SetValueAsObject(EnemyActorKey.SelectedKeyName, PerceptionComponent->GetClosestEnemy());
-            UE_LOG(LogTemp, Warning, TEXT("Enemy found"));
         }
     }
     

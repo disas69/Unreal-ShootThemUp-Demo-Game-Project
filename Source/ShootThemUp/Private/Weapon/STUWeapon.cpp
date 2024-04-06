@@ -4,7 +4,7 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/DamageEvents.h"
-#include "GameFramework/Character.h"
+#include "Player/STUBaseCharacter.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
 
 ASTUWeapon::ASTUWeapon()
@@ -21,7 +21,7 @@ void ASTUWeapon::BeginPlay()
 {
     Super::BeginPlay();
     
-    Character = Cast<ACharacter>(GetOwner());
+    Character = Cast<ASTUBaseCharacter>(GetOwner());
     CurrentAmmo = DefaultAmmo;
 
     WeaponFXComponent->Initialize(WeaponMesh, MuzzleSocketName);
@@ -43,7 +43,7 @@ void ASTUWeapon::TraceWeapon(const FVector& SocketLocation, FHitResult& HitResul
 {
     FVector ViewLocation;
     FRotator ViewDirection;
-    GetPlayerController()->GetPlayerViewPoint(ViewLocation, ViewDirection);
+    GetPlayerViewPoint(ViewLocation, ViewDirection);
 
     // Trace from the crosshair to the target location
     const FVector StartLocation = ViewLocation;
@@ -158,11 +158,25 @@ bool ASTUWeapon::IsFullAmmo() const
     return CurrentAmmo.Bullets == DefaultAmmo.Bullets;
 }
 
-APlayerController* ASTUWeapon::GetPlayerController()
+void ASTUWeapon::GetPlayerViewPoint(FVector& Location, FRotator& Rotation)
+{
+    if (Character->IsPlayerControlled())
+    {
+        GetPlayerController()->GetPlayerViewPoint(Location, Rotation);
+    }
+    else
+    {
+        const FTransform MuzzleTransform = GetMuzzleSocketTransform();
+        Location = MuzzleTransform.GetLocation();
+        Rotation = MuzzleTransform.GetRotation().Rotator();
+    }
+}
+
+AController* ASTUWeapon::GetPlayerController()
 {
     if (Controller == nullptr)
     {
-        Controller = Character->GetController<APlayerController>();
+        Controller = Character->GetController();
     }
 
     return Controller;
