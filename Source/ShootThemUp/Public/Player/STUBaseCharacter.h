@@ -92,6 +92,7 @@ private:
 
     UFUNCTION()
     void OnDeath();
+    void EnableRagdollPhysics();
 
     void PlayCameraShake(TSubclassOf<UCameraShakeBase> CameraShake);
 };

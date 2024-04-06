@@ -191,8 +191,14 @@ void ASTUBaseCharacter::OnDeath()
         Controller->ChangeState(NAME_Spectating);
     }
 
-    // PlayAnimMontage(DeathAnimation);
+    PlayAnimMontage(DeathAnimation);
 
+    FTimerHandle DeathTimerHandle;
+    GetWorldTimerManager().SetTimer(DeathTimerHandle, this, &ASTUBaseCharacter::EnableRagdollPhysics, DeathAnimation->GetPlayLength() * FMath::RandRange(0.0f, 0.5f), false);
+}
+
+void ASTUBaseCharacter::EnableRagdollPhysics()
+{
     USkeletalMeshComponent* CharacterMesh = GetMesh();
     if (CharacterMesh != nullptr)
     {
