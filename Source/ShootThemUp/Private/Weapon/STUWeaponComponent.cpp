@@ -165,6 +165,12 @@ void USTUWeaponComponent::EquipWeapon(int32 NewWeaponIndex)
         NewWeaponIndex = 0;
     }
 
+    if (CurrentWeaponIndex == NewWeaponIndex)
+    {
+        bIsEquipInProgress = false;
+        return;
+    }
+
     HandlePreviousWeapon();
     CurrentWeaponIndex = NewWeaponIndex;
 
@@ -180,6 +186,22 @@ void USTUWeaponComponent::EquipWeapon(int32 NewWeaponIndex)
     PlayAnimMontage(EquipAnimMontage);
 
     UE_LOG(LogTemp, Display, TEXT("Equipped weapon: %s"), *CurrentWeapon->GetName());
+}
+
+int32 USTUWeaponComponent::GetNonEmptyWeaponIndex() const
+{
+    int32 Index = 0;
+    for (const ASTUWeapon* Weapon : Weapons)
+    {
+        if (Weapon != nullptr && !Weapon->IsAmmoEmpty())
+        {
+            return Index;
+        }
+
+        Index++;
+    }
+
+    return Index;
 }
 
 void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)

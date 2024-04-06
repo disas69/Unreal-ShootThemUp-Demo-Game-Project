@@ -35,16 +35,14 @@ AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
     {
         APawn* PerceivedPawn = Cast<APawn>(PerceivedActor);
         const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(PerceivedPawn);
-        if (HealthComponent == nullptr || !HealthComponent->IsAlive())
+        if (HealthComponent != nullptr && HealthComponent->IsAlive())
         {
-            continue;
-        }
-
-        const float CurrentDistance = (PerceivedPawn->GetActorLocation() - ControlledPawn->GetActorLocation()).Size();
-        if (CurrentDistance < ClosestDistance)
-        {
-            ClosestDistance = CurrentDistance;
-            ClosestEnemy = PerceivedPawn;
+            const float CurrentDistance = (PerceivedPawn->GetActorLocation() - ControlledPawn->GetActorLocation()).Size();
+            if (CurrentDistance < ClosestDistance)
+            {
+                ClosestDistance = CurrentDistance;
+                ClosestEnemy = PerceivedPawn;
+            }
         }
     }
 

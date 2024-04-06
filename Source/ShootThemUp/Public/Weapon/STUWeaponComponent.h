@@ -45,21 +45,20 @@ public:
     UAnimMontage* EquipAnimMontage = nullptr;
 
     void Initialize();
-    void SwitchWeapon(const FInputActionValue& Value);
-
-    UFUNCTION()
-    void StartFire();
-
-    UFUNCTION()
-    void StopFire();
     
     UFUNCTION()
     void Reload();
 
-    bool IsFireInProgress() const { return bIsFireInProgress; }
+    UFUNCTION()
+    void SwitchWeapon(const FInputActionValue& Value);
+
     ASTUWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
+    bool IsFireInProgress() const { return bIsFireInProgress; }
+    
     bool AddAmmo(TSubclassOf<ASTUWeapon> WeaponType, int32 ClipsAmount);
 
+    virtual void StartFire();
+    virtual void StopFire();
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 protected:
@@ -77,6 +76,12 @@ protected:
     
     virtual void BeginPlay() override;
 
+    bool CanFire() const;
+    bool CanEquip() const;
+    bool CanReload() const;
+    void EquipWeapon(int32 WeaponIndex);
+    int32 GetNonEmptyWeaponIndex() const;
+
 private:
     int32 CurrentWeaponIndex = -1;
     int32 PreviousWeaponIndex = -1;
@@ -88,12 +93,8 @@ private:
     void InitAnimations();
     void OnEquipFinished(USkeletalMeshComponent* MeshComp);
     void OnReloadFinished(USkeletalMeshComponent* MeshComp);
-    void EquipWeapon(int32 WeaponIndex);
     void HandlePreviousWeapon();
     void AttachWeaponToSocket(ASTUWeapon* Weapon, const FName& SocketName) const;
     void PlayAnimMontage(UAnimMontage* AnimMontage) const;
-    bool CanFire() const;
-    bool CanEquip() const;
-    bool CanReload() const;
     void TryReload(ASTUWeapon* EmptyWeapon);
 };
