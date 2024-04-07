@@ -1,16 +1,16 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
-#include "AI/Decorators/SUTHealthAmountDecorator.h"
+#include "AI/Decorators/STUHealthAmountDecorator.h"
 #include "STUUtils.h"
 #include "AIController.h"
 #include "Components/STUHealthComponent.h"
 
-USUTHealthAmountDecorator::USUTHealthAmountDecorator()
+USTUHealthAmountDecorator::USTUHealthAmountDecorator()
 {
     NodeName = "Health Amount";
 }
 
-bool USUTHealthAmountDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
+bool USTUHealthAmountDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
 {
     const AAIController* Controller = OwnerComp.GetAIOwner();
     if (Controller != nullptr)
@@ -18,7 +18,7 @@ bool USUTHealthAmountDecorator::CalculateRawConditionValue(UBehaviorTreeComponen
         const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(Controller->GetPawn());
         if (HealthComponent != nullptr || !HealthComponent->IsAlive())
         {
-            return HealthComponent->GetHealthPercent() <= AllowedHealthPercent;
+            return HealthComponent->GetHealthPercent() < AllowedHealthPercent;
         }
     }
     

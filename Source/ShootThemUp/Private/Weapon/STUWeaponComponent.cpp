@@ -81,16 +81,27 @@ void USTUWeaponComponent::Reload()
     }
 }
 
-bool USTUWeaponComponent::AddAmmo(TSubclassOf<ASTUWeapon> WeaponType, int32 ClipsAmount)
+ASTUWeapon* USTUWeaponComponent::GetWeaponByType(TSubclassOf<ASTUWeapon> WeaponType) const
 {
     for (ASTUWeapon* Weapon : Weapons)
     {
         if (Weapon != nullptr && Weapon->IsA(WeaponType))
         {
-            return Weapon->AddAmmo(ClipsAmount);
+            return Weapon;
         }
     }
 
+    return nullptr;
+}
+
+bool USTUWeaponComponent::AddAmmo(TSubclassOf<ASTUWeapon> WeaponType, int32 ClipsAmount)
+{
+    ASTUWeapon* Weapon = GetWeaponByType(WeaponType);
+    if (Weapon != nullptr)
+    {
+        return Weapon->AddAmmo(ClipsAmount);
+    }
+    
     return false;
 }
 

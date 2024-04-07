@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTDecorator.h"
-#include "SUTHealthAmountDecorator.generated.h"
+#include "STUHealthAmountDecorator.generated.h"
 
 UCLASS()
-class SHOOTTHEMUP_API USUTHealthAmountDecorator : public UBTDecorator
+class SHOOTTHEMUP_API USTUHealthAmountDecorator : public UBTDecorator
 {
     GENERATED_BODY()
 
 public:
-    USUTHealthAmountDecorator();
+    USTUHealthAmountDecorator();
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (ClampMin = 0.0, ClampMax = 1.0))
     float AllowedHealthPercent = 0.6f;

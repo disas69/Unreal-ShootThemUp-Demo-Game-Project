@@ -52,10 +52,11 @@ public:
     UFUNCTION()
     void SwitchWeapon(const FInputActionValue& Value);
 
+    bool IsFireInProgress() const { return bIsFireInProgress; }
     int32 GetCurrentWeaponIndex() const { return CurrentWeaponIndex; }
     ASTUWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
-    bool IsFireInProgress() const { return bIsFireInProgress; }
-    
+    ASTUWeapon* GetWeaponByType(TSubclassOf<ASTUWeapon> WeaponType) const;
+
     bool AddAmmo(TSubclassOf<ASTUWeapon> WeaponType, int32 ClipsAmount);
 
     virtual void StartFire();
