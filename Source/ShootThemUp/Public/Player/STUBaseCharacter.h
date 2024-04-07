@@ -37,6 +37,9 @@ public:
     float GetMovementDirectionAngle() const;
 
 protected:
+    UFUNCTION()
+    virtual void OnDeath();
+    
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USpringArmComponent* SpringArm = nullptr;
 
@@ -81,18 +84,15 @@ private:
     UFUNCTION()
     void Look(const FInputActionValue& Value);
 
+    UFUNCTION()
+    void OnHealthChanged(float NewHealth, float HealthDelta);
+
     void StartSprint();
     void StopSprint();
 
     void StartFire();
     void StopFire();
-
-    UFUNCTION()
-    void OnHealthChanged(float NewHealth, float HealthDelta);
-
-    UFUNCTION()
-    void OnDeath();
+    
     void EnableRagdollPhysics();
-
     void PlayCameraShake(TSubclassOf<UCameraShakeBase> CameraShake);
 };

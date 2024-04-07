@@ -2,6 +2,7 @@
 
 #include "AI/STUAICharacter.h"
 #include "AI/STUAIController.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Weapon/STUAIWeaponComponent.h"
 
@@ -29,4 +30,15 @@ void ASTUAICharacter::Tick(float DeltaTime)
 void ASTUAICharacter::BeginPlay()
 {
     Super::BeginPlay();
+}
+
+void ASTUAICharacter::OnDeath()
+{
+    Super::OnDeath();
+
+    const AAIController* AIController = Cast<AAIController>(GetController());
+    if (AIController != nullptr && AIController->BrainComponent != nullptr)
+    {
+        AIController->BrainComponent->Cleanup();
+    }
 }
