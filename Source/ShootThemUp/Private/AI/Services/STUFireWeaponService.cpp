@@ -13,7 +13,7 @@ USTUFireWeaponService::USTUFireWeaponService()
 
 void USTUFireWeaponService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
-    AAIController* Controller = OwnerComp.GetAIOwner();
+    const AAIController* Controller = OwnerComp.GetAIOwner();
     if (Controller != nullptr)
     {
         const UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();

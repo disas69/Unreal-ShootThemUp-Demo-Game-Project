@@ -12,9 +12,9 @@ class SHOOTTHEMUP_API USTUAIWeaponComponent : public USTUWeaponComponent
     GENERATED_BODY()
 
 public:
+    void TryEquipNextWeapon();
+    void TryEquipNonEmptyWeapon();
+    
     virtual void StartFire() override;
     virtual void StopFire() override;
-
-private:
-    void TrySwitchEmptyWeapon();
 };

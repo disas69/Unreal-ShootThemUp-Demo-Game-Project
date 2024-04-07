@@ -52,6 +52,7 @@ public:
     UFUNCTION()
     void SwitchWeapon(const FInputActionValue& Value);
 
+    int32 GetCurrentWeaponIndex() const { return CurrentWeaponIndex; }
     ASTUWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
     bool IsFireInProgress() const { return bIsFireInProgress; }
     
