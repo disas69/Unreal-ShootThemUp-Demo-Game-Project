@@ -182,7 +182,7 @@ void ASTUBaseCharacter::OnDeath()
 {
     DisableInput(nullptr);
 
-    WeaponComponent->StopFire();
+    StopFire();
     GetCharacterMovement()->DisableMovement();
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
