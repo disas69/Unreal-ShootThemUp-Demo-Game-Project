@@ -28,6 +28,8 @@ public:
     UPROPERTY(EditAnywhere, Category = "Pickup")
     float FloatingSpeed = 10.0f;
 
+    bool IsAvailable() const { return bIsAvailable; }
+
     virtual void Tick(float DeltaTime) override;
     virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
@@ -36,8 +38,9 @@ protected:
     virtual bool TryCollectPickup(APawn* CollectorPawn);
 
 private:
+    bool bIsAvailable = true;
     FVector InitialLocation = FVector::ZeroVector;
     
     void Collect();
-    void Respawn() const;
+    void Respawn();
 };

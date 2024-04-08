@@ -47,6 +47,7 @@ bool ASTUPickup::TryCollectPickup(APawn* CollectorPawn)
 
 void ASTUPickup::Collect()
 {
+    bIsAvailable = false;
     GetRootComponent()->SetVisibility(false, true);
     SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
@@ -54,8 +55,9 @@ void ASTUPickup::Collect()
     GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASTUPickup::Respawn, RespawnTime, false);
 }
 
-void ASTUPickup::Respawn() const
+void ASTUPickup::Respawn()
 {
+    bIsAvailable = true;
     GetRootComponent()->SetVisibility(true, true);
     SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 }
