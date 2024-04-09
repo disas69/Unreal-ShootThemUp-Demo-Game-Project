@@ -17,6 +17,9 @@ void ASTUGameModeBase::StartPlay()
 {
     Super::StartPlay();
     SpawnPlayers();
+
+    CurrentRound = 1;
+    StartRound();
 }
 
 UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
@@ -41,4 +44,49 @@ void ASTUGameModeBase::SpawnPlayers()
         AAIController* AIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass, SpawnInfo);
         RestartPlayer(AIController);
     }
+}
+
+void ASTUGameModeBase::StartRound()
+{
+    RoundCountDown = GameData.RoundTime;
+    GetWorldTimerManager().SetTimer(GameRoundTimerHandle, this, &ASTUGameModeBase::UpdateRoundTimer, 1.0f, true);
+}
+
+void ASTUGameModeBase::UpdateRoundTimer()
+{
+    RoundCountDown -= GetWorldTimerManager().GetTimerRate(GameRoundTimerHandle);
+
+    if (RoundCountDown <= 0.0f)
+    {
+        GetWorldTimerManager().ClearTimer(GameRoundTimerHandle);
+
+        if (CurrentRound + 1 <= GameData.RoundsNum)
+        {
+            CurrentRound++;
+            StartRound();
+            ResetAllPlayers();
+        }
+        else
+        {
+            // Game over
+        }
+    }
+}
+
+void ASTUGameModeBase::ResetAllPlayers()
+{
+    for (FConstControllerIterator It = GetWorld()->GetControllerIterator(); It; ++It)
+    {
+        ResetPlayer(It->Get());
+    }
+}
+
+void ASTUGameModeBase::ResetPlayer(AController* Controller)
+{
+    if (Controller != nullptr && Controller->GetPawn() != nullptr)
+    {
+        Controller->GetPawn()->Reset();
+    }
+    
+    RestartPlayer(Controller);
 }

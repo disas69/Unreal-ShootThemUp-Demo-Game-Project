@@ -15,6 +15,12 @@ struct FGameData
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game")
     int32 PlayersNum = 2;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game")
+    int32 RoundsNum = 4;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game")
+    float RoundTime = 60;
 };
 
 UCLASS()
@@ -39,5 +45,13 @@ protected:
     FGameData GameData;
 
 private:
+    int32 CurrentRound = 1;
+    float RoundCountDown = 0.0f;
+    FTimerHandle GameRoundTimerHandle;
+    
     void SpawnPlayers();
+    void StartRound();
+    void UpdateRoundTimer();
+    void ResetAllPlayers();
+    void ResetPlayer(AController* Controller);
 };
