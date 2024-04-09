@@ -1,6 +1,7 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Components/STUHealthComponent.h"
+#include "Perception/AISenseEvent_Damage.h"
 
 USTUHealthComponent::USTUHealthComponent()
 {
@@ -56,6 +57,8 @@ void USTUHealthComponent::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, 
     {
         OnDeath.Broadcast();
     }
+
+    ReportDamageEvent(DamagedActor, InstigatedBy, Damage);
 }
 
 void USTUHealthComponent::HealUpdate()
@@ -74,5 +77,15 @@ void USTUHealthComponent::SetHealth(const float NewHealth)
     const float PreviousHealth = Health;
     Health = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
     OnHealthChanged.Broadcast(Health, Health - PreviousHealth);
+}
+
+void USTUHealthComponent::ReportDamageEvent(AActor* DamagedActor, const AController* Instigator, float DamageAmount) const
+{
+    if (Instigator == nullptr || Instigator->GetPawn() == nullptr)
+    {
+        return;
+    }
+    
+    UAISense_Damage::ReportDamageEvent(GetWorld(), DamagedActor, Instigator->GetPawn(), DamageAmount, Instigator->GetPawn()->GetActorLocation(), DamagedActor->GetActorLocation());
 }
 

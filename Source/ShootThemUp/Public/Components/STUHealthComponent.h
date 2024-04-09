@@ -59,4 +59,5 @@ private:
     void HealUpdate();
 
     void SetHealth(const float NewHealth);
+    void ReportDamageEvent(AActor* DamagedActor, const AController* Instigator, float DamageAmount) const;
 };
