@@ -34,6 +34,11 @@ AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
     for (AActor* PerceivedActor : PerceivedActors)
     {
         APawn* PerceivedPawn = Cast<APawn>(PerceivedActor);
+        if (PerceivedPawn == nullptr || !FSTUUtils::IsEnemy(Controller, PerceivedPawn->GetController()))
+        {
+            continue;
+        }
+
         const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(PerceivedPawn);
         if (HealthComponent != nullptr && HealthComponent->IsAlive())
         {
