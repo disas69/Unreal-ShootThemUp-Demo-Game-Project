@@ -14,13 +14,19 @@ struct FGameData
     GENERATED_USTRUCT_BODY()
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game")
-    int32 PlayersNum = 2;
+    int32 PlayersNum = 4;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game")
     int32 RoundsNum = 4;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game")
     float RoundTime = 60;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teams")
+    FLinearColor DefaultTeamColor = FLinearColor::Red;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teams")
+    TArray<FLinearColor> TeamsColors = {FLinearColor::Red, FLinearColor::Blue};
 };
 
 UCLASS()
@@ -54,4 +60,8 @@ private:
     void UpdateRoundTimer();
     void ResetAllPlayers();
     void ResetPlayer(AController* Controller);
+
+    void CreateTeams();
+    FLinearColor GetTeamColor(int32 TeamID) const;
+    void SetPlayerColor(AController* Controller);
 };

@@ -115,6 +115,19 @@ float ASTUBaseCharacter::GetMovementDirectionAngle() const
     return FMath::RadiansToDegrees(Angle) * Direction;
 }
 
+void ASTUBaseCharacter::SetPlayerColor(FLinearColor TeamColor) const
+{
+    USkeletalMeshComponent* CharacterMesh = GetMesh();
+    if (CharacterMesh != nullptr)
+    {
+        UMaterialInstanceDynamic* MaterialInstance = CharacterMesh->CreateAndSetMaterialInstanceDynamic(0);
+        if (MaterialInstance != nullptr)
+        {
+            MaterialInstance->SetVectorParameterValue(ColorParameterName, TeamColor);
+        }
+    }
+}
+
 void ASTUBaseCharacter::Move(const FInputActionValue& Value)
 {
     const FVector2D MovementVector = Value.Get<FVector2D>();

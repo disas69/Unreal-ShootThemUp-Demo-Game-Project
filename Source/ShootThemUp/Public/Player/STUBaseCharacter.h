@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "STUPlayerState.h"
 #include "GameFramework/Character.h"
 #include "STUBaseCharacter.generated.h"
 
@@ -35,6 +36,8 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Movement")
     float GetMovementDirectionAngle() const;
+
+    void SetPlayerColor(FLinearColor TeamColor) const;
 
 protected:
     UFUNCTION()
@@ -69,6 +72,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
     TSubclassOf<UCameraShakeBase> DamageCameraShake;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
+    FName ColorParameterName = "Paint Color";
     
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
