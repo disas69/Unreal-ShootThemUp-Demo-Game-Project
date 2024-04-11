@@ -43,8 +43,5 @@ private:
     float DamageAmount = 0.0f;
     float DamageRadius = 0.0f;
 
-    UPROPERTY()
-    APlayerController* Controller = nullptr;
-
-    APlayerController* GetPlayerController();
+    AController* GetOwnerController() const;
 };

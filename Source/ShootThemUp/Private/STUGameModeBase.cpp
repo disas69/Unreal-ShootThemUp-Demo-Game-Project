@@ -7,6 +7,8 @@
 #include "Player/STUPlayerState.h"
 #include "UI/STUGameHUD.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
+
 ASTUGameModeBase::ASTUGameModeBase()
 {
     DefaultPawnClass = ASTUBaseCharacter::StaticClass();
@@ -36,6 +38,21 @@ UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AContr
     return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
+void ASTUGameModeBase::OnPlayerKilled(const AController* PlayerKilled, const AController* PlayerKiller)
+{
+    ASTUPlayerState* KilledPlayerState = PlayerKilled != nullptr ? Cast<ASTUPlayerState>(PlayerKilled->PlayerState) : nullptr;
+    if (KilledPlayerState != nullptr)
+    {
+        KilledPlayerState->AddDeath();
+    }
+
+    ASTUPlayerState* KillerPlayerState = PlayerKiller != nullptr ? Cast<ASTUPlayerState>(PlayerKiller->PlayerState) : nullptr;
+    if (KillerPlayerState != nullptr)
+    {
+        KillerPlayerState->AddKill();
+    }
+}
+
 void ASTUGameModeBase::SpawnPlayers()
 {
     const int32 PlayersNum = FMath::Max(0, GameData.PlayersNum - 1);
@@ -54,6 +71,7 @@ void ASTUGameModeBase::StartRound()
 {
     RoundCountDown = GameData.RoundTime;
     GetWorldTimerManager().SetTimer(GameRoundTimerHandle, this, &ASTUGameModeBase::UpdateRoundTimer, 1.0f, true);
+    LogPlayerStates();
 }
 
 void ASTUGameModeBase::UpdateRoundTimer()
@@ -73,6 +91,8 @@ void ASTUGameModeBase::UpdateRoundTimer()
         else
         {
             // Game over
+            UE_LOG(LogSTUGameModeBase, Display, TEXT("Game over!"));
+            LogPlayerStates();
         }
     }
 }
@@ -122,20 +142,32 @@ FLinearColor ASTUGameModeBase::GetTeamColor(int32 TeamID) const
     return Result;
 }
 
-void ASTUGameModeBase::SetPlayerColor(AController* Controller)
+void ASTUGameModeBase::SetPlayerColor(const AController* Controller)
 {
     if (Controller == nullptr)
     {
         return;
     }
 
-    ASTUBaseCharacter* Character = Cast<ASTUBaseCharacter>(Controller->GetPawn());
+    const ASTUBaseCharacter* Character = Cast<ASTUBaseCharacter>(Controller->GetPawn());
     if (Character != nullptr)
     {
         const ASTUPlayerState* PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
         if (PlayerState != nullptr)
         {
             Character->SetPlayerColor(PlayerState->GetTeamColor());
+        }
+    }
+}
+
+void ASTUGameModeBase::LogPlayerStates() const
+{
+    for (FConstControllerIterator It = GetWorld()->GetControllerIterator(); It; ++It)
+    {
+        const ASTUPlayerState* PlayerState = Cast<ASTUPlayerState>(It->Get()->PlayerState);
+        if (PlayerState != nullptr)
+        {
+            PlayerState->PrintStateLog();
         }
     }
 }

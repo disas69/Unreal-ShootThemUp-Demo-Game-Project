@@ -195,8 +195,6 @@ void USTUWeaponComponent::EquipWeapon(int32 NewWeaponIndex)
     }
 
     PlayAnimMontage(EquipAnimMontage);
-
-    UE_LOG(LogTemp, Display, TEXT("Equipped weapon: %s"), *CurrentWeapon->GetName());
 }
 
 int32 USTUWeaponComponent::GetNonEmptyWeaponIndex() const

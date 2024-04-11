@@ -1,6 +1,8 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Components/STUHealthComponent.h"
+
+#include "STUGameModeBase.h"
 #include "Perception/AISenseEvent_Damage.h"
 
 USTUHealthComponent::USTUHealthComponent()
@@ -55,7 +57,7 @@ void USTUHealthComponent::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, 
     }
     else
     {
-        OnDeath.Broadcast();
+        ReportDeathEvent(DamagedActor->GetInstigatorController(), InstigatedBy);
     }
 
     ReportDamageEvent(DamagedActor, InstigatedBy, Damage);
@@ -85,7 +87,18 @@ void USTUHealthComponent::ReportDamageEvent(AActor* DamagedActor, const AControl
     {
         return;
     }
-    
-    UAISense_Damage::ReportDamageEvent(GetWorld(), DamagedActor, Instigator->GetPawn(), DamageAmount, Instigator->GetPawn()->GetActorLocation(), DamagedActor->GetActorLocation());
+
+    UAISense_Damage::ReportDamageEvent(
+        GetWorld(), DamagedActor, Instigator->GetPawn(), DamageAmount, Instigator->GetPawn()->GetActorLocation(), DamagedActor->GetActorLocation());
 }
 
+void USTUHealthComponent::ReportDeathEvent(const AController* Killed, const AController* Killer) const
+{
+    ASTUGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASTUGameModeBase>();
+    if (GameMode != nullptr)
+    {
+        GameMode->OnPlayerKilled(Killed, Killer);
+    }
+
+    OnDeath.Broadcast();
+}

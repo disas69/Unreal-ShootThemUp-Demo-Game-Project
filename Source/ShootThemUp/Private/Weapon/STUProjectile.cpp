@@ -40,7 +40,7 @@ void ASTUProjectile::Launch(const FVector& LaunchDirection, float Damage, float 
 void ASTUProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
     MovementComponent->StopMovementImmediately();
-    UGameplayStatics::ApplyRadialDamage(GetWorld(), DamageAmount, GetActorLocation(), DamageRadius, nullptr, TArray<AActor*>(), this, nullptr, false);
+    UGameplayStatics::ApplyRadialDamage(GetWorld(), DamageAmount, GetActorLocation(), DamageRadius, nullptr, TArray<AActor*>(), this, GetOwnerController(), false);
 
     // DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 2.0f, 0, 2.0f);
     WeaponFXComponent->PlayImpactFX(Hit);
@@ -53,12 +53,13 @@ void ASTUProjectile::BeginPlay()
     SphereComponent->OnComponentHit.AddDynamic(this, &ASTUProjectile::OnProjectileHit);
 }
 
-APlayerController* ASTUProjectile::GetPlayerController()
+AController* ASTUProjectile::GetOwnerController() const
 {
-    if (Controller == nullptr)
+    const APawn* Pawn = Cast<APawn>(GetOwner());
+    if (Pawn != nullptr)
     {
-        Controller = Cast<APawn>(GetOwner())->GetController<APlayerController>();
+        return Pawn->GetController();
     }
 
-    return Controller;
+    return nullptr;
 }
