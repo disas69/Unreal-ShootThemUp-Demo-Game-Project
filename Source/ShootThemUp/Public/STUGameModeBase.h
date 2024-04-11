@@ -42,6 +42,10 @@ public:
 
     void OnPlayerKilled(const AController* PlayerKilled, const AController* PlayerKiller);
 
+    int32 GetCurrentRoundNum() const { return CurrentRound; }
+    int32 GetTotalRoundsNum() const { return GameData.RoundsNum; }
+    float GetRoundCountdown() const { return RoundCountDown; }
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     TSubclassOf<AAIController> AIControllerClass;
