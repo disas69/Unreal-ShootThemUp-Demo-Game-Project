@@ -77,5 +77,6 @@ private:
     FLinearColor GetTeamColor(int32 TeamID) const;
     void SetPlayerColor(const AController* Controller);
 
+    void GameOver() const;
     void LogPlayerStates() const;
 };

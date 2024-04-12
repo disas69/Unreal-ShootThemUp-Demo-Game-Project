@@ -15,6 +15,8 @@ public:
     USTURespawnComponent();
 
     void Respawn(float RespawnTime);
+    void CancelRespawn();
+    
     float GetRespawnCountdown() const { return RespawnCountdown; }
 
 private:

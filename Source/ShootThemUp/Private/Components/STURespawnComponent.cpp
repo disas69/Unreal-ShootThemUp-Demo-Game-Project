@@ -14,6 +14,15 @@ void USTURespawnComponent::Respawn(float RespawnTime)
     GetWorld()->GetTimerManager().SetTimer(RespawnTimer, this, &USTURespawnComponent::RespawnTimerUpdate, 1.0f, true);
 }
 
+void USTURespawnComponent::CancelRespawn()
+{
+    if (GetWorld()->GetTimerManager().IsTimerActive(RespawnTimer))
+    {
+        GetWorld()->GetTimerManager().ClearTimer(RespawnTimer);
+        RespawnCountdown = 0.0f;
+    }
+}
+
 void USTURespawnComponent::RespawnTimerUpdate()
 {
     RespawnCountdown -= GetWorld()->GetTimerManager().GetTimerRate(RespawnTimer);

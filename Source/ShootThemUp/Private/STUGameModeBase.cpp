@@ -2,6 +2,7 @@
 
 #include "STUGameModeBase.h"
 #include "AIController.h"
+#include "EngineUtils.h"
 #include "STUUtils.h"
 #include "Components/STURespawnComponent.h"
 #include "Player/STUBaseCharacter.h"
@@ -108,9 +109,7 @@ void ASTUGameModeBase::UpdateRoundTimer()
         }
         else
         {
-            // Game over
-            UE_LOG(LogSTUGameModeBase, Display, TEXT("Game over!"));
-            LogPlayerStates();
+            GameOver();
         }
     }
 }
@@ -125,9 +124,18 @@ void ASTUGameModeBase::ResetAllPlayers()
 
 void ASTUGameModeBase::ResetPlayer(AController* Controller)
 {
-    if (Controller != nullptr && Controller->GetPawn() != nullptr)
+    if (Controller != nullptr)
     {
-        Controller->GetPawn()->Reset();
+        USTURespawnComponent* RespawnComponent = FSTUUtils::GetActorComponent<USTURespawnComponent>(Controller);
+        if (RespawnComponent)
+        {
+            RespawnComponent->CancelRespawn();
+        }
+        
+        if ( Controller->GetPawn() != nullptr)
+        {
+            Controller->GetPawn()->Reset();
+        }
     }
 
     RestartPlayer(Controller);
@@ -176,6 +184,22 @@ void ASTUGameModeBase::SetPlayerColor(const AController* Controller)
             Character->SetPlayerColor(PlayerState->GetTeamColor());
         }
     }
+}
+
+void ASTUGameModeBase::GameOver() const
+{
+    for (APawn* Pawn : TActorRange<APawn>(GetWorld()))
+    {
+        if (Pawn == nullptr)
+        {
+            continue;
+        }
+
+        Pawn->TurnOff();
+        Pawn->DisableInput(nullptr);
+    }
+    
+    LogPlayerStates();
 }
 
 void ASTUGameModeBase::LogPlayerStates() const
