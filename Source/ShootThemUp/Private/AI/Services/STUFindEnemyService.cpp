@@ -17,7 +17,7 @@ void USTUFindEnemyService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* No
     if (Controller != nullptr)
     {
         UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
-        const USTUAIPerceptionComponent* PerceptionComponent = FSTUUtils::GetPlayerComponent<USTUAIPerceptionComponent>(Controller);
+        const USTUAIPerceptionComponent* PerceptionComponent = FSTUUtils::GetActorComponent<USTUAIPerceptionComponent>(Controller);
     
         if (BlackboardComponent != nullptr && PerceptionComponent != nullptr)
         {

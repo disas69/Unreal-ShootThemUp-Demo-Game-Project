@@ -17,7 +17,7 @@ void USTUChangeWeaponService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
         const AAIController* Controller = OwnerComp.GetAIOwner();
         if (Controller != nullptr)
         {
-            USTUAIWeaponComponent* WeaponComponent = FSTUUtils::GetPlayerComponent<USTUAIWeaponComponent>(Controller->GetPawn());
+            USTUAIWeaponComponent* WeaponComponent = FSTUUtils::GetActorComponent<USTUAIWeaponComponent>(Controller->GetPawn());
             if (WeaponComponent != nullptr)
             {
                 WeaponComponent->TryEquipNextWeapon();

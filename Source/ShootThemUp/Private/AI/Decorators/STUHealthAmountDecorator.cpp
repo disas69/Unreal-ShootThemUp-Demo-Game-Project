@@ -15,7 +15,7 @@ bool USTUHealthAmountDecorator::CalculateRawConditionValue(UBehaviorTreeComponen
     const AAIController* Controller = OwnerComp.GetAIOwner();
     if (Controller != nullptr)
     {
-        const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(Controller->GetPawn());
+        const USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(Controller->GetPawn());
         if (HealthComponent != nullptr || !HealthComponent->IsAlive())
         {
             return HealthComponent->GetHealthPercent() < AllowedHealthPercent;

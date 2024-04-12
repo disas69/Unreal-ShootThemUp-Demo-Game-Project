@@ -60,5 +60,5 @@ private:
 
     void SetHealth(const float NewHealth);
     void ReportDamageEvent(AActor* DamagedActor, const AController* Instigator, float DamageAmount) const;
-    void ReportDeathEvent(const AController* Killed, const AController* Killer) const;
+    void ReportDeathEvent(AController* Killed, const AController* Killer) const;
 };

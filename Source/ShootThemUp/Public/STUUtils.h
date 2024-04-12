@@ -8,14 +8,14 @@ class FSTUUtils
 {
 public:
     template <typename T>
-    static T* GetPlayerComponent(AActor* PlayerActor)
+    static T* GetActorComponent(AActor* PlayerActor)
     {
-        if (!PlayerActor)
+        if (PlayerActor != nullptr)
         {
-            return nullptr;
+            return PlayerActor->FindComponentByClass<T>();
         }
 
-        return PlayerActor->FindComponentByClass<T>();
+        return nullptr;
     }
 
     static bool IsEnemy(const AController* Controller1, const AController* Controller2)

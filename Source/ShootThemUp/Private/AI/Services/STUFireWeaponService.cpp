@@ -20,7 +20,7 @@ void USTUFireWeaponService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* N
         if (BlackboardComponent != nullptr)
         {
             const bool bHasTarget = BlackboardComponent->GetValueAsObject(EnemyActorKey.SelectedKeyName) != nullptr;
-            USTUWeaponComponent* WeaponComponent = FSTUUtils::GetPlayerComponent<USTUWeaponComponent>(Controller->GetPawn());
+            USTUWeaponComponent* WeaponComponent = FSTUUtils::GetActorComponent<USTUWeaponComponent>(Controller->GetPawn());
 
             if (WeaponComponent != nullptr)
             {

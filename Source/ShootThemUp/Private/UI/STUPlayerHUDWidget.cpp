@@ -8,7 +8,7 @@
 
 bool USTUPlayerHUDWidget::Initialize()
 {
-    USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
+    USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(GetOwningPlayerPawn());
     if (HealthComponent != nullptr)
     {
         HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged);
@@ -19,7 +19,7 @@ bool USTUPlayerHUDWidget::Initialize()
 
 float USTUPlayerHUDWidget::GetHealthPercent() const
 {
-    const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
+    const USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(GetOwningPlayerPawn());
     if (HealthComponent != nullptr)
     {
         return HealthComponent->GetHealthPercent();
@@ -47,7 +47,7 @@ FString USTUPlayerHUDWidget::GetAmmoText() const
 
 ASTUWeapon* USTUPlayerHUDWidget::GetCurrentWeapon() const
 {
-    const USTUWeaponComponent* WeaponComponent = FSTUUtils::GetPlayerComponent<USTUWeaponComponent>(GetOwningPlayerPawn());
+    const USTUWeaponComponent* WeaponComponent = FSTUUtils::GetActorComponent<USTUWeaponComponent>(GetOwningPlayerPawn());
     if (WeaponComponent != nullptr)
     {
         return WeaponComponent->GetCurrentWeapon();
@@ -58,7 +58,7 @@ ASTUWeapon* USTUPlayerHUDWidget::GetCurrentWeapon() const
 
 bool USTUPlayerHUDWidget::IsPlayerAlive() const
 {
-    const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
+    const USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(GetOwningPlayerPawn());
     if (HealthComponent != nullptr)
     {
         return HealthComponent->IsAlive();

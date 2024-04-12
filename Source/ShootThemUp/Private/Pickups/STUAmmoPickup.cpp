@@ -7,13 +7,13 @@
 
 bool ASTUAmmoPickup::TryCollectPickup(APawn* CollectorPawn)
 {
-    const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(CollectorPawn);
+    const USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(CollectorPawn);
     if (HealthComponent == nullptr || !HealthComponent->IsAlive())
     {
         return false;
     }
     
-    USTUWeaponComponent* WeaponComponent = FSTUUtils::GetPlayerComponent<USTUWeaponComponent>(CollectorPawn);
+    USTUWeaponComponent* WeaponComponent = FSTUUtils::GetActorComponent<USTUWeaponComponent>(CollectorPawn);
     if (WeaponComponent != nullptr)
     {
         return WeaponComponent->AddAmmo(WeaponType, ClipsAmount);

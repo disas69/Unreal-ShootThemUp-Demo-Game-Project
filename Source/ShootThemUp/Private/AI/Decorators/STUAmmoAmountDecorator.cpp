@@ -17,10 +17,10 @@ bool USTUAmmoAmountDecorator::CalculateRawConditionValue(UBehaviorTreeComponent&
     const AAIController* Controller = OwnerComp.GetAIOwner();
     if (Controller != nullptr)
     {
-        const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(Controller->GetPawn());
+        const USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(Controller->GetPawn());
         if (HealthComponent != nullptr || !HealthComponent->IsAlive())
         {
-            const USTUWeaponComponent* WeaponComponent = FSTUUtils::GetPlayerComponent<USTUWeaponComponent>(Controller->GetPawn());
+            const USTUWeaponComponent* WeaponComponent = FSTUUtils::GetActorComponent<USTUWeaponComponent>(Controller->GetPawn());
             if (WeaponComponent != nullptr)
             {
                 ASTUWeapon* Weapon = WeaponComponent->GetWeaponByType(WeaponType);

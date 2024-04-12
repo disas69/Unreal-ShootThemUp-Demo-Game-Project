@@ -88,11 +88,10 @@ void USTUHealthComponent::ReportDamageEvent(AActor* DamagedActor, const AControl
         return;
     }
 
-    UAISense_Damage::ReportDamageEvent(
-        GetWorld(), DamagedActor, Instigator->GetPawn(), DamageAmount, Instigator->GetPawn()->GetActorLocation(), DamagedActor->GetActorLocation());
+    UAISense_Damage::ReportDamageEvent(GetWorld(), DamagedActor, Instigator->GetPawn(), DamageAmount, Instigator->GetPawn()->GetActorLocation(), DamagedActor->GetActorLocation());
 }
 
-void USTUHealthComponent::ReportDeathEvent(const AController* Killed, const AController* Killer) const
+void USTUHealthComponent::ReportDeathEvent(AController* Killed, const AController* Killer) const
 {
     ASTUGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASTUGameModeBase>();
     if (GameMode != nullptr)

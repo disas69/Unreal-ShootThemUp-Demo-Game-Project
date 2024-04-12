@@ -4,11 +4,14 @@
 #include "AI/STUAICharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/STUAIPerceptionComponent.h"
+#include "Components/STURespawnComponent.h"
 
 ASTUAIController::ASTUAIController()
 {
     STUAIPerceptionComponent = CreateDefaultSubobject<USTUAIPerceptionComponent>("AIPerceptionComponent");
     SetPerceptionComponent(*STUAIPerceptionComponent);
+
+    STURespawnComponent = CreateDefaultSubobject<USTURespawnComponent>("RespawnComponent");
 
     bWantsPlayerState = true;
 }

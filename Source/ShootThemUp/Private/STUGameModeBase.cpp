@@ -2,6 +2,8 @@
 
 #include "STUGameModeBase.h"
 #include "AIController.h"
+#include "STUUtils.h"
+#include "Components/STURespawnComponent.h"
 #include "Player/STUBaseCharacter.h"
 #include "Player/STUPlayerController.h"
 #include "Player/STUPlayerState.h"
@@ -38,7 +40,7 @@ UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AContr
     return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
-void ASTUGameModeBase::OnPlayerKilled(const AController* PlayerKilled, const AController* PlayerKiller)
+void ASTUGameModeBase::OnPlayerKilled(AController* PlayerKilled, const AController* PlayerKiller)
 {
     ASTUPlayerState* KilledPlayerState = PlayerKilled != nullptr ? Cast<ASTUPlayerState>(PlayerKilled->PlayerState) : nullptr;
     if (KilledPlayerState != nullptr)
@@ -51,6 +53,22 @@ void ASTUGameModeBase::OnPlayerKilled(const AController* PlayerKilled, const ACo
     {
         KillerPlayerState->AddKill();
     }
+
+    ScheduleRespawn(PlayerKilled);
+}
+
+void ASTUGameModeBase::ScheduleRespawn(AController* Controller)
+{
+    USTURespawnComponent* RespawnComponent = FSTUUtils::GetActorComponent<USTURespawnComponent>(Controller);
+    if (RespawnComponent)
+    {
+        RespawnComponent->Respawn(GameData.RespawnTime);
+    }
+}
+
+void ASTUGameModeBase::Respawn(AController* Controller)
+{
+    ResetPlayer(Controller);
 }
 
 void ASTUGameModeBase::SpawnPlayers()

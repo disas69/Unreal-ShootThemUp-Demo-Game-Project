@@ -39,7 +39,7 @@ AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
             continue;
         }
 
-        const USTUHealthComponent* HealthComponent = FSTUUtils::GetPlayerComponent<USTUHealthComponent>(PerceivedPawn);
+        const USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(PerceivedPawn);
         if (HealthComponent != nullptr && HealthComponent->IsAlive())
         {
             const float CurrentDistance = (PerceivedPawn->GetActorLocation() - ControlledPawn->GetActorLocation()).Size();
