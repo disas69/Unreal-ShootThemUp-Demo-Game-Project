@@ -26,5 +26,4 @@ private:
     int32 GetCurrentRoundNum() const;
     int32 GetTotalRoundsNum() const;
     int32 GetKillsNum() const;
-    FString GetTimeFormattedText(float TimeSeconds) const;
 };

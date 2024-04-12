@@ -1,12 +1,14 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "UI/STUGameDataWidget.h"
+
+#include "FSTUTextUtils.h"
 #include "STUGameModeBase.h"
 #include "Player/STUPlayerState.h"
 
 FString USTUGameDataWidget::GetTimerText() const
 {
-    return GetTimeFormattedText(GetRoundTime());
+    return FSTUTextUtils::FormatTime(GetRoundTime());
 }
 
 FString USTUGameDataWidget::GetRoundsText() const
@@ -65,12 +67,4 @@ int32 USTUGameDataWidget::GetKillsNum() const
     }
 
     return 0;
-}
-
-FString USTUGameDataWidget::GetTimeFormattedText(float TimeSeconds) const
-{
-    // Format time as MM:SS
-    const int32 Minutes = FMath::FloorToInt(TimeSeconds / 60);
-    const int32 Seconds = FMath::FloorToInt(TimeSeconds - Minutes * 60);
-    return FString::Printf(TEXT("%02i:%02i"), Minutes, Seconds);
 }
