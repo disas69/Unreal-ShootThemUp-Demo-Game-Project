@@ -58,7 +58,7 @@ void ASTUGameModeBase::OnPlayerKilled(AController* PlayerKilled, const AControll
     ScheduleRespawn(PlayerKilled);
 }
 
-void ASTUGameModeBase::ScheduleRespawn(AController* Controller)
+void ASTUGameModeBase::ScheduleRespawn(AController* Controller) const
 {
     USTURespawnComponent* RespawnComponent = FSTUUtils::GetActorComponent<USTURespawnComponent>(Controller);
     if (RespawnComponent)
@@ -131,10 +131,24 @@ void ASTUGameModeBase::ResetPlayer(AController* Controller)
         {
             RespawnComponent->CancelRespawn();
         }
-        
-        if ( Controller->GetPawn() != nullptr)
+
+        // Player's Pawn is already detached from the controller due to the spectator mode
+        ASTUPlayerController* PlayerController = Cast<ASTUPlayerController>(Controller);
+        if (PlayerController != nullptr)
         {
-            Controller->GetPawn()->Reset();
+            APawn* PlayerPawn = PlayerController->GetCharacterPawn();
+            if (PlayerPawn != nullptr)
+            {
+                PlayerPawn->Reset();
+            }
+        }
+        else
+        {
+            APawn* AIPawn = Controller->GetPawn();
+            if (AIPawn != nullptr)
+            {
+                AIPawn->Reset();
+            }
         }
     }
 

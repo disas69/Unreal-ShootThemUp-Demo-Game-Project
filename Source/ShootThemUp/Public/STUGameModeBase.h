@@ -49,7 +49,7 @@ public:
     int32 GetTotalRoundsNum() const { return GameData.RoundsNum; }
     float GetRoundCountdown() const { return RoundCountDown; }
 
-    void ScheduleRespawn(AController* Controller);
+    void ScheduleRespawn(AController* Controller) const;
     void Respawn(AController* Controller);
 
 protected:

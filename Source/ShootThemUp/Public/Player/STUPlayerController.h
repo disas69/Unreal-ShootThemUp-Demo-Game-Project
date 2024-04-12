@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "STUPlayerController.generated.h"
 
+class ASTUBaseCharacter;
 class USTURespawnComponent;
 
 UCLASS()
@@ -16,7 +17,15 @@ class SHOOTTHEMUP_API ASTUPlayerController : public APlayerController
 public:
     ASTUPlayerController();
 
+    APawn* GetCharacterPawn();
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTURespawnComponent* STURespawnComponent;
+
+    virtual void OnPossess(APawn* InPawn) override;
+
+private:
+    UPROPERTY()
+    ASTUBaseCharacter* CharacterPawn = nullptr;
 };

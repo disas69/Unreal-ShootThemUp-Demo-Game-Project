@@ -47,6 +47,7 @@ void USTUHealthComponent::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, 
     }
 
     SetHealth(Health - Damage);
+    ReportDamageEvent(DamagedActor, InstigatedBy, Damage);
 
     if (IsAlive())
     {
@@ -59,8 +60,6 @@ void USTUHealthComponent::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, 
     {
         ReportDeathEvent(DamagedActor->GetInstigatorController(), InstigatedBy);
     }
-
-    ReportDamageEvent(DamagedActor, InstigatedBy, Damage);
 }
 
 void USTUHealthComponent::HealUpdate()
