@@ -6,6 +6,7 @@
 #include "Player/STUBaseCharacter.h"
 #include "STUPlayerCharacter.generated.h"
 
+class USphereComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -29,6 +30,9 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UCameraComponent* Camera = nullptr;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+    USphereComponent* CameraCollision = nullptr;
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputMappingContext* InputMappingContext = nullptr;
 
@@ -44,6 +48,13 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
     TSubclassOf<UCameraShakeBase> DamageCameraShake;
 
+    UFUNCTION()
+    void OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+    UFUNCTION()
+    void OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+    
+    virtual void BeginPlay() override;
     virtual void OnHealthChanged(float NewHealth, float HealthDelta) override;
     virtual void OnDeath() override;
 
@@ -55,4 +66,5 @@ private:
     void Look(const FInputActionValue& Value);
 
     void PlayCameraShake(TSubclassOf<UCameraShakeBase> CameraShake) const;
+    void UpdateCameraCollision() const;
 };

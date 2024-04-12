@@ -5,9 +5,11 @@
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
 #include "Components/STUHealthComponent.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Input/InputDataConfig.h"
 #include "Weapon/STUWeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 
 ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -18,6 +20,11 @@ ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjectInitial
     Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
     Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
     Camera->bUsePawnControlRotation = false;
+
+    CameraCollision = CreateDefaultSubobject<USphereComponent>("CameraCollision");
+    CameraCollision->SetupAttachment(Camera);
+    CameraCollision->SetSphereRadius(10.0f);
+    CameraCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 }
 
 void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -70,6 +77,24 @@ void ASTUPlayerCharacter::Look(const FInputActionValue& Value)
     AddControllerPitchInput(LookAmount);
 }
 
+void ASTUPlayerCharacter::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+    UpdateCameraCollision();
+}
+
+void ASTUPlayerCharacter::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+    UpdateCameraCollision();
+}
+
+void ASTUPlayerCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    CameraCollision->OnComponentBeginOverlap.AddDynamic(this, &ASTUPlayerCharacter::OnCameraCollisionBeginOverlap);
+    CameraCollision->OnComponentEndOverlap.AddDynamic(this, &ASTUPlayerCharacter::OnCameraCollisionEndOverlap);
+}
+
 void ASTUPlayerCharacter::OnHealthChanged(float NewHealth, float HealthDelta)
 {
     Super::OnHealthChanged(NewHealth, HealthDelta);
@@ -96,5 +121,23 @@ void ASTUPlayerCharacter::PlayCameraShake(TSubclassOf<UCameraShakeBase> CameraSh
     if (PlayerController != nullptr && PlayerController->PlayerCameraManager != nullptr)
     {
         PlayerController->PlayerCameraManager->StartCameraShake(CameraShake);
+    }
+}
+
+void ASTUPlayerCharacter::UpdateCameraCollision() const
+{
+    const bool bIsOverlapping = CameraCollision->IsOverlappingComponent(GetCapsuleComponent());
+    GetMesh()->SetOwnerNoSee(bIsOverlapping);
+
+    TArray<USceneComponent*> ChildrenComponents;
+    GetMesh()->GetChildrenComponents(true, ChildrenComponents);
+
+    for (USceneComponent* Component : ChildrenComponents)
+    {
+        UMeshComponent* MeshComponent = Cast<UMeshComponent>(Component);
+        if (MeshComponent != nullptr)
+        {
+            MeshComponent->SetOwnerNoSee(bIsOverlapping);
+        }
     }
 }
