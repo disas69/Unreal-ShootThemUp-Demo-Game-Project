@@ -39,4 +39,6 @@ public:
 private:
     UFUNCTION()
     void OnHealthChanged(float NewHealth, float HealthDelta);
+
+    void OnPossessNewPawn(APawn* Pawn);
 };

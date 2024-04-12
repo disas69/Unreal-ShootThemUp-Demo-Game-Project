@@ -8,11 +8,13 @@
 
 bool USTUPlayerHUDWidget::Initialize()
 {
-    USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(GetOwningPlayerPawn());
-    if (HealthComponent != nullptr)
+    AController* PlayerController = GetOwningPlayer();
+    if (PlayerController != nullptr)
     {
-        HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged);
+        PlayerController->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHUDWidget::OnPossessNewPawn);
     }
+
+    OnPossessNewPawn(GetOwningPlayerPawn());
     
     return Super::Initialize();
 }
@@ -83,5 +85,14 @@ void USTUPlayerHUDWidget::OnHealthChanged(float NewHealth, float HealthDelta)
     if (HealthDelta < 0.0f)
     {
         OnTakeDamage();
+    }
+}
+
+void USTUPlayerHUDWidget::OnPossessNewPawn(APawn* Pawn)
+{
+    USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(Pawn);
+    if (HealthComponent != nullptr && !HealthComponent->OnHealthChanged.IsBoundToObject(this))
+    {
+        HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged);
     }
 }
