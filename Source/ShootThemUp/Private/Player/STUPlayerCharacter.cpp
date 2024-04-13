@@ -33,8 +33,9 @@ void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
     const APlayerController* PlayerController = Cast<APlayerController>(GetController());
     UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+
     Subsystem->ClearAllMappings();
-    Subsystem->AddMappingContext(InputMappingContext, 0);
+    Subsystem->AddMappingContext(InputDataConfig->InputMappingContext, 0);
 
     UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
     Input->BindAction(InputDataConfig->Move, ETriggerEvent::Triggered, this, &ASTUPlayerCharacter::Move);

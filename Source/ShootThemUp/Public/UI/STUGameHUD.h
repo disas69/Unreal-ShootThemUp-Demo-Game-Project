@@ -17,21 +17,27 @@ class SHOOTTHEMUP_API ASTUGameHUD : public AHUD
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
     FVector2D CrossHairOffset = FVector2D(0.0f, 0.0f);
-    
-    virtual void DrawHUD() override;
 
     FVector2D GetCrossHairPosition() const;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-    TSubclassOf<USTUPlayerHUDWidget> PlayerHUDWidgetClass;
+    TSubclassOf<UUserWidget> PlayerHUDWidgetClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<UUserWidget> PauseWidgetClass;
 
     virtual void BeginPlay() override;
 
 private:
     UPROPERTY()
-    USTUPlayerHUDWidget* PlayerHUDWidget = nullptr;
+    UUserWidget* CurrentWidget = nullptr;
+    
+    UPROPERTY()
+    TMap<EGameState, UUserWidget*> GameWidgets;
 
+    void CreateGameWidgets();
+    void DisplayGameWidget(EGameState NewState);
     void OnGameStateChanged(EGameState NewState);
     
     void DrawDebugCrossHair();

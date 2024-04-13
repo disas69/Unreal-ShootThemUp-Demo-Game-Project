@@ -43,6 +43,28 @@ UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AContr
     return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
+bool ASTUGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate)
+{
+    const bool bResult = Super::SetPause(PC, CanUnpauseDelegate);
+    if (bResult)
+    {
+        SetGameState(EGameState::Pause);
+    }
+
+    return bResult;
+}
+
+bool ASTUGameModeBase::ClearPause()
+{
+    const bool bResult = Super::ClearPause();
+    if (bResult)
+    {
+        SetGameState(EGameState::Gameplay);
+    }
+    
+    return bResult;
+}
+
 void ASTUGameModeBase::OnPlayerKilled(AController* PlayerKilled, const AController* PlayerKiller)
 {
     ASTUPlayerState* KilledPlayerState = PlayerKilled != nullptr ? Cast<ASTUPlayerState>(PlayerKilled->PlayerState) : nullptr;

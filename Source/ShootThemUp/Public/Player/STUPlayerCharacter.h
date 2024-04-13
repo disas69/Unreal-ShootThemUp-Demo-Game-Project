@@ -34,9 +34,6 @@ protected:
     USphereComponent* CameraCollision = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputMappingContext* InputMappingContext = nullptr;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputDataConfig* InputDataConfig = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")

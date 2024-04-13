@@ -3,12 +3,6 @@
 #include "UI/STUGameHUD.h"
 #include "STUGameModeBase.h"
 #include "Blueprint/UserWidget.h"
-#include "UI/STUPlayerHUDWidget.h"
-
-void ASTUGameHUD::DrawHUD()
-{
-    Super::DrawHUD();
-}
 
 FVector2D ASTUGameHUD::GetCrossHairPosition() const
 {
@@ -22,11 +16,7 @@ void ASTUGameHUD::BeginPlay()
 {
     Super::BeginPlay();
 
-    PlayerHUDWidget = CreateWidget<USTUPlayerHUDWidget>(GetWorld(), PlayerHUDWidgetClass);
-    if (PlayerHUDWidget != nullptr)
-    {
-        PlayerHUDWidget->AddToViewport();
-    }
+    CreateGameWidgets();
 
     ASTUGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASTUGameModeBase>();
     if (GameMode != nullptr)
@@ -35,9 +25,42 @@ void ASTUGameHUD::BeginPlay()
     }
 }
 
+void ASTUGameHUD::CreateGameWidgets()
+{
+    GameWidgets.Add(EGameState::Gameplay, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
+    GameWidgets.Add(EGameState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
+
+    for (const auto GameWidgetPair : GameWidgets)
+    {
+        UUserWidget* GameWidget = GameWidgetPair.Value;
+        if (GameWidget != nullptr)
+        {
+            GameWidget->AddToViewport();
+            GameWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+    }
+}
+
+void ASTUGameHUD::DisplayGameWidget(EGameState NewState)
+{
+    if (CurrentWidget != nullptr)
+    {
+        CurrentWidget->SetVisibility(ESlateVisibility::Hidden);
+    }
+
+    if (GameWidgets.Contains(NewState))
+    {
+        CurrentWidget = GameWidgets[NewState];
+        if (CurrentWidget != nullptr)
+        {
+            CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+        }
+    }
+}
+
 void ASTUGameHUD::OnGameStateChanged(EGameState NewState)
 {
-    UE_LOG(LogTemp, Display, TEXT("Game state changed to: %s"), *UEnum::GetValueAsString(NewState));
+    DisplayGameWidget(NewState);
 }
 
 void ASTUGameHUD::DrawDebugCrossHair()
