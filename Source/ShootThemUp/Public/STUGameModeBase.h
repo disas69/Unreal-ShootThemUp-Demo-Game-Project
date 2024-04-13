@@ -8,6 +8,17 @@
 
 class AAIController;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameStateChanged, EGameState);
+
+UENUM(BlueprintType)
+enum class EGameState : uint8
+{
+    Waiting,
+    Gameplay,
+    Pause,
+    Finished
+};
+
 USTRUCT(BlueprintType)
 struct FGameData
 {
@@ -40,6 +51,8 @@ class SHOOTTHEMUP_API ASTUGameModeBase : public AGameModeBase
 public:
     ASTUGameModeBase();
 
+    FOnGameStateChanged GameStateChanged;
+
     virtual void StartPlay() override;
     virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
 
@@ -66,7 +79,9 @@ private:
     int32 CurrentRound = 1;
     float RoundCountDown = 0.0f;
     FTimerHandle GameRoundTimerHandle;
-    
+    EGameState GameState = EGameState::Waiting;
+
+    void SetGameState(EGameState NewState);
     void SpawnPlayers();
     void StartRound();
     void UpdateRoundTimer();
@@ -77,6 +92,6 @@ private:
     FLinearColor GetTeamColor(int32 TeamID) const;
     void SetPlayerColor(const AController* Controller);
 
-    void GameOver() const;
+    void GameOver();
     void LogPlayerStates() const;
 };

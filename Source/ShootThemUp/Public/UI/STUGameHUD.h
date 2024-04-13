@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "STUGameModeBase.h"
 #include "GameFramework/HUD.h"
 #include "STUGameHUD.generated.h"
 
@@ -30,6 +31,8 @@ protected:
 private:
     UPROPERTY()
     USTUPlayerHUDWidget* PlayerHUDWidget = nullptr;
+
+    void OnGameStateChanged(EGameState NewState);
     
     void DrawDebugCrossHair();
 };

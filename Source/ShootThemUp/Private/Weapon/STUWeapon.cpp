@@ -79,7 +79,6 @@ void ASTUWeapon::ApplyDamage(const FHitResult& HitResult)
         if (HitActor != nullptr)
         {
             HitActor->TakeDamage(Damage, FDamageEvent(), GetPlayerController(), this);
-            UE_LOG(LogTemp, Display, TEXT("Hit actor: %s"), *HitActor->GetName());
         }
     }
 }

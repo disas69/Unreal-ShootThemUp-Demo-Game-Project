@@ -29,6 +29,8 @@ void ASTUGameModeBase::StartPlay()
 
     CurrentRound = 1;
     StartRound();
+    
+    SetGameState(EGameState::Gameplay);
 }
 
 UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
@@ -70,6 +72,17 @@ void ASTUGameModeBase::ScheduleRespawn(AController* Controller) const
 void ASTUGameModeBase::Respawn(AController* Controller)
 {
     ResetPlayer(Controller);
+}
+
+void ASTUGameModeBase::SetGameState(EGameState NewState)
+{
+    if (GameState == NewState)
+    {
+        return;
+    }
+
+    GameState = NewState;
+    GameStateChanged.Broadcast(GameState);
 }
 
 void ASTUGameModeBase::SpawnPlayers()
@@ -200,8 +213,10 @@ void ASTUGameModeBase::SetPlayerColor(const AController* Controller)
     }
 }
 
-void ASTUGameModeBase::GameOver() const
+void ASTUGameModeBase::GameOver()
 {
+    SetGameState(EGameState::Finished);
+    
     for (APawn* Pawn : TActorRange<APawn>(GetWorld()))
     {
         if (Pawn == nullptr)

@@ -1,6 +1,7 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "UI/STUGameHUD.h"
+#include "STUGameModeBase.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/STUPlayerHUDWidget.h"
 
@@ -26,6 +27,17 @@ void ASTUGameHUD::BeginPlay()
     {
         PlayerHUDWidget->AddToViewport();
     }
+
+    ASTUGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASTUGameModeBase>();
+    if (GameMode != nullptr)
+    {
+        GameMode->GameStateChanged.AddUObject(this, &ASTUGameHUD::OnGameStateChanged);
+    }
+}
+
+void ASTUGameHUD::OnGameStateChanged(EGameState NewState)
+{
+    UE_LOG(LogTemp, Display, TEXT("Game state changed to: %s"), *UEnum::GetValueAsString(NewState));
 }
 
 void ASTUGameHUD::DrawDebugCrossHair()
