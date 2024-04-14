@@ -16,4 +16,19 @@ public:
 
         return FString::Printf(TEXT("%s:%s"), *StrMinutes, *StrSeconds);
     }
+
+    static FText TextFromInt(int32 Number)
+    {
+        return FText::FromString(FString::FromInt(Number));
+    }
+
+    static FText TextFromFloat(float Number)
+    {
+        return FText::FromString(FString::SanitizeFloat(Number));
+    }
+
+    static FText TextFromString(const FString& String)
+    {
+        return FText::FromString(String);
+    }
 };

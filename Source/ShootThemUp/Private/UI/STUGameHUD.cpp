@@ -29,6 +29,7 @@ void ASTUGameHUD::CreateGameWidgets()
 {
     GameWidgets.Add(EGameState::Gameplay, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
     GameWidgets.Add(EGameState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
+    GameWidgets.Add(EGameState::Finished, CreateWidget<UUserWidget>(GetWorld(), GameEndWidgetClass));
 
     for (const auto GameWidgetPair : GameWidgets)
     {

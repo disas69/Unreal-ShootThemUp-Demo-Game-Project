@@ -31,6 +31,8 @@ void ASTUPlayerController::BeginPlay()
     {
         GameMode->GameStateChanged.AddUObject(this, &ASTUPlayerController::OnGameStateChanged);
     }
+
+    RotationInput = FRotator::ZeroRotator;
 }
 
 void ASTUPlayerController::OnPossess(APawn* InPawn)

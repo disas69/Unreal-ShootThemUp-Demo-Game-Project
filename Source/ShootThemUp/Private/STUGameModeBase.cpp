@@ -196,9 +196,23 @@ void ASTUGameModeBase::CreateTeams()
     int32 TeamID = 0;
     for (FConstControllerIterator It = GetWorld()->GetControllerIterator(); It; ++It)
     {
-        ASTUPlayerState* PlayerState = Cast<ASTUPlayerState>(It->Get()->PlayerState);
+        AController* Controller = It->Get();
+        if (Controller == nullptr)
+        {
+            continue;
+        }
+        
+        ASTUPlayerState* PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
         if (PlayerState != nullptr)
         {
+            if (Controller->IsPlayerController())
+            {
+                PlayerState->SetPlayerName("Player");
+            }
+            else
+            {
+                PlayerState->SetPlayerName("Bot");
+            }
             PlayerState->SetTeam(TeamID, GetTeamColor(TeamID));
             SetPlayerColor(It->Get());
             TeamID = (TeamID + 1) % GameData.TeamsColors.Num();
@@ -248,6 +262,12 @@ void ASTUGameModeBase::GameOver()
 
         Pawn->TurnOff();
         Pawn->DisableInput(nullptr);
+
+        USTURespawnComponent* RespawnComponent = FSTUUtils::GetActorComponent<USTURespawnComponent>(Pawn);
+        if (RespawnComponent)
+        {
+            RespawnComponent->CancelRespawn();
+        }
     }
     
     LogPlayerStates();
