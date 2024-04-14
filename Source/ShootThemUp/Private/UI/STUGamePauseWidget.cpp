@@ -1,7 +1,6 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "UI/STUGamePauseWidget.h"
-
 #include "STUGameModeBase.h"
 #include "Components/Button.h"
 

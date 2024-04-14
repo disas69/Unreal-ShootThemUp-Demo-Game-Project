@@ -1,21 +1,28 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "UI/STUGameEndWidget.h"
-
 #include "FSTUTextUtils.h"
+#include "Components/Button.h"
 #include "Components/VerticalBox.h"
+#include "Kismet/GameplayStatics.h"
 #include "Player/STUPlayerState.h"
 #include "UI/STUPlayerStatsWidget.h"
 
 bool USTUGameEndWidget::Initialize()
 {
+    const bool bInit = Super::Initialize();
+    if (RestartLevelButton != nullptr)
+    {
+        RestartLevelButton->OnClicked.AddDynamic(this, &USTUGameEndWidget::RestartLevel);
+    }
+
     ASTUGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASTUGameModeBase>();
     if (GameMode)
     {
         GameMode->GameStateChanged.AddUObject(this, &USTUGameEndWidget::OnGameStateChange);
     }
     
-    return Super::Initialize();
+    return bInit;
 }
 
 void USTUGameEndWidget::OnGameStateChange(EGameState NewState)
@@ -29,7 +36,7 @@ void USTUGameEndWidget::OnGameStateChange(EGameState NewState)
 void USTUGameEndWidget::DisplayPlayersStats()
 {
     PlayerStatsBox->ClearChildren();
-    
+
     for (FConstControllerIterator It = GetWorld()->GetControllerIterator(); It; ++It)
     {
         const AController* Controller = It->Get();
@@ -51,4 +58,10 @@ void USTUGameEndWidget::DisplayPlayersStats()
             }
         }
     }
+}
+
+void USTUGameEndWidget::RestartLevel()
+{
+    const FString CurrentLevel = UGameplayStatics::GetCurrentLevelName(this);
+    UGameplayStatics::OpenLevel(this, FName(CurrentLevel));
 }
