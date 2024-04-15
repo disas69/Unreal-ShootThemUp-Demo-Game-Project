@@ -10,5 +10,16 @@ void USTUGameInstance::OpenMenuLevel() const
 
 void USTUGameInstance::OpenGameLevel(int32 LevelIndex) const
 {
-    UGameplayStatics::OpenLevelBySoftObjectPtr(this, StartLevel);
+    UGameplayStatics::OpenLevelBySoftObjectPtr(this, GetLevelData(LevelIndex).Level);
+}
+
+FLevelData USTUGameInstance::GetLevelData(int32 Index) const
+{
+    if (Index < 0 || Index >= GameLevels.Num())
+    {
+        UE_LOG(LogTemp, Error, TEXT("Level index is out of range!"));
+        return FLevelData();
+    }
+
+    return GameLevels[Index];
 }
