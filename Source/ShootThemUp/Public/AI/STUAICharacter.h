@@ -6,6 +6,7 @@
 #include "Player/STUBaseCharacter.h"
 #include "STUAICharacter.generated.h"
 
+class UWidgetComponent;
 class UBehaviorTree;
 
 UCLASS()
@@ -22,6 +23,14 @@ public:
     virtual void Tick(float DeltaTime) override;
 
 protected:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+    UWidgetComponent* HealthWidgetComponent = nullptr;
+    
     virtual void BeginPlay() override;
     virtual void OnDeath() override;
+    virtual void OnHealthChanged(float NewHealth, float HealthDelta) override;
+
+private:
+    void UpdateHealthWidgetValue() const;
+    void UpdateHealthWidgetVisibility() const;
 };
