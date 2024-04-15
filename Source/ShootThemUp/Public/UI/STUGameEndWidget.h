@@ -29,10 +29,16 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UButton* RestartLevelButton;
 
+    UPROPERTY(meta = (BindWidget))
+    UButton* ExitButton;
+
 private:
     void OnGameStateChange(EGameState NewState);
     void DisplayPlayersStats();
 
     UFUNCTION()
     void RestartLevel();
+
+    UFUNCTION()
+    void ExitLevel();
 };

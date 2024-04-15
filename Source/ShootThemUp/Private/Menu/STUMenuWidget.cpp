@@ -1,9 +1,8 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Menu/STUMenuWidget.h"
-
+#include "STUGameInstance.h"
 #include "Components/Button.h"
-#include "Kismet/GameplayStatics.h"
 
 bool USTUMenuWidget::Initialize()
 {
@@ -18,6 +17,9 @@ bool USTUMenuWidget::Initialize()
 
 void USTUMenuWidget::StartGame()
 {
-    const FName LevelName = "TestLevel";
-    UGameplayStatics::OpenLevel(this, LevelName);
+    const USTUGameInstance* GameInstance = Cast<USTUGameInstance>(GetGameInstance());
+    if (GameInstance != nullptr)
+    {
+        GameInstance->OpenGameLevel(0);
+    }
 }

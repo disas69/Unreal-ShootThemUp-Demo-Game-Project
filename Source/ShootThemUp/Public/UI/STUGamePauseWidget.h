@@ -20,7 +20,13 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UButton* ContinueButton;
 
+    UPROPERTY(meta = (BindWidget))
+    UButton* ExitButton;
+
 private:
     UFUNCTION()
     void ContinueGame();
+
+    UFUNCTION()
+    void ExitGame();
 };

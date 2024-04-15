@@ -2,6 +2,7 @@
 
 #include "UI/STUGameEndWidget.h"
 #include "FSTUTextUtils.h"
+#include "STUGameInstance.h"
 #include "Components/Button.h"
 #include "Components/VerticalBox.h"
 #include "Kismet/GameplayStatics.h"
@@ -14,6 +15,11 @@ bool USTUGameEndWidget::Initialize()
     if (RestartLevelButton != nullptr)
     {
         RestartLevelButton->OnClicked.AddDynamic(this, &USTUGameEndWidget::RestartLevel);
+    }
+
+    if (ExitButton != nullptr)
+    {
+        ExitButton->OnClicked.AddDynamic(this, &USTUGameEndWidget::ExitLevel);
     }
 
     ASTUGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASTUGameModeBase>();
@@ -64,4 +70,13 @@ void USTUGameEndWidget::RestartLevel()
 {
     const FString CurrentLevel = UGameplayStatics::GetCurrentLevelName(this);
     UGameplayStatics::OpenLevel(this, FName(CurrentLevel));
+}
+
+void USTUGameEndWidget::ExitLevel()
+{
+    USTUGameInstance* GameInstance = GetGameInstance<USTUGameInstance>();
+    if (GameInstance != nullptr)
+    {
+        GameInstance->OpenMenuLevel();
+    }
 }

@@ -10,4 +10,15 @@ UCLASS()
 class SHOOTTHEMUP_API USTUGameInstance : public UGameInstance
 {
     GENERATED_BODY()
+
+public:
+    void OpenMenuLevel() const;
+    void OpenGameLevel(int32 LevelIndex) const;
+
+protected:
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    TSoftObjectPtr<UWorld> MenuLevel;
+    
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    TSoftObjectPtr<UWorld> StartLevel;
 };
