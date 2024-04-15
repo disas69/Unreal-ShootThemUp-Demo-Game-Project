@@ -19,9 +19,10 @@ void USTUPlayerStatsWidget::SetDeaths(const FText& Text)
     DeathsText->SetText(Text);
 }
 
-void USTUPlayerStatsWidget::SetTeam(const FText& Text)
+void USTUPlayerStatsWidget::SetTeamIcon(UTexture2D* Texture, const FLinearColor& Color)
 {
-    TeamText->SetText(Text);
+    TeamIcon->SetBrushFromTexture(Texture);
+    TeamIcon->SetColorAndOpacity(Color);
 }
 
 void USTUPlayerStatsWidget::SetPlayerIndicatorVisibility(bool bVisible)

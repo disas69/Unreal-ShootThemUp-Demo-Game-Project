@@ -43,6 +43,7 @@ void USTUGameEndWidget::DisplayPlayersStats()
 {
     PlayerStatsBox->ClearChildren();
 
+    TArray<const ASTUPlayerState*> PlayerStates;
     for (FConstControllerIterator It = GetWorld()->GetControllerIterator(); It; ++It)
     {
         const AController* Controller = It->Get();
@@ -51,16 +52,31 @@ void USTUGameEndWidget::DisplayPlayersStats()
             const ASTUPlayerState* PlayerState = Controller->GetPlayerState<ASTUPlayerState>();
             if (PlayerState != nullptr)
             {
-                USTUPlayerStatsWidget* UserWidget = CreateWidget<USTUPlayerStatsWidget>(GetWorld(), PlayerStatsWidgetClass);
-                if (UserWidget != nullptr)
-                {
-                    UserWidget->SetPlayerName(FSTUTextUtils::TextFromString(PlayerState->GetPlayerName()));
-                    UserWidget->SetKills(FSTUTextUtils::TextFromInt(PlayerState->GetKillsNum()));
-                    UserWidget->SetDeaths(FSTUTextUtils::TextFromInt(PlayerState->GetDeathsNum()));
-                    UserWidget->SetTeam(FSTUTextUtils::TextFromInt(PlayerState->GetTeamID()));
-                    UserWidget->SetPlayerIndicatorVisibility(Controller->IsPlayerController());
-                    PlayerStatsBox->AddChild(UserWidget);
-                }
+                PlayerStates.Add(PlayerState);
+            }
+        }
+    }
+
+    // Sort by kills
+    PlayerStates.Sort([](const ASTUPlayerState& A, const ASTUPlayerState& B)
+    {
+        return A.GetKillsNum() > B.GetKillsNum();
+    });
+
+    for (const ASTUPlayerState* PlayerState : PlayerStates)
+    {
+        USTUPlayerStatsWidget* PlayerStatWidget = CreateWidget<USTUPlayerStatsWidget>(GetWorld(), PlayerStatsWidgetClass);
+        if (PlayerStatWidget)
+        {
+            USTUPlayerStatsWidget* UserWidget = CreateWidget<USTUPlayerStatsWidget>(GetWorld(), PlayerStatsWidgetClass);
+            if (UserWidget != nullptr)
+            {
+                UserWidget->SetPlayerName(FSTUTextUtils::TextFromString(PlayerState->GetPlayerName()));
+                UserWidget->SetKills(FSTUTextUtils::TextFromInt(PlayerState->GetKillsNum()));
+                UserWidget->SetDeaths(FSTUTextUtils::TextFromInt(PlayerState->GetDeathsNum()));
+                UserWidget->SetTeamIcon(PlayerState->GetTeamData().Icon, PlayerState->GetTeamData().Color);
+                UserWidget->SetPlayerIndicatorVisibility(PlayerState->GetPlayerController() != nullptr);
+                PlayerStatsBox->AddChild(UserWidget);
             }
         }
     }

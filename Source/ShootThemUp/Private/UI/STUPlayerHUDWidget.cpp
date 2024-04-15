@@ -2,12 +2,15 @@
 
 #include "UI/STUPlayerHUDWidget.h"
 #include "STUUtils.h"
+#include "Components/ProgressBar.h"
 #include "Components/STUHealthComponent.h"
 #include "Weapon/STUWeapon.h"
 #include "Weapon/STUWeaponComponent.h"
 
 bool USTUPlayerHUDWidget::Initialize()
 {
+    const bool bInit = Super::Initialize();
+
     AController* PlayerController = GetOwningPlayer();
     if (PlayerController != nullptr)
     {
@@ -16,7 +19,7 @@ bool USTUPlayerHUDWidget::Initialize()
 
     OnPossessNewPawn(GetOwningPlayerPawn());
     
-    return Super::Initialize();
+    return bInit;
 }
 
 float USTUPlayerHUDWidget::GetHealthPercent() const
@@ -82,6 +85,10 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
 
 void USTUPlayerHUDWidget::OnHealthChanged(float NewHealth, float HealthDelta)
 {
+    const float Percent = GetHealthPercent();
+    HealthBar->SetPercent(Percent);
+    HealthBar->SetFillColorAndOpacity(Percent > CriticalHealthThreshold ? NormalColor : CriticalColor);
+    
     if (HealthDelta < 0.0f)
     {
         OnTakeDamage();
@@ -94,5 +101,10 @@ void USTUPlayerHUDWidget::OnPossessNewPawn(APawn* Pawn)
     if (HealthComponent != nullptr && !HealthComponent->OnHealthChanged.IsBoundToObject(this))
     {
         HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged);
+    }
+
+    if (HealthBar != nullptr)
+    {
+        HealthBar->SetPercent(GetHealthPercent());
     }
 }

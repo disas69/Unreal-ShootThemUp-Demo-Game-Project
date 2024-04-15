@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "STUPlayerHUDWidget.generated.h"
 
+class UProgressBar;
 class USTUHealthComponent;
 class USTUWeaponComponent;
 class ASTUWeapon;
@@ -35,6 +36,19 @@ public:
     void OnTakeDamage();
     
     virtual bool Initialize() override;
+
+protected:
+    UPROPERTY(meta = (BindWidget))
+    UProgressBar* HealthBar;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    float CriticalHealthThreshold = 0.3f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    FLinearColor NormalColor = FLinearColor::Green;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    FLinearColor CriticalColor = FLinearColor::Red;
 
 private:
     UFUNCTION()

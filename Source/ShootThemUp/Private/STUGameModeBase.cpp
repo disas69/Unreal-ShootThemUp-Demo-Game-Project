@@ -213,19 +213,20 @@ void ASTUGameModeBase::CreateTeams()
             {
                 PlayerState->SetPlayerName("Bot");
             }
-            PlayerState->SetTeam(TeamID, GetTeamColor(TeamID));
+            PlayerState->SetTeamData(TeamID, GetTeamData(TeamID));
             SetPlayerColor(It->Get());
-            TeamID = (TeamID + 1) % GameData.TeamsColors.Num();
+            TeamID = (TeamID + 1) % GameData.Teams.Num();
         }
     }
 }
 
-FLinearColor ASTUGameModeBase::GetTeamColor(int32 TeamID) const
+FTeamData ASTUGameModeBase::GetTeamData(int32 TeamID) const
 {
-    FLinearColor Result = GameData.DefaultTeamColor;
-    if (TeamID >= 0 && TeamID < GameData.TeamsColors.Num())
+    FTeamData Result;
+    
+    if (TeamID >= 0 && TeamID < GameData.Teams.Num())
     {
-        Result = GameData.TeamsColors[TeamID];
+        Result = GameData.Teams[TeamID];
     }
 
     return Result;
@@ -244,7 +245,7 @@ void ASTUGameModeBase::SetPlayerColor(const AController* Controller)
         const ASTUPlayerState* PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
         if (PlayerState != nullptr)
         {
-            Character->SetPlayerColor(PlayerState->GetTeamColor());
+            Character->SetPlayerColor(PlayerState->GetTeamData().Color);
         }
     }
 }

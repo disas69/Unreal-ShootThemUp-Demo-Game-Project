@@ -20,6 +20,21 @@ enum class EGameState : uint8
 };
 
 USTRUCT(BlueprintType)
+struct FTeamData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Team")
+    FString Name = "Team";
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Team")
+    FLinearColor Color = FLinearColor::Red;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Team")
+    UTexture2D* Icon = nullptr;
+};
+
+USTRUCT(BlueprintType)
 struct FGameData
 {
     GENERATED_USTRUCT_BODY()
@@ -40,7 +55,7 @@ struct FGameData
     FLinearColor DefaultTeamColor = FLinearColor::Red;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teams")
-    TArray<FLinearColor> TeamsColors = {FLinearColor::Red, FLinearColor::Blue};
+    TArray<FTeamData> Teams;
 };
 
 UCLASS()
@@ -91,7 +106,7 @@ private:
     void ResetPlayer(AController* Controller);
 
     void CreateTeams();
-    FLinearColor GetTeamColor(int32 TeamID) const;
+    FTeamData GetTeamData(int32 TeamID) const;
     void SetPlayerColor(const AController* Controller);
 
     void GameOver();

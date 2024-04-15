@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "STUGameModeBase.h"
 #include "GameFramework/PlayerState.h"
 #include "STUPlayerState.generated.h"
 
@@ -12,10 +13,10 @@ class SHOOTTHEMUP_API ASTUPlayerState : public APlayerState
     GENERATED_BODY()
 
 public:
-    void SetTeam(const int32 NewTeamID, const FLinearColor NewTeamColor);
+    void SetTeamData(const int32 NewTeamID, const FTeamData& NewTeamData);
 
     int32 GetTeamID() const { return TeamID; }
-    FLinearColor GetTeamColor() const { return TeamColor; }
+    const FTeamData& GetTeamData() const { return TeamData; }
 
     void AddKill() { ++KillsNum; }
     void AddDeath() { ++DeathsNum; }
@@ -26,7 +27,7 @@ public:
 
 private:
     int32 TeamID = 0;
-    FLinearColor TeamColor = FLinearColor::Red;
+    FTeamData TeamData;
 
     int32 KillsNum = 0;
     int32 DeathsNum = 0;
