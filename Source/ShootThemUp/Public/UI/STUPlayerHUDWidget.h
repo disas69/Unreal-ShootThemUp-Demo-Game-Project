@@ -55,4 +55,5 @@ private:
     void OnHealthChanged(float NewHealth, float HealthDelta);
 
     void OnPossessNewPawn(APawn* Pawn);
+    void UpdateHealthBar() const;
 };

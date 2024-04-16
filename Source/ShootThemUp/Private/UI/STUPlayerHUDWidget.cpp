@@ -85,9 +85,7 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
 
 void USTUPlayerHUDWidget::OnHealthChanged(float NewHealth, float HealthDelta)
 {
-    const float Percent = GetHealthPercent();
-    HealthBar->SetPercent(Percent);
-    HealthBar->SetFillColorAndOpacity(Percent > CriticalHealthThreshold ? NormalColor : CriticalColor);
+    UpdateHealthBar();
     
     if (HealthDelta < 0.0f)
     {
@@ -103,8 +101,13 @@ void USTUPlayerHUDWidget::OnPossessNewPawn(APawn* Pawn)
         HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged);
     }
 
-    if (HealthBar != nullptr)
-    {
-        HealthBar->SetPercent(GetHealthPercent());
-    }
+    UpdateHealthBar();
+}
+
+void USTUPlayerHUDWidget::UpdateHealthBar() const
+{
+    const float Percent = GetHealthPercent();
+    HealthBar->SetPercent(Percent);
+    HealthBar->SetFillColorAndOpacity(Percent > CriticalHealthThreshold ? NormalColor : CriticalColor);
+    HealthBar->SetVisibility(Percent < 1.0f ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 }
