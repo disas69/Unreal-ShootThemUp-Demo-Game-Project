@@ -2,7 +2,7 @@
 
 #include "UI/STUGameHUD.h"
 #include "STUGameModeBase.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/STUBaseWidget.h"
 
 FVector2D ASTUGameHUD::GetCrossHairPosition() const
 {
@@ -27,13 +27,13 @@ void ASTUGameHUD::BeginPlay()
 
 void ASTUGameHUD::CreateGameWidgets()
 {
-    GameWidgets.Add(EGameState::Gameplay, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
-    GameWidgets.Add(EGameState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
-    GameWidgets.Add(EGameState::Finished, CreateWidget<UUserWidget>(GetWorld(), GameEndWidgetClass));
+    GameWidgets.Add(EGameState::Gameplay, CreateWidget<USTUBaseWidget>(GetWorld(), PlayerHUDWidgetClass));
+    GameWidgets.Add(EGameState::Pause, CreateWidget<USTUBaseWidget>(GetWorld(), PauseWidgetClass));
+    GameWidgets.Add(EGameState::Finished, CreateWidget<USTUBaseWidget>(GetWorld(), GameEndWidgetClass));
 
     for (const auto GameWidgetPair : GameWidgets)
     {
-        UUserWidget* GameWidget = GameWidgetPair.Value;
+        USTUBaseWidget* GameWidget = GameWidgetPair.Value;
         if (GameWidget != nullptr)
         {
             GameWidget->AddToViewport();
@@ -55,6 +55,7 @@ void ASTUGameHUD::DisplayGameWidget(EGameState NewState)
         if (CurrentWidget != nullptr)
         {
             CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+            CurrentWidget->Show();
         }
     }
 }

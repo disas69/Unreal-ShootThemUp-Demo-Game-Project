@@ -7,6 +7,7 @@
 #include "GameFramework/HUD.h"
 #include "STUGameHUD.generated.h"
 
+class USTUBaseWidget;
 class USTUPlayerHUDWidget;
 
 UCLASS()
@@ -22,22 +23,22 @@ public:
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-    TSubclassOf<UUserWidget> PlayerHUDWidgetClass;
+    TSubclassOf<USTUBaseWidget> PlayerHUDWidgetClass;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-    TSubclassOf<UUserWidget> PauseWidgetClass;
+    TSubclassOf<USTUBaseWidget> PauseWidgetClass;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-    TSubclassOf<UUserWidget> GameEndWidgetClass;
+    TSubclassOf<USTUBaseWidget> GameEndWidgetClass;
 
     virtual void BeginPlay() override;
 
 private:
     UPROPERTY()
-    UUserWidget* CurrentWidget = nullptr;
+    USTUBaseWidget* CurrentWidget = nullptr;
     
     UPROPERTY()
-    TMap<EGameState, UUserWidget*> GameWidgets;
+    TMap<EGameState, USTUBaseWidget*> GameWidgets;
 
     void CreateGameWidgets();
     void DisplayGameWidget(EGameState NewState);

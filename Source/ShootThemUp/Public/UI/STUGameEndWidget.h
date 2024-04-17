@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "STUBaseWidget.h"
 #include "STUGameModeBase.h"
-#include "Blueprint/UserWidget.h"
 #include "STUGameEndWidget.generated.h"
 
 class UButton;
@@ -12,7 +12,7 @@ class USTUPlayerStatsWidget;
 class UVerticalBox;
 
 UCLASS()
-class SHOOTTHEMUP_API USTUGameEndWidget : public UUserWidget
+class SHOOTTHEMUP_API USTUGameEndWidget : public USTUBaseWidget
 {
     GENERATED_BODY()
 
