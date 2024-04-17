@@ -31,6 +31,11 @@ protected:
     UPROPERTY(meta=(BindWidget))
     UButton* ExitGameButton;
 
+    UPROPERTY(meta = (BindWidgetAnim), Transient)
+    UWidgetAnimation* LoadingAnimation;
+
+    virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
+
 private:
     int32 SelectedIndex = -1;
     
@@ -45,4 +50,6 @@ private:
 
     void CreateLevelItems();
     void OnLevelItemSelected(int32 Index);
+
+    void LoadSelectedLevel();
 };

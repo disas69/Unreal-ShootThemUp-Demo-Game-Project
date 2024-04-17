@@ -30,13 +30,24 @@ bool USTUMenuWidget::Initialize()
     return bResult;
 }
 
+void USTUMenuWidget::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
+{
+    Super::OnAnimationFinished_Implementation(Animation);
+
+    if (Animation == LoadingAnimation)
+    {
+        LoadSelectedLevel();
+    }
+}
+
 void USTUMenuWidget::StartGame()
 {
-    const USTUGameInstance* GameInstance = GetGameInstance<USTUGameInstance>();
-    if (GameInstance != nullptr)
+    if (IsAnimationPlaying(LoadingAnimation))
     {
-        GameInstance->OpenGameLevel(SelectedIndex);
+        return;
     }
+    
+    PlayAnimation(LoadingAnimation);
 }
 
 void USTUMenuWidget::ExitGame()
@@ -79,5 +90,14 @@ void USTUMenuWidget::OnLevelItemSelected(int32 Index)
     {
         const bool bIsSelected = SelectedIndex == i;
         LevelItemWidgets[i]->SetSelected(bIsSelected);
+    }
+}
+
+void USTUMenuWidget::LoadSelectedLevel()
+{
+    const USTUGameInstance* GameInstance = GetGameInstance<USTUGameInstance>();
+    if (GameInstance != nullptr)
+    {
+        GameInstance->OpenGameLevel(SelectedIndex);
     }
 }
