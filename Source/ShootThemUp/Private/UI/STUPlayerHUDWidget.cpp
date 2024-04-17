@@ -18,7 +18,7 @@ bool USTUPlayerHUDWidget::Initialize()
     }
 
     OnPossessNewPawn(GetOwningPlayerPawn());
-    
+
     return bInit;
 }
 
@@ -83,6 +83,24 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const
     return false;
 }
 
+void USTUPlayerHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+    Super::NativeTick(MyGeometry, InDeltaTime);
+
+    const AController* PlayerController = GetOwningPlayer();
+    if (PlayerController != nullptr && PlayerController)
+    {
+        if (GetHealthPercent() <= CriticalHealthThreshold)
+        {
+            PlayDamageAnimation();
+        }
+    }
+    else if (IsAnimationPlaying(DamageAnimation))
+    {
+        StopAnimation(DamageAnimation);
+    }
+}
+
 void USTUPlayerHUDWidget::OnHealthChanged(float NewHealth, float HealthDelta)
 {
     UpdateHealthBar();
@@ -90,6 +108,7 @@ void USTUPlayerHUDWidget::OnHealthChanged(float NewHealth, float HealthDelta)
     if (HealthDelta < 0.0f)
     {
         OnTakeDamage();
+        PlayDamageAnimation();
     }
 }
 
@@ -110,4 +129,12 @@ void USTUPlayerHUDWidget::UpdateHealthBar() const
     HealthBar->SetPercent(Percent);
     HealthBar->SetFillColorAndOpacity(Percent > CriticalHealthThreshold ? NormalColor : CriticalColor);
     HealthBar->SetVisibility(Percent < 1.0f ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+}
+
+void USTUPlayerHUDWidget::PlayDamageAnimation()
+{
+    if (!IsAnimationPlaying(DamageAnimation))
+    {
+        PlayAnimation(DamageAnimation);
+    }
 }

@@ -50,10 +50,15 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     FLinearColor CriticalColor = FLinearColor::Red;
 
+    UPROPERTY(meta = (BindWidgetAnim), Transient)
+    UWidgetAnimation* DamageAnimation;
+
+    virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
 private:
     UFUNCTION()
     void OnHealthChanged(float NewHealth, float HealthDelta);
-
     void OnPossessNewPawn(APawn* Pawn);
     void UpdateHealthBar() const;
+    void PlayDamageAnimation();
 };
