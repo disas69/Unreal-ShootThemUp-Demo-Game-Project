@@ -4,8 +4,10 @@
 #include "STUGameInstance.h"
 #include "Components/Button.h"
 #include "Components/HorizontalBox.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Menu/STULevelItemWidget.h"
+#include "Sound/SoundCue.h"
 
 bool USTUMenuWidget::Initialize()
 {
@@ -48,6 +50,7 @@ void USTUMenuWidget::StartGame()
     }
     
     PlayAnimation(LoadingAnimation);
+    UGameplayStatics::PlaySound2D(GetWorld(), StartGameSound);
 }
 
 void USTUMenuWidget::ExitGame()

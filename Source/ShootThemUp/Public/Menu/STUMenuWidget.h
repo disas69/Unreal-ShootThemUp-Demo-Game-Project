@@ -6,6 +6,7 @@
 #include "UI/STUBaseWidget.h"
 #include "STUMenuWidget.generated.h"
 
+class USoundCue;
 class USTULevelItemWidget;
 class UHorizontalBox;
 class UButton;
@@ -33,6 +34,9 @@ protected:
 
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* LoadingAnimation;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* StartGameSound;
 
     virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
 
