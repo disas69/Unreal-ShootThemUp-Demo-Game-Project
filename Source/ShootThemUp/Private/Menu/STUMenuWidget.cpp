@@ -27,6 +27,7 @@ bool USTUMenuWidget::Initialize()
     if (LevelItemWidgets.Num() > 0)
     {
         OnLevelItemSelected(0);
+        OnLevelItemFocused(0);
     }
 
     return bResult;
@@ -78,6 +79,7 @@ void USTUMenuWidget::CreateLevelItems()
             {
                 LevelItemWidget->SetLevelData(i, Levels[i]);
                 LevelItemWidget->LevelSelected.AddUObject(this, &USTUMenuWidget::OnLevelItemSelected);
+                LevelItemWidget->LevelFocused.AddUObject(this, &USTUMenuWidget::OnLevelItemFocused);
                 LevelItemsBox->AddChild(LevelItemWidget);
                 LevelItemWidgets.Add(LevelItemWidget);
             }
@@ -93,6 +95,15 @@ void USTUMenuWidget::OnLevelItemSelected(int32 Index)
     {
         const bool bIsSelected = SelectedIndex == i;
         LevelItemWidgets[i]->SetSelected(bIsSelected);
+    }
+}
+
+void USTUMenuWidget::OnLevelItemFocused(int32 Index)
+{
+    for (int32 i = 0; i < LevelItemWidgets.Num(); i++)
+    {
+        const bool bIsFocused = Index == i;
+        LevelItemWidgets[i]->SetFocused(bIsFocused);
     }
 }
 

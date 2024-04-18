@@ -54,6 +54,7 @@ private:
 
     void CreateLevelItems();
     void OnLevelItemSelected(int32 Index);
+    void OnLevelItemFocused(int32 Index);
 
     void LoadSelectedLevel();
 };

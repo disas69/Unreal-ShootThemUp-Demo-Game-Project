@@ -13,6 +13,7 @@ bool USTULevelItemWidget::Initialize()
     if (SelectLevelButton != nullptr)
     {
         SelectLevelButton->OnClicked.AddDynamic(this, &USTULevelItemWidget::SelectLevel);
+        SelectLevelButton->OnHovered.AddDynamic(this, &USTULevelItemWidget::FocusLevel);
     }
 
     return bResult;
@@ -27,10 +28,20 @@ void USTULevelItemWidget::SetLevelData(int32 Index, const FLevelData& Data)
 
 void USTULevelItemWidget::SetSelected(bool bIsSelected) const
 {
-    Frame->SetVisibility(bIsSelected ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+    LevelPreview->SetColorAndOpacity(bIsSelected ? FLinearColor::Red : FLinearColor::White);
+}
+
+void USTULevelItemWidget::SetFocused(bool bIsFocused) const
+{
+    Frame->SetVisibility(bIsFocused ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 }
 
 void USTULevelItemWidget::SelectLevel()
 {
     LevelSelected.Broadcast(LevelIndex);
+}
+
+void USTULevelItemWidget::FocusLevel()
+{
+    LevelFocused.Broadcast(LevelIndex);
 }

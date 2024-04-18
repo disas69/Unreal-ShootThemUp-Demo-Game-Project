@@ -23,7 +23,9 @@ public:
 
     void SetLevelData(int32 Index, const FLevelData& Data);
     void SetSelected(bool bIsSelected) const;
+    void SetFocused(bool bIsFocused) const;
 
+    FLevelItemSelected LevelFocused;
     FLevelItemSelected LevelSelected;
 
 protected:
@@ -44,4 +46,7 @@ private:
     
     UFUNCTION()
     void SelectLevel();
+
+    UFUNCTION()
+    void FocusLevel();
 };
