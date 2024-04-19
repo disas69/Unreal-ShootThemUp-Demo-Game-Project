@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "STUBaseCharacter.generated.h"
 
+class USoundCue;
 class USTUWeaponComponent;
 class USTUHealthComponent;
 
@@ -53,6 +54,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
     FName ColorParameterName = "Paint Color";
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+    USoundCue* DeathSound = nullptr;
 
     virtual void BeginPlay() override;
 

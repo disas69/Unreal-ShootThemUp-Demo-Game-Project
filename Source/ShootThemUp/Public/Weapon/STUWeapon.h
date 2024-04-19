@@ -8,8 +8,6 @@
 
 class ASTUBaseCharacter;
 class USTUWeaponFXComponent;
-class UNiagaraComponent;
-class UNiagaraSystem;
 class ASTUGameHUD;
 class ASTUWeapon;
 

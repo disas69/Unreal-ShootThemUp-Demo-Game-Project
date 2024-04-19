@@ -14,6 +14,7 @@ void ASTURifleWeapon::StopFire()
 {
     Super::StopFire();
     GetWorldTimerManager().ClearTimer(FireTimerHandle);
+    WeaponFXComponent->StopFireSound();
 }
 
 void ASTURifleWeapon::FireInternal()
@@ -22,6 +23,7 @@ void ASTURifleWeapon::FireInternal()
 
     if (IsAmmoEmpty())
     {
+        WeaponFXComponent->PlayAmmoEmptySound();
         StopFire();
         return;
     }
@@ -34,6 +36,7 @@ void ASTURifleWeapon::FireInternal()
     TraceWeapon(SocketLocation, HitResult, TraceEndLocation);
 
     WeaponFXComponent->PlayTraceFX(SocketLocation, TraceEndLocation);
+    WeaponFXComponent->PlayFireSound();
 
     if (HitResult.bBlockingHit)
     {

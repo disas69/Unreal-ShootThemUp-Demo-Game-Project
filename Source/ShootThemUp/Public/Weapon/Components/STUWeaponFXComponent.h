@@ -7,6 +7,7 @@
 #include "Weapon/STUWeapon.h"
 #include "STUWeaponFXComponent.generated.h"
 
+class USoundCue;
 class UNiagaraComponent;
 class UNiagaraSystem;
 
@@ -54,6 +55,10 @@ public:
     void PlayTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
     void PlayImpactFX(const FHitResult& Hit);
 
+    void PlayAmmoEmptySound();
+    void PlayFireSound();
+    void StopFireSound();
+
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     FImpactData DefaultImpactEffectData;
@@ -70,6 +75,12 @@ protected:
     UPROPERTY(EditAnywhere, Category = "VFX")
     FString TraceTargetName = "TraceTarget";
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+    USoundCue* FireSound = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+    USoundCue* NoAmmoSound = nullptr;
+
 private:
     UPROPERTY()
     USkeletalMeshComponent* WeaponMesh = nullptr;
@@ -78,6 +89,9 @@ private:
 
     UPROPERTY()
     UNiagaraComponent* MuzzleFXComponent = nullptr;
+
+    UPROPERTY()
+    UAudioComponent* FireSoundComponent = nullptr;
     
     UNiagaraComponent* SpawnMuzzleFX(USkeletalMeshComponent* Mesh, const FName& SocketName) const;
     void SetMuzzleFXActive(bool IsActive);

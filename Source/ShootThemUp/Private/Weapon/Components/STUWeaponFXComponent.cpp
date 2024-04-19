@@ -3,8 +3,10 @@
 #include "Weapon/Components/STUWeaponFXComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/DecalComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 USTUWeaponFXComponent::USTUWeaponFXComponent()
 {
@@ -47,10 +49,34 @@ void USTUWeaponFXComponent::PlayImpactFX(const FHitResult& Hit)
 
     UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ImpactEffectData.Effect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
 
-    UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(), ImpactEffectData.DecalData.Material, ImpactEffectData.DecalData.Size, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+    UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(
+        GetWorld(), ImpactEffectData.DecalData.Material, ImpactEffectData.DecalData.Size, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
     if (Decal != nullptr)
     {
         Decal->SetFadeOut(ImpactEffectData.DecalData.LifeTime, ImpactEffectData.DecalData.FadeOutTime);
+    }
+}
+
+void USTUWeaponFXComponent::PlayAmmoEmptySound()
+{
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), NoAmmoSound, GetOwner()->GetActorLocation());
+}
+
+void USTUWeaponFXComponent::PlayFireSound()
+{
+    if (!IsValid(FireSoundComponent))
+    {
+        FireSoundComponent = UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
+    }
+
+    FireSoundComponent->SetPaused(false);
+}
+
+void USTUWeaponFXComponent::StopFireSound()
+{
+    if (IsValid(FireSoundComponent))
+    {
+        FireSoundComponent->SetPaused(true);
     }
 }
 

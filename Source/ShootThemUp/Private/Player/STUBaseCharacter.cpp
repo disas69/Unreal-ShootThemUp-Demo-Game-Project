@@ -4,6 +4,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/STUCharacterMovementComponent.h"
 #include "Components/STUHealthComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 #include "Weapon/STUWeaponComponent.h"
 
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -128,6 +130,7 @@ void ASTUBaseCharacter::OnDeath()
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
     PlayAnimMontage(DeathAnimation);
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
 
     FTimerHandle DeathTimerHandle;
     GetWorldTimerManager().SetTimer(DeathTimerHandle, this, &ASTUBaseCharacter::EnableRagdollPhysics, DeathAnimation->GetPlayLength() * FMath::RandRange(0.0f, 0.5f), false);

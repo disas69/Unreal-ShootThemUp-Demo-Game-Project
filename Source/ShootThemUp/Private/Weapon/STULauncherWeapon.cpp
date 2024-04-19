@@ -2,6 +2,7 @@
 
 #include "Weapon/STULauncherWeapon.h"
 #include "Weapon/STUProjectile.h"
+#include "Weapon/Components/STUWeaponFXComponent.h"
 
 void ASTULauncherWeapon::StartFire()
 {
@@ -20,6 +21,7 @@ void ASTULauncherWeapon::FireInternal()
 
     if (IsAmmoEmpty())
     {
+        WeaponFXComponent->PlayAmmoEmptySound();
         StopFire();
         return;
     }
@@ -39,5 +41,6 @@ void ASTULauncherWeapon::FireInternal()
         Projectile->Launch(ShootDirection, Damage, DamageRadius);
     }
 
+    WeaponFXComponent->PlayFireSound();
     DecreaseAmmo();
 }
