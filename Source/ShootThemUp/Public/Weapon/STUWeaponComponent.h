@@ -58,9 +58,11 @@ public:
     ASTUWeapon* GetWeaponByType(TSubclassOf<ASTUWeapon> WeaponType) const;
 
     bool AddAmmo(TSubclassOf<ASTUWeapon> WeaponType, int32 ClipsAmount);
+    void Aim(bool bAiming);
 
     virtual void StartFire();
     virtual void StopFire();
+    
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 protected:

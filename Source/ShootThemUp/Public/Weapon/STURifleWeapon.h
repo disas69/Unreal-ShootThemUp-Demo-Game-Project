@@ -17,8 +17,15 @@ class SHOOTTHEMUP_API ASTURifleWeapon : public ASTUWeapon
 public:
     virtual void StartFire() override;
     virtual void StopFire() override;
+    virtual void Aim(bool bAiming) override;
 
 protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
+    float AimCameraFOV = 60.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
+    float AimSensitivity = 0.6f;
+    
     virtual void FireInternal() override;
 
 private:

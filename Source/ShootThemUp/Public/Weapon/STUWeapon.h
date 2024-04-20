@@ -70,6 +70,8 @@ public:
     bool AddAmmo(int32 ClipsAmount);
     void OnEquipFinished();
 
+    virtual void Aim(bool bAiming);
+
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     USkeletalMeshComponent* WeaponMesh = nullptr;

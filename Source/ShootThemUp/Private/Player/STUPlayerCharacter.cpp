@@ -10,6 +10,7 @@
 #include "Input/InputDataConfig.h"
 #include "Weapon/STUWeaponComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/STUCameraZoomComponent.h"
 
 ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -25,6 +26,8 @@ ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjectInitial
     CameraCollision->SetupAttachment(Camera);
     CameraCollision->SetSphereRadius(10.0f);
     CameraCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+
+    CameraZoomComponent = CreateDefaultSubobject<USTUCameraZoomComponent>("CameraZoomComponent");
 }
 
 void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -43,6 +46,7 @@ void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
     Input->BindAction(InputDataConfig->Jump, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Jump);
     Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Triggered, this, &ASTUPlayerCharacter::Sprint);
     Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Triggered, this, &ASTUPlayerCharacter::Fire);
+    Input->BindAction(InputDataConfig->Aim, ETriggerEvent::Triggered, this, &ASTUPlayerCharacter::Aim);
     Input->BindAction(InputDataConfig->SwitchWeapon, ETriggerEvent::Triggered, WeaponComponent, &USTUWeaponComponent::SwitchWeapon);
     Input->BindAction(InputDataConfig->Reload, ETriggerEvent::Triggered, WeaponComponent, &USTUWeaponComponent::Reload);
 }
@@ -69,10 +73,10 @@ void ASTUPlayerCharacter::Look(const FInputActionValue& Value)
 {
     const FVector2D LookAxisVector = Value.Get<FVector2D>();
 
-    const float TurnAmount = LookAxisVector.X * CameraMovementRate * CameraSensitivity * GetWorld()->GetDeltaSeconds();
+    const float TurnAmount = LookAxisVector.X * CameraMovementRate * CameraZoomComponent->GetCameraSensitivity() * GetWorld()->GetDeltaSeconds();
     AddControllerYawInput(TurnAmount);
 
-    const float LookAmount = LookAxisVector.Y * CameraMovementRate * CameraSensitivity * GetWorld()->GetDeltaSeconds();
+    const float LookAmount = LookAxisVector.Y * CameraMovementRate * CameraZoomComponent->GetCameraSensitivity() * GetWorld()->GetDeltaSeconds();
     AddControllerPitchInput(LookAmount);
 }
 
@@ -97,6 +101,14 @@ void ASTUPlayerCharacter::Fire(const FInputActionValue& Value)
     else
     {
         StopFire();
+    }
+}
+
+void ASTUPlayerCharacter::Aim(const FInputActionValue& Value)
+{
+    if (WeaponComponent != nullptr)
+    {
+        WeaponComponent->Aim(Value.Get<bool>());
     }
 }
 
@@ -136,6 +148,18 @@ void ASTUPlayerCharacter::OnDeath()
     {
         Controller->ChangeState(NAME_Spectating);
     }
+}
+
+void ASTUPlayerCharacter::StartSprint()
+{
+    Super::StartSprint();
+    CameraZoomComponent->ZoomIn(SprintCameraFOV);
+}
+
+void ASTUPlayerCharacter::StopSprint()
+{
+    Super::StopSprint();
+    CameraZoomComponent->ZoomOut();
 }
 
 void ASTUPlayerCharacter::PlayCameraShake(TSubclassOf<UCameraShakeBase> CameraShake) const

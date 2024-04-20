@@ -27,12 +27,12 @@ public:
     float GetMovementDirectionAngle() const;
 
     void SetPlayerColor(FLinearColor TeamColor) const;
-    
-    void StartSprint();
-    void StopSprint();
 
     void StartFire();
     void StopFire();
+
+    virtual void StartSprint();
+    virtual void StopSprint();
 
 protected:
     bool bIsMovingForward = false;

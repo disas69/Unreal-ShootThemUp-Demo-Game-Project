@@ -98,6 +98,7 @@ void ASTUBaseCharacter::StartSprint()
     }
 
     bIsSprinting = true;
+    WeaponComponent->Aim(false);
 }
 
 void ASTUBaseCharacter::StopSprint()

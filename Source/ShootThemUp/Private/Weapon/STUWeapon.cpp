@@ -145,6 +145,11 @@ void ASTUWeapon::OnEquipFinished()
     }
 }
 
+void ASTUWeapon::Aim(bool bAiming)
+{
+    
+}
+
 void ASTUWeapon::Reload()
 {
     CurrentAmmo.Bullets = DefaultAmmo.Bullets;

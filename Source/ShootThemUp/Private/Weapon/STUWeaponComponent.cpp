@@ -66,10 +66,18 @@ void USTUWeaponComponent::StartFire()
 void USTUWeaponComponent::StopFire()
 {
     bIsFireInProgress = false;
-    
+
     if (CurrentWeapon != nullptr)
     {
         CurrentWeapon->StopFire();
+    }
+}
+
+void USTUWeaponComponent::Aim(bool bAiming)
+{
+    if (CurrentWeapon != nullptr)
+    {
+        CurrentWeapon->Aim(bAiming);
     }
 }
 
@@ -262,6 +270,7 @@ void USTUWeaponComponent::HandlePreviousWeapon()
         if (CurrentWeapon != nullptr)
         {
             CurrentWeapon->StopFire();
+            CurrentWeapon->Aim(false);
             CurrentWeapon->SetActorHiddenInGame(false);
             AttachWeaponToSocket(CurrentWeapon, WeaponArmorySocketName);
         }

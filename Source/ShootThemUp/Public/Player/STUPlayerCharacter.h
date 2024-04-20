@@ -6,6 +6,7 @@
 #include "Player/STUBaseCharacter.h"
 #include "STUPlayerCharacter.generated.h"
 
+class USTUCameraZoomComponent;
 class USphereComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -33,6 +34,9 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USphereComponent* CameraCollision = nullptr;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+    USTUCameraZoomComponent* CameraZoomComponent = nullptr;
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputDataConfig* InputDataConfig = nullptr;
 
@@ -40,7 +44,7 @@ protected:
     float CameraMovementRate = 60.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
-    float CameraSensitivity = 1.0f;
+    float SprintCameraFOV = 90.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
     TSubclassOf<UCameraShakeBase> DamageCameraShake;
@@ -54,6 +58,8 @@ protected:
     virtual void BeginPlay() override;
     virtual void OnHealthChanged(float NewHealth, float HealthDelta) override;
     virtual void OnDeath() override;
+    virtual void StartSprint() override;
+    virtual void StopSprint() override;
 
 private:
     UFUNCTION()
@@ -67,6 +73,9 @@ private:
 
     UFUNCTION()
     void Fire(const FInputActionValue& Value);
+
+    UFUNCTION()
+    void Aim(const FInputActionValue& Value);
 
     void PlayCameraShake(TSubclassOf<UCameraShakeBase> CameraShake) const;
     void UpdateCameraCollision() const;
