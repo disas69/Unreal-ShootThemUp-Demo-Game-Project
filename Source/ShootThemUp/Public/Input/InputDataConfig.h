@@ -28,6 +28,9 @@ public:
     UInputAction* Fire = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+    UInputAction* Aim = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* Jump = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")

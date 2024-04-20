@@ -41,10 +41,8 @@ void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
     Input->BindAction(InputDataConfig->Move, ETriggerEvent::Triggered, this, &ASTUPlayerCharacter::Move);
     Input->BindAction(InputDataConfig->Look, ETriggerEvent::Triggered, this, &ASTUPlayerCharacter::Look);
     Input->BindAction(InputDataConfig->Jump, ETriggerEvent::Triggered, this, &ASTUBaseCharacter::Jump);
-    Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Started, this, &ASTUBaseCharacter::StartSprint);
-    Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Completed, this, &ASTUBaseCharacter::StopSprint);
-    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Started, this, &ASTUBaseCharacter::StartFire);
-    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Completed, this, &ASTUBaseCharacter::StopFire);
+    Input->BindAction(InputDataConfig->Sprint, ETriggerEvent::Triggered, this, &ASTUPlayerCharacter::Sprint);
+    Input->BindAction(InputDataConfig->Fire, ETriggerEvent::Triggered, this, &ASTUPlayerCharacter::Fire);
     Input->BindAction(InputDataConfig->SwitchWeapon, ETriggerEvent::Triggered, WeaponComponent, &USTUWeaponComponent::SwitchWeapon);
     Input->BindAction(InputDataConfig->Reload, ETriggerEvent::Triggered, WeaponComponent, &USTUWeaponComponent::Reload);
 }
@@ -76,6 +74,30 @@ void ASTUPlayerCharacter::Look(const FInputActionValue& Value)
 
     const float LookAmount = LookAxisVector.Y * CameraMovementRate * CameraSensitivity * GetWorld()->GetDeltaSeconds();
     AddControllerPitchInput(LookAmount);
+}
+
+void ASTUPlayerCharacter::Sprint(const FInputActionValue& Value)
+{
+    if (Value.Get<bool>())
+    {
+        StartSprint();
+    }
+    else
+    {
+        StopSprint();
+    }
+}
+
+void ASTUPlayerCharacter::Fire(const FInputActionValue& Value)
+{
+    if (Value.Get<bool>())
+    {
+        StartFire();
+    }
+    else
+    {
+        StopFire();
+    }
 }
 
 void ASTUPlayerCharacter::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

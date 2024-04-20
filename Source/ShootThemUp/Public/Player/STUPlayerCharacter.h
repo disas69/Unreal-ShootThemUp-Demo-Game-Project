@@ -62,6 +62,12 @@ private:
     UFUNCTION()
     void Look(const FInputActionValue& Value);
 
+    UFUNCTION()
+    void Sprint(const FInputActionValue& Value);
+
+    UFUNCTION()
+    void Fire(const FInputActionValue& Value);
+
     void PlayCameraShake(TSubclassOf<UCameraShakeBase> CameraShake) const;
     void UpdateCameraCollision() const;
 };
