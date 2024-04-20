@@ -34,6 +34,8 @@ public:
     virtual void StartSprint();
     virtual void StopSprint();
 
+    virtual void TurnOff() override;
+
 protected:
     bool bIsMovingForward = false;
 

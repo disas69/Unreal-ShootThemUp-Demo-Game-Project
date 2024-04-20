@@ -21,6 +21,7 @@ public:
     UBehaviorTree* BehaviorTree = nullptr;
 
     virtual void Tick(float DeltaTime) override;
+    virtual void TurnOff() override;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
@@ -33,4 +34,5 @@ protected:
 private:
     void UpdateHealthWidgetValue() const;
     void UpdateHealthWidgetVisibility() const;
+    void CleanupBrainComponent() const;
 };

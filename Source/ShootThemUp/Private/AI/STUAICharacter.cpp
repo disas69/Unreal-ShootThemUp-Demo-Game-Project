@@ -35,6 +35,12 @@ void ASTUAICharacter::Tick(float DeltaTime)
     UpdateHealthWidgetVisibility();
 }
 
+void ASTUAICharacter::TurnOff()
+{
+    Super::TurnOff();
+    CleanupBrainComponent();
+}
+
 void ASTUAICharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -44,12 +50,7 @@ void ASTUAICharacter::BeginPlay()
 void ASTUAICharacter::OnDeath()
 {
     Super::OnDeath();
-
-    const AAIController* AIController = Cast<AAIController>(GetController());
-    if (AIController != nullptr && AIController->BrainComponent != nullptr)
-    {
-        AIController->BrainComponent->Cleanup();
-    }
+    CleanupBrainComponent();
 }
 
 void ASTUAICharacter::OnHealthChanged(float NewHealth, float HealthDelta)
@@ -70,7 +71,7 @@ void ASTUAICharacter::UpdateHealthWidgetValue() const
 void ASTUAICharacter::UpdateHealthWidgetVisibility() const
 {
     float Distance = MAX_FLT;
-    
+
     if (HealthComponent->IsAlive())
     {
         const APlayerCameraManager* PlayerCamera = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
@@ -81,5 +82,14 @@ void ASTUAICharacter::UpdateHealthWidgetVisibility() const
     if (HealthBarWidget != nullptr)
     {
         HealthBarWidget->SetDistanceVisibility(Distance);
+    }
+}
+
+void ASTUAICharacter::CleanupBrainComponent() const
+{
+    const AAIController* AIController = Cast<AAIController>(GetController());
+    if (AIController != nullptr && AIController->BrainComponent != nullptr)
+    {
+        AIController->BrainComponent->Cleanup();
     }
 }

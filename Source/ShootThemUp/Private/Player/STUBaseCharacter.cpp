@@ -106,6 +106,13 @@ void ASTUBaseCharacter::StopSprint()
     bIsSprinting = false;
 }
 
+void ASTUBaseCharacter::TurnOff()
+{
+    Super::TurnOff();
+    StopFire();
+    StopSprint();
+}
+
 void ASTUBaseCharacter::StartFire()
 {
     bIsFireInProgress = true;
