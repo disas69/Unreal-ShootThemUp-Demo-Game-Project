@@ -23,7 +23,7 @@ void USTUWeaponFXComponent::PlayFireFX()
 {
     if (!IsValid(MuzzleFXComponent))
     {
-        MuzzleFXComponent = SpawnMuzzleFX(WeaponMesh, MuzzleSocketName);
+        MuzzleFXComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX, WeaponMesh, MuzzleSocketName, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget, true);
     }
     
     SetMuzzleFXActive(true);
@@ -49,12 +49,13 @@ void USTUWeaponFXComponent::PlayImpactFX(const FHitResult& Hit)
 
     UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ImpactEffectData.Effect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
 
-    UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(
-        GetWorld(), ImpactEffectData.DecalData.Material, ImpactEffectData.DecalData.Size, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+    UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(), ImpactEffectData.DecalData.Material, ImpactEffectData.DecalData.Size, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
     if (Decal != nullptr)
     {
         Decal->SetFadeOut(ImpactEffectData.DecalData.LifeTime, ImpactEffectData.DecalData.FadeOutTime);
     }
+
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactEffectData.Sound, Hit.ImpactPoint);
 }
 
 void USTUWeaponFXComponent::PlayAmmoEmptySound()
@@ -64,12 +65,27 @@ void USTUWeaponFXComponent::PlayAmmoEmptySound()
 
 void USTUWeaponFXComponent::PlayFireSound()
 {
-    if (!IsValid(FireSoundComponent))
+    if (FireSound == nullptr)
     {
-        FireSoundComponent = UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
+        return;
     }
+    
+    if (FireSound->IsLooping())
+    {
+        if (!IsValid(FireSoundComponent))
+        {
+            FireSoundComponent = UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
+        }
 
-    FireSoundComponent->SetPaused(false);
+        if (IsValid(FireSoundComponent))
+        {
+            FireSoundComponent->SetPaused(false);
+        }
+    }
+    else
+    {
+        UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
+    }
 }
 
 void USTUWeaponFXComponent::StopFireSound()
@@ -78,11 +94,6 @@ void USTUWeaponFXComponent::StopFireSound()
     {
         FireSoundComponent->SetPaused(true);
     }
-}
-
-UNiagaraComponent* USTUWeaponFXComponent::SpawnMuzzleFX(USkeletalMeshComponent* Mesh, const FName& SocketName) const
-{
-    return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX, Mesh, SocketName, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget, true);
 }
 
 void USTUWeaponFXComponent::SetMuzzleFXActive(bool IsActive)

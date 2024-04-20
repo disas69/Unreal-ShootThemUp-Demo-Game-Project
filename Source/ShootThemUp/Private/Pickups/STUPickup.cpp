@@ -2,6 +2,8 @@
 
 #include "Pickups/STUPickup.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 ASTUPickup::ASTUPickup()
 {
@@ -50,6 +52,7 @@ void ASTUPickup::Collect()
     bIsAvailable = false;
     GetRootComponent()->SetVisibility(false, true);
     SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, GetActorLocation());
 
     FTimerHandle RespawnTimerHandle;
     GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASTUPickup::Respawn, RespawnTime, false);

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "STUPickup.generated.h"
 
+class USoundCue;
 class USphereComponent;
 
 UCLASS()
@@ -27,6 +28,9 @@ public:
 
     UPROPERTY(EditAnywhere, Category = "Pickup")
     float FloatingSpeed = 10.0f;
+
+    UPROPERTY(EditAnywhere, Category = "Sound")
+    USoundCue* PickupSound = nullptr;
 
     bool IsAvailable() const { return bIsAvailable; }
 

@@ -29,7 +29,10 @@ void ASTUWeapon::BeginPlay()
 
 void ASTUWeapon::StartFire()
 {
-    WeaponFXComponent->PlayFireFX();
+    if (!IsAmmoEmpty())
+    {
+        WeaponFXComponent->PlayFireFX();
+    }
 }
 
 void ASTUWeapon::StopFire()

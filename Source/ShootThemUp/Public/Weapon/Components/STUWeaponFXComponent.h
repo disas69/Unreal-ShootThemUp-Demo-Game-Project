@@ -39,6 +39,9 @@ struct FImpactData
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     FDecalData DecalData;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* Sound = nullptr;
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -93,6 +96,5 @@ private:
     UPROPERTY()
     UAudioComponent* FireSoundComponent = nullptr;
     
-    UNiagaraComponent* SpawnMuzzleFX(USkeletalMeshComponent* Mesh, const FName& SocketName) const;
     void SetMuzzleFXActive(bool IsActive);
 };

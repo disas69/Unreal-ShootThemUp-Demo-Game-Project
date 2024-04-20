@@ -12,7 +12,7 @@ void ASTULauncherWeapon::StartFire()
 
 void ASTULauncherWeapon::StopFire()
 {
-    // Super::StopFire();
+    Super::StopFire();
 }
 
 void ASTULauncherWeapon::FireInternal()
