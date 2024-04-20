@@ -2,6 +2,7 @@
 
 #include "UI/STUPlayerHUDWidget.h"
 #include "STUUtils.h"
+#include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/STUHealthComponent.h"
 #include "Weapon/STUWeapon.h"
@@ -87,17 +88,18 @@ void USTUPlayerHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 {
     Super::NativeTick(MyGeometry, InDeltaTime);
 
-    const AController* PlayerController = GetOwningPlayer();
-    if (PlayerController != nullptr && PlayerController)
+    const float HealthPercent = GetHealthPercent();
+    if (HealthPercent < CriticalHealthThreshold)
     {
-        if (GetHealthPercent() <= CriticalHealthThreshold)
-        {
-            PlayDamageAnimation();
-        }
+        // Remap the health percent to the opacity value:
+        const TRange<float> HealthRange = TRange<float>(CriticalHealthThreshold, 0.0f);
+        const TRange<float> OpacityRange = TRange<float>(0.0f, 1.0f);
+        const float Alpha = FMath::GetMappedRangeValueClamped(HealthRange, OpacityRange, HealthPercent);
+        DamageOverlay->SetOpacity(Alpha);
     }
-    else if (IsAnimationPlaying(DamageAnimation))
+    else
     {
-        StopAnimation(DamageAnimation);
+        DamageOverlay->SetOpacity(0.0f);
     }
 }
 
@@ -108,7 +110,18 @@ void USTUPlayerHUDWidget::OnHealthChanged(float NewHealth, float HealthDelta)
     if (HealthDelta < 0.0f)
     {
         OnTakeDamage();
-        PlayDamageAnimation();
+
+        if (!IsAnimationPlaying(DamageAnimation))
+        {
+            PlayAnimation(DamageAnimation);
+        }
+    }
+    else
+    {
+        if (!IsAnimationPlaying(HealAnimation))
+        {
+            PlayAnimation(HealAnimation);
+        }
     }
 }
 
@@ -129,12 +142,4 @@ void USTUPlayerHUDWidget::UpdateHealthBar() const
     HealthBar->SetPercent(Percent);
     HealthBar->SetFillColorAndOpacity(Percent > CriticalHealthThreshold ? NormalColor : CriticalColor);
     HealthBar->SetVisibility(Percent < 1.0f ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
-}
-
-void USTUPlayerHUDWidget::PlayDamageAnimation()
-{
-    if (!IsAnimationPlaying(DamageAnimation))
-    {
-        PlayAnimation(DamageAnimation);
-    }
 }

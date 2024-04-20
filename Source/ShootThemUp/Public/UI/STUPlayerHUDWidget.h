@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "STUPlayerHUDWidget.generated.h"
 
+class UImage;
 class UProgressBar;
 class USTUHealthComponent;
 class USTUWeaponComponent;
@@ -54,6 +55,12 @@ protected:
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* DamageAnimation;
 
+    UPROPERTY(meta = (BindWidget))
+    UImage* DamageOverlay;
+
+    UPROPERTY(meta = (BindWidgetAnim), Transient)
+    UWidgetAnimation* HealAnimation;
+
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
@@ -61,5 +68,4 @@ private:
     void OnHealthChanged(float NewHealth, float HealthDelta);
     void OnPossessNewPawn(APawn* Pawn);
     void UpdateHealthBar() const;
-    void PlayDamageAnimation();
 };
