@@ -2,6 +2,7 @@
 
 #include "Weapon/STURifleWeapon.h"
 #include "Components/STUCameraZoomComponent.h"
+#include "Engine/DamageEvents.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
 
 void ASTURifleWeapon::StartFire()
@@ -64,6 +65,9 @@ void ASTURifleWeapon::FireInternal()
         WeaponFXComponent->PlayImpactFX(HitResult);
     }
 
-    ApplyDamage(HitResult);
+    FPointDamageEvent DamageEvent;
+    DamageEvent.HitInfo = HitResult;
+    ApplyDamage(HitResult, DamageEvent);
+
     DecreaseAmmo();
 }

@@ -36,6 +36,6 @@ void USTUCharacterMovementComponent::OnGroundLanded(const FHitResult& Hit)
     if (FallVelocity > LandedVelocity.X)
     {
         const float Damage = FMath::GetMappedRangeValueClamped(LandedVelocity, LandedDamage, FallVelocity);
-        GetCharacterOwner()->TakeDamage(Damage, FDamageEvent(), nullptr, nullptr);
+        GetCharacterOwner()->TakeDamage(Damage, FPointDamageEvent(), nullptr, nullptr);
     }
 }

@@ -45,20 +45,28 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health", meta = (EditCondition = "AutoHeal"))
     float HealAmount = 5.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
+    TMap<UPhysicalMaterial*, float> DamageModifiers;
     
     virtual void BeginPlay() override;
 
 private:
     float Health = 0.0f;
     FTimerHandle HealTimerHandle;
-    
-    UFUNCTION()
-    void OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
+    UFUNCTION()
+    void OnOwnerTakePointDamage(AActor* DamagedActor, float Damage, AController* InstigatedBy, FVector HitLocation, UPrimitiveComponent* FHitComponent, FName BoneName, FVector ShotFromDirection, const UDamageType* DamageType, AActor* DamageCauser);
+
+    UFUNCTION()
+    void OnOwnerTakeRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin, const FHitResult& HitInfo, AController* InstigatedBy, AActor* DamageCauser);
+    
     UFUNCTION()
     void HealUpdate();
 
     void SetHealth(const float NewHealth);
     void ReportDamageEvent(AActor* DamagedActor, const AController* Instigator, float DamageAmount) const;
     void ReportDeathEvent(AController* Killed, const AController* Killer) const;
+    void ApplyDamage(AActor* DamagedActor, float Damage, AController* InstigatedBy);
+    float GetPointDamageModifier(AActor* DamagedActor, const FName& BoneName);
 };

@@ -104,7 +104,7 @@ protected:
     virtual void FireInternal();
     
     void TraceWeapon(const FVector& SocketLocation, FHitResult& HitResult, FVector& TraceEndLocation);
-    void ApplyDamage(const FHitResult& HitResult);
+    void ApplyDamage(const FHitResult& HitResult, const FDamageEvent& DamageEvent);
     FTransform GetMuzzleSocketTransform() const;
 
     void DecreaseAmmo();

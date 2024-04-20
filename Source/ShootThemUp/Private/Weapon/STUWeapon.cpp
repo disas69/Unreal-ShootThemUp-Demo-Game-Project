@@ -74,14 +74,14 @@ void ASTUWeapon::TraceWeapon(const FVector& SocketLocation, FHitResult& HitResul
     }
 }
 
-void ASTUWeapon::ApplyDamage(const FHitResult& HitResult)
+void ASTUWeapon::ApplyDamage(const FHitResult& HitResult, const FDamageEvent& DamageEvent)
 {
     if (HitResult.bBlockingHit)
     {
         AActor* HitActor = HitResult.GetActor();
         if (HitActor != nullptr)
         {
-            HitActor->TakeDamage(Damage, FDamageEvent(), GetPlayerController(), this);
+            HitActor->TakeDamage(Damage, DamageEvent, GetPlayerController(), this);
         }
     }
 }

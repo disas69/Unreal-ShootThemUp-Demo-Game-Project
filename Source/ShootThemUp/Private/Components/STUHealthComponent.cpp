@@ -1,8 +1,8 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Components/STUHealthComponent.h"
-
 #include "STUGameModeBase.h"
+#include "GameFramework/Character.h"
 #include "Perception/AISenseEvent_Damage.h"
 
 USTUHealthComponent::USTUHealthComponent()
@@ -30,36 +30,22 @@ void USTUHealthComponent::BeginPlay()
     AActor* ComponentOwner = GetOwner();
     if (ComponentOwner != nullptr)
     {
-        ComponentOwner->OnTakeAnyDamage.AddDynamic(this, &USTUHealthComponent::OnOwnerTakeDamage);
+        ComponentOwner->OnTakePointDamage.AddDynamic(this, &USTUHealthComponent::OnOwnerTakePointDamage);
+        ComponentOwner->OnTakeRadialDamage.AddDynamic(this, &USTUHealthComponent::OnOwnerTakeRadialDamage);
     }
 }
 
-void USTUHealthComponent::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+void USTUHealthComponent::OnOwnerTakePointDamage(AActor* DamagedActor, float Damage, AController* InstigatedBy, FVector HitLocation, UPrimitiveComponent* FHitComponent, FName BoneName, FVector ShotFromDirection, const UDamageType* DamageType, AActor* DamageCauser)
 {
-    if (Damage <= 0.0f || !IsAlive())
-    {
-        return;
-    }
+    const float DamageModifier = GetPointDamageModifier(DamagedActor, BoneName);
+    Damage *= DamageModifier;
+    
+    ApplyDamage(DamagedActor, Damage, InstigatedBy);
+}
 
-    if (AutoHeal && HealTimerHandle.IsValid())
-    {
-        GetWorld()->GetTimerManager().ClearTimer(HealTimerHandle);
-    }
-
-    SetHealth(Health - Damage);
-    ReportDamageEvent(DamagedActor, InstigatedBy, Damage);
-
-    if (IsAlive())
-    {
-        if (AutoHeal)
-        {
-            GetWorld()->GetTimerManager().SetTimer(HealTimerHandle, this, &USTUHealthComponent::HealUpdate, HealUpdateTime, true, HealDelay);
-        }
-    }
-    else
-    {
-        ReportDeathEvent(DamagedActor->GetInstigatorController(), InstigatedBy);
-    }
+void USTUHealthComponent::OnOwnerTakeRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin, const FHitResult& HitInfo, AController* InstigatedBy, AActor* DamageCauser)
+{
+    ApplyDamage(DamagedActor, Damage, InstigatedBy);
 }
 
 void USTUHealthComponent::HealUpdate()
@@ -99,4 +85,55 @@ void USTUHealthComponent::ReportDeathEvent(AController* Killed, const AControlle
     }
 
     OnDeath.Broadcast();
+}
+
+void USTUHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, AController* InstigatedBy)
+{
+    if (Damage <= 0.0f || !IsAlive())
+    {
+        return;
+    }
+
+    if (AutoHeal && HealTimerHandle.IsValid())
+    {
+        GetWorld()->GetTimerManager().ClearTimer(HealTimerHandle);
+    }
+
+    SetHealth(Health - Damage);
+    ReportDamageEvent(DamagedActor, InstigatedBy, Damage);
+
+    if (IsAlive())
+    {
+        if (AutoHeal)
+        {
+            GetWorld()->GetTimerManager().SetTimer(HealTimerHandle, this, &USTUHealthComponent::HealUpdate, HealUpdateTime, true, HealDelay);
+        }
+    }
+    else
+    {
+        ReportDeathEvent(DamagedActor->GetInstigatorController(), InstigatedBy);
+    }
+}
+
+float USTUHealthComponent::GetPointDamageModifier(AActor* DamagedActor, const FName& BoneName)
+{
+    if (DamageModifiers.Num() == 0)
+    {
+        return 1.0f;
+    }
+
+    const ACharacter* DamagedCharacter = Cast<ACharacter>(DamagedActor);
+    if (DamagedCharacter != nullptr)
+    {
+        const UPhysicalMaterial* PhysicalMaterial = DamagedCharacter->GetMesh()->GetBodyInstance(BoneName)->GetSimplePhysicalMaterial();
+        if (PhysicalMaterial != nullptr)
+        {
+            if (DamageModifiers.Contains(PhysicalMaterial))
+            {
+                return DamageModifiers[PhysicalMaterial];
+            }
+        }
+    }
+
+    return 1.0f;
 }
