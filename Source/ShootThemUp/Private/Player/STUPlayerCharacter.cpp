@@ -143,6 +143,8 @@ void ASTUPlayerCharacter::OnHealthChanged(float NewHealth, float HealthDelta)
 void ASTUPlayerCharacter::OnDeath()
 {
     Super::OnDeath();
+    
+    CameraZoomComponent->ResetCameraFOV();
 
     if (Controller != nullptr)
     {

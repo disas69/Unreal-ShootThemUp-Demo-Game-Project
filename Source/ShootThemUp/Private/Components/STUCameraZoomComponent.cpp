@@ -14,15 +14,32 @@ void USTUCameraZoomComponent::BeginPlay()
     DefaultFieldOfView = CameraFOV;
     DefaultCameraSensitivity = CameraSensitivity;
 
+    APlayerCameraManager* CameraManager = GetPlayerCameraManager();
+    if (CameraManager != nullptr)
+    {
+        PlayerCameraManager = CameraManager;
+        PlayerCameraManager->SetFOV(CameraFOV);
+    }
+}
+
+APlayerCameraManager* USTUCameraZoomComponent::GetPlayerCameraManager() const
+{
     const APlayerController* PlayerController = Cast<APawn>(GetOwner())->GetController<APlayerController>();
     if (PlayerController != nullptr)
     {
-        APlayerCameraManager* CameraManager = PlayerController->PlayerCameraManager;
-        if (CameraManager != nullptr)
-        {
-            PlayerCameraManager = CameraManager;
-            PlayerCameraManager->SetFOV(CameraFOV);
-        }
+        return PlayerController->PlayerCameraManager;
+    }
+
+    return nullptr;
+}
+
+void USTUCameraZoomComponent::ResetCameraFOV()
+{
+    bZooming = false;
+    
+    if (PlayerCameraManager != nullptr)
+    {
+        PlayerCameraManager->SetFOV(DefaultFieldOfView);
     }
 }
 
@@ -43,8 +60,13 @@ void USTUCameraZoomComponent::ZoomOut()
 void USTUCameraZoomComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+    
+    if (PlayerCameraManager == nullptr || !IsValid(PlayerCameraManager))
+    {
+        PlayerCameraManager = GetPlayerCameraManager();
+    }
 
-    if (bZooming && PlayerCameraManager != nullptr)
+    if (bZooming)
     {
         const float CurrentFOV = PlayerCameraManager->GetFOVAngle();
         const float NewFOV = FMath::FInterpTo(CurrentFOV, TargetFieldOfView, DeltaTime, ZoomSpeed);

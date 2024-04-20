@@ -26,6 +26,7 @@ public:
     float GetCameraSensitivity() const { return CameraSensitivity; }
     void SetCameraSensitivity(float NewSensitivity) { CameraSensitivity = NewSensitivity; }
     void ResetCameraSensitivity() { CameraSensitivity = DefaultCameraSensitivity; }
+    void ResetCameraFOV();
 
     void ZoomIn(float TargetFOV);
     void ZoomOut();
@@ -43,4 +44,6 @@ private:
 
     UPROPERTY()
     APlayerCameraManager* PlayerCameraManager = nullptr;
+
+    APlayerCameraManager* GetPlayerCameraManager() const;
 };
