@@ -32,12 +32,17 @@ public:
 
     const TArray<FLevelData>& GetGameLevels() const { return GameLevels; }
 
+    void ToggleVolume() const;
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     TSoftObjectPtr<UWorld> MenuLevel;
     
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     TArray<FLevelData> GameLevels;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    USoundClass* MasterSoundClass;
 
 private:
     FLevelData GetLevelData(int32 Index) const;

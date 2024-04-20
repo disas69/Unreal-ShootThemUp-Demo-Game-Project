@@ -2,6 +2,7 @@
 
 #include "STUGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/STUSoundStatics.h"
 
 void USTUGameInstance::OpenMenuLevel() const
 {
@@ -11,6 +12,11 @@ void USTUGameInstance::OpenMenuLevel() const
 void USTUGameInstance::OpenGameLevel(int32 LevelIndex) const
 {
     UGameplayStatics::OpenLevelBySoftObjectPtr(this, GetLevelData(LevelIndex).Level);
+}
+
+void USTUGameInstance::ToggleVolume() const
+{
+    USTUSoundStatics::ToggleSoundClassVolume(MasterSoundClass);
 }
 
 FLevelData USTUGameInstance::GetLevelData(int32 Index) const
