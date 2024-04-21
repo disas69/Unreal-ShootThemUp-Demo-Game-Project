@@ -60,6 +60,7 @@ protected:
     virtual void OnDeath() override;
     virtual void StartSprint() override;
     virtual void StopSprint() override;
+    virtual void StopPlayer() override;
 
 private:
     UFUNCTION()

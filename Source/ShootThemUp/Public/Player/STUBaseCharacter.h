@@ -33,8 +33,10 @@ public:
 
     virtual void StartSprint();
     virtual void StopSprint();
+    virtual void StopPlayer();
 
     virtual void TurnOff() override;
+    virtual void Reset() override;
 
 protected:
     bool bIsMovingForward = false;

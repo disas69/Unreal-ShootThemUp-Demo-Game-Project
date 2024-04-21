@@ -22,6 +22,7 @@ public:
 
     virtual void Tick(float DeltaTime) override;
     virtual void TurnOff() override;
+    virtual void Reset() override;
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")

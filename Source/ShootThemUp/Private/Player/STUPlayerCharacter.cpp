@@ -164,6 +164,12 @@ void ASTUPlayerCharacter::StopSprint()
     CameraZoomComponent->ZoomOut();
 }
 
+void ASTUPlayerCharacter::StopPlayer()
+{
+    Super::StopPlayer();
+    WeaponComponent->Aim(false);
+}
+
 void ASTUPlayerCharacter::PlayCameraShake(TSubclassOf<UCameraShakeBase> CameraShake) const
 {
     const APlayerController* PlayerController = Cast<APlayerController>(GetController());

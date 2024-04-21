@@ -39,6 +39,14 @@ void ASTUAICharacter::TurnOff()
 {
     Super::TurnOff();
     CleanupBrainComponent();
+
+}
+
+void ASTUAICharacter::Reset()
+{
+    Super::Reset();
+    CleanupBrainComponent();
+
 }
 
 void ASTUAICharacter::BeginPlay()

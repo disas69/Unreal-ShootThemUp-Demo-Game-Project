@@ -48,6 +48,7 @@ bool ASTUGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDel
     const bool bResult = Super::SetPause(PC, CanUnpauseDelegate);
     if (bResult)
     {
+        StopAllPlayers();
         SetGameState(EGameState::Pause);
     }
 
@@ -189,6 +190,19 @@ void ASTUGameModeBase::ResetPlayer(AController* Controller)
 
     RestartPlayer(Controller);
     SetPlayerColor(Controller);
+}
+
+void ASTUGameModeBase::StopAllPlayers() const
+{
+    for (FConstControllerIterator It = GetWorld()->GetControllerIterator(); It; ++It)
+    {
+        const AController* Controller = It->Get();
+        ASTUBaseCharacter* Character = Cast<ASTUBaseCharacter>(Controller->GetPawn());
+        if (Character != nullptr)
+        {
+            Character->StopPlayer();
+        }
+    }
 }
 
 void ASTUGameModeBase::CreateTeams()

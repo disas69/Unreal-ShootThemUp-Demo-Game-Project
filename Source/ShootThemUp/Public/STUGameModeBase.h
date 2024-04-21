@@ -104,6 +104,7 @@ private:
     void UpdateRoundTimer();
     void ResetAllPlayers();
     void ResetPlayer(AController* Controller);
+    void StopAllPlayers() const;
 
     void CreateTeams();
     FTeamData GetTeamData(int32 TeamID) const;

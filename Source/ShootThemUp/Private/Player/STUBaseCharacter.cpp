@@ -106,11 +106,22 @@ void ASTUBaseCharacter::StopSprint()
     bIsSprinting = false;
 }
 
+void ASTUBaseCharacter::StopPlayer()
+{
+    StopFire();
+    StopSprint();
+}
+
 void ASTUBaseCharacter::TurnOff()
 {
     Super::TurnOff();
-    StopFire();
-    StopSprint();
+    StopPlayer();
+}
+
+void ASTUBaseCharacter::Reset()
+{
+    Super::Reset();
+    StopPlayer();
 }
 
 void ASTUBaseCharacter::StartFire()
