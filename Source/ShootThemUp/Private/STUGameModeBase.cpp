@@ -4,6 +4,7 @@
 #include "AIController.h"
 #include "EngineUtils.h"
 #include "STUUtils.h"
+#include "Components/STUHealthComponent.h"
 #include "Components/STURespawnComponent.h"
 #include "Player/STUBaseCharacter.h"
 #include "Player/STUPlayerController.h"
@@ -83,6 +84,35 @@ void ASTUGameModeBase::OnPlayerKilled(AController* PlayerKilled, const AControll
     ScheduleRespawn(PlayerKilled);
 }
 
+void ASTUGameModeBase::OnPlayerDamageApplied(const AActor* DamagedActor, float Damage, const AController* InstigatedBy) const
+{
+    if (InstigatedBy == nullptr)
+    {
+        return;
+    }
+
+    if (InstigatedBy->IsPlayerController())
+    {
+        PlayerDamagedActor.Broadcast(DamagedActor, Damage);
+    }
+}
+
+void ASTUGameModeBase::InitPlayer(AController* Controller)
+{
+    if (Controller == nullptr)
+    {
+        return;
+    }
+    
+    RestartPlayer(Controller);
+
+    USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(Controller->GetPawn());
+    if (HealthComponent)
+    {
+        HealthComponent->OnDamageApplied.AddUObject(this, &ASTUGameModeBase::OnPlayerDamageApplied);
+    }
+}
+
 void ASTUGameModeBase::ScheduleRespawn(AController* Controller) const
 {
     USTURespawnComponent* RespawnComponent = FSTUUtils::GetActorComponent<USTURespawnComponent>(Controller);
@@ -118,7 +148,7 @@ void ASTUGameModeBase::SpawnPlayers()
         SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
         AAIController* AIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass, SpawnInfo);
-        RestartPlayer(AIController);
+        InitPlayer(AIController);
     }
 }
 
@@ -188,7 +218,7 @@ void ASTUGameModeBase::ResetPlayer(AController* Controller)
         }
     }
 
-    RestartPlayer(Controller);
+    InitPlayer(Controller);
     SetPlayerColor(Controller);
 }
 

@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "STUPlayerHUDWidget.generated.h"
 
+class USTUDamageTextWidget;
 class UImage;
 class UProgressBar;
 class USTUHealthComponent;
@@ -39,7 +40,10 @@ public:
 
     UFUNCTION(BlueprintImplementableEvent, Category = "UI")
     void OnTakeDamage();
-    
+
+    UFUNCTION()
+    void OnPlayerDamagedActor(const AActor* Actor, float Damage) const;
+
     virtual bool Initialize() override;
 
 protected:
@@ -63,6 +67,9 @@ protected:
 
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* HealAnimation;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<USTUDamageTextWidget> DamageTextWidgetClass;
 
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 

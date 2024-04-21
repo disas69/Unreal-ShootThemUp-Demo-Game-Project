@@ -5,12 +5,20 @@
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/STUHealthComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "UI/STUDamageTextWidget.h"
 #include "Weapon/STUWeapon.h"
 #include "Weapon/STUWeaponComponent.h"
 
 bool USTUPlayerHUDWidget::Initialize()
 {
     const bool bInit = Super::Initialize();
+
+    ASTUGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASTUGameModeBase>();
+    if (GameMode != nullptr)
+    {
+        GameMode->PlayerDamagedActor.AddUObject(this, &USTUPlayerHUDWidget::OnPlayerDamagedActor);
+    }
 
     AController* PlayerController = GetOwningPlayer();
     if (PlayerController != nullptr)
@@ -148,4 +156,26 @@ void USTUPlayerHUDWidget::UpdateHealthBar() const
     const float Percent = GetHealthPercent();
     HealthBar->SetPercent(Percent);
     HealthBar->SetFillColorAndOpacity(Percent > CriticalHealthThreshold ? NormalColor : CriticalColor);
+}
+
+void USTUPlayerHUDWidget::OnPlayerDamagedActor(const AActor* Actor, float Damage) const
+{
+    const APlayerController* PlayerController = GetOwningPlayer();
+    if (PlayerController != nullptr && Actor != nullptr && Actor != PlayerController->GetPawn())
+    {
+        const FVector WorldPosition = Actor->GetActorLocation() + FVector(0.0f, 0.0f, 100.0f);
+
+        FVector2D ScreenPosition;
+        if (UGameplayStatics::ProjectWorldToScreen(PlayerController, WorldPosition, ScreenPosition))
+        {
+            USTUDamageTextWidget* DamageTextWidget = CreateWidget<USTUDamageTextWidget>(GetWorld(), DamageTextWidgetClass);
+            if (DamageTextWidget != nullptr)
+            {
+                DamageTextWidget->SetDamageText(FString::Printf(TEXT("-%.0f"), Damage));
+                DamageTextWidget->SetPositionInViewport(ScreenPosition);
+                DamageTextWidget->AddToViewport();
+                DamageTextWidget->Show();
+            }
+        }
+    }
 }

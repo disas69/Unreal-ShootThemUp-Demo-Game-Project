@@ -8,6 +8,7 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnDeath);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, float)
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnDamageApplied, const AActor*, float, const AController*)
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class SHOOTTHEMUP_API USTUHealthComponent : public UActorComponent
@@ -29,6 +30,7 @@ public:
 
     FOnDeath OnDeath;
     FOnHealthChanged OnHealthChanged;
+    FOnDamageApplied OnDamageApplied;
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health", meta = (ClampMin = "0.0", ClampMax = "1000.0"))

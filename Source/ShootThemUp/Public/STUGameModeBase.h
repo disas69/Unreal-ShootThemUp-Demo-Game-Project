@@ -9,6 +9,7 @@
 class AAIController;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameStateChanged, EGameState);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnPlayerDamagedActor, const AActor*, float);
 
 UENUM(BlueprintType)
 enum class EGameState : uint8
@@ -67,6 +68,7 @@ public:
     ASTUGameModeBase();
 
     FOnGameStateChanged GameStateChanged;
+    FOnPlayerDamagedActor PlayerDamagedActor;
 
     virtual void StartPlay() override;
     virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
@@ -74,11 +76,13 @@ public:
     virtual bool ClearPause() override;
 
     void OnPlayerKilled(AController* PlayerKilled, const AController* PlayerKiller);
+    void OnPlayerDamageApplied(const AActor* DamagedActor, float Damage, const AController* InstigatedBy) const;
 
     int32 GetCurrentRoundNum() const { return CurrentRound; }
     int32 GetTotalRoundsNum() const { return GameData.RoundsNum; }
     float GetRoundCountdown() const { return RoundCountDown; }
 
+    void InitPlayer(AController* Controller);
     void ScheduleRespawn(AController* Controller) const;
     void Respawn(AController* Controller);
 

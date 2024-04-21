@@ -74,6 +74,7 @@ void USTUHealthComponent::ReportDamageEvent(AActor* DamagedActor, const AControl
     }
 
     UAISense_Damage::ReportDamageEvent(GetWorld(), DamagedActor, Instigator->GetPawn(), DamageAmount, Instigator->GetPawn()->GetActorLocation(), DamagedActor->GetActorLocation());
+    OnDamageApplied.Broadcast(DamagedActor, DamageAmount, Instigator);
 }
 
 void USTUHealthComponent::ReportDeathEvent(AController* Killed, const AController* Killer) const
