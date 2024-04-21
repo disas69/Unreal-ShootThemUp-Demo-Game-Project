@@ -23,6 +23,9 @@ public:
     float GetHealthPercent() const;
 
     UFUNCTION(BlueprintCallable, Category = "UI")
+    FString GetHealthText() const;
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
     FString GetAmmoText() const;
 
     UFUNCTION(BlueprintCallable, Category = "UI")

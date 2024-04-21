@@ -34,6 +34,13 @@ float USTUPlayerHUDWidget::GetHealthPercent() const
     return 0.0f;
 }
 
+FString USTUPlayerHUDWidget::GetHealthText() const
+{
+    const float Health = GetHealthPercent();
+    const int32 HealthInt = FMath::CeilToInt(Health * 100);
+    return FString::Printf(TEXT("%i%%"), HealthInt);
+}
+
 FString USTUPlayerHUDWidget::GetAmmoText() const
 {
     ASTUWeapon* CurrentWeapon = GetCurrentWeapon();
@@ -141,5 +148,4 @@ void USTUPlayerHUDWidget::UpdateHealthBar() const
     const float Percent = GetHealthPercent();
     HealthBar->SetPercent(Percent);
     HealthBar->SetFillColorAndOpacity(Percent > CriticalHealthThreshold ? NormalColor : CriticalColor);
-    HealthBar->SetVisibility(Percent < 1.0f ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 }
