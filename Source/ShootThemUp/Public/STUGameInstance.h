@@ -33,6 +33,11 @@ public:
     const TArray<FLevelData>& GetGameLevels() const { return GameLevels; }
 
     void ToggleVolume() const;
+    void SetMusicVolume(float Volume) const;
+    void SetSFXVolume(float Volume) const;
+
+    float GetMusicVolume() const;
+    float GetSFXVolume() const;
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game")
@@ -43,6 +48,12 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     USoundClass* MasterSoundClass;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    USoundClass* MusicSoundClass;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    USoundClass* SFXSoundClass;
 
 private:
     FLevelData GetLevelData(int32 Index) const;

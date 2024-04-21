@@ -6,6 +6,7 @@
 #include "UI/STUBaseWidget.h"
 #include "STUMenuWidget.generated.h"
 
+class USlider;
 class USoundCue;
 class USTULevelItemWidget;
 class UHorizontalBox;
@@ -34,6 +35,12 @@ protected:
 
     UPROPERTY(meta=(BindWidget))
     UButton* SettingsButton;
+
+    UPROPERTY(meta=(BindWidget))
+    USlider* MusicVolumeSlider;
+    
+    UPROPERTY(meta=(BindWidget))
+    USlider* SFXVolumeSlider;
 
     UPROPERTY(meta=(BindWidget))
     UButton* BackButton;
@@ -66,6 +73,12 @@ private:
 
     UFUNCTION()
     void ShowSettings();
+
+    UFUNCTION()
+    void OnMusicVolumeChanged(float Value);
+
+    UFUNCTION()
+    void OnSFXVolumeChanged(float Value);
 
     UFUNCTION()
     void ShowMainMenu();

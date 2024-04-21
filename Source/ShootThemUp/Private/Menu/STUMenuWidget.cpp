@@ -4,6 +4,7 @@
 #include "STUGameInstance.h"
 #include "Components/Button.h"
 #include "Components/HorizontalBox.h"
+#include "Components/Slider.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Menu/STULevelItemWidget.h"
@@ -25,6 +26,30 @@ bool USTUMenuWidget::Initialize()
     if (SettingsButton != nullptr)
     {
         SettingsButton->OnClicked.AddDynamic(this, &USTUMenuWidget::ShowSettings);
+    }
+
+    if (MusicVolumeSlider != nullptr)
+    {
+        MusicVolumeSlider->OnValueChanged.AddDynamic(this, &USTUMenuWidget::OnMusicVolumeChanged);
+    }
+
+    if (SFXVolumeSlider != nullptr)
+    {
+        SFXVolumeSlider->OnValueChanged.AddDynamic(this, &USTUMenuWidget::OnSFXVolumeChanged);
+    }
+
+    const USTUGameInstance* GameInstance = GetGameInstance<USTUGameInstance>();
+    if (GameInstance != nullptr)
+    {
+        if (MusicVolumeSlider != nullptr)
+        {
+            MusicVolumeSlider->SetValue(GameInstance->GetMusicVolume());
+        }
+
+        if (SFXVolumeSlider != nullptr)
+        {
+            SFXVolumeSlider->SetValue(GameInstance->GetSFXVolume());
+        }
     }
 
     if (BackButton != nullptr)
@@ -72,6 +97,24 @@ void USTUMenuWidget::ExitGame()
 void USTUMenuWidget::ShowSettings()
 {
     PlayAnimation(ShowSettingsAnimation);
+}
+
+void USTUMenuWidget::OnMusicVolumeChanged(float Value)
+{
+    const USTUGameInstance* GameInstance = GetGameInstance<USTUGameInstance>();
+    if (GameInstance != nullptr)
+    {
+        GameInstance->SetMusicVolume(Value);
+    }
+}
+
+void USTUMenuWidget::OnSFXVolumeChanged(float Value)
+{
+    const USTUGameInstance* GameInstance = GetGameInstance<USTUGameInstance>();
+    if (GameInstance != nullptr)
+    {
+        GameInstance->SetSFXVolume(Value);
+    }
 }
 
 void USTUMenuWidget::ShowMainMenu()
