@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "STUDamageZone.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUDamageZone : public AActor
 {
@@ -15,22 +17,10 @@ public:
     ASTUDamageZone();
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
-    USceneComponent* SceneComponent = nullptr;
+    UBoxComponent* BoxComponent = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
-    float Radius = 100.0f;
+    float Damage = 1000.0f;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
-    float Damage = 10.0f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
-    FColor DebugColor = FColor::Red;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
-    bool bIsFullDamage = false;
-    
-    virtual void Tick(float DeltaTime) override;
-
-protected:
-    virtual void BeginPlay() override;
+    virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };

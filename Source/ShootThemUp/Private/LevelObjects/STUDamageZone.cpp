@@ -1,27 +1,26 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "LevelObjects/STUDamageZone.h"
-
-#include "Kismet/GameplayStatics.h"
+#include "Components/BoxComponent.h"
+#include "Engine/DamageEvents.h"
 
 ASTUDamageZone::ASTUDamageZone()
 {
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
 
-    SceneComponent = CreateDefaultSubobject<USceneComponent>("Root");
-    SetRootComponent(SceneComponent);
+    BoxComponent = CreateDefaultSubobject<UBoxComponent>("BoxComponent");
+    SetRootComponent(BoxComponent);
+    BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    BoxComponent->SetCollisionObjectType(ECC_WorldDynamic);
 }
 
-void ASTUDamageZone::BeginPlay()
+void ASTUDamageZone::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-    Super::BeginPlay();
-}
+    Super::NotifyActorBeginOverlap(OtherActor);
 
-void ASTUDamageZone::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-
-    DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 24, DebugColor);
-
-    UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, GetActorLocation(), Radius, nullptr, TArray<AActor*>(), this, nullptr, bIsFullDamage);
+    if (OtherActor != nullptr)
+    {
+        const FPointDamageEvent DamageEvent;
+        OtherActor->TakeDamage(Damage, DamageEvent, nullptr, this);
+    }
 }
