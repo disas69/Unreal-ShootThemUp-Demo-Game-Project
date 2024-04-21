@@ -22,6 +22,16 @@ bool USTUMenuWidget::Initialize()
         ExitGameButton->OnClicked.AddDynamic(this, &USTUMenuWidget::ExitGame);
     }
 
+    if (SettingsButton != nullptr)
+    {
+        SettingsButton->OnClicked.AddDynamic(this, &USTUMenuWidget::ShowSettings);
+    }
+
+    if (BackButton != nullptr)
+    {
+        BackButton->OnClicked.AddDynamic(this, &USTUMenuWidget::ShowMainMenu);
+    }
+
     CreateLevelItems();
 
     if (LevelItemWidgets.Num() > 0)
@@ -57,6 +67,16 @@ void USTUMenuWidget::StartGame()
 void USTUMenuWidget::ExitGame()
 {
     UKismetSystemLibrary::QuitGame(GetWorld(), GetOwningPlayer(), EQuitPreference::Quit, true);
+}
+
+void USTUMenuWidget::ShowSettings()
+{
+    PlayAnimation(ShowSettingsAnimation);
+}
+
+void USTUMenuWidget::ShowMainMenu()
+{
+    PlayAnimation(ShowMenuAnimation);
 }
 
 void USTUMenuWidget::CreateLevelItems()

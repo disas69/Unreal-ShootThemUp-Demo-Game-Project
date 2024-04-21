@@ -32,8 +32,20 @@ protected:
     UPROPERTY(meta=(BindWidget))
     UButton* ExitGameButton;
 
+    UPROPERTY(meta=(BindWidget))
+    UButton* SettingsButton;
+
+    UPROPERTY(meta=(BindWidget))
+    UButton* BackButton;
+
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* LoadingAnimation;
+
+    UPROPERTY(meta = (BindWidgetAnim), Transient)
+    UWidgetAnimation* ShowSettingsAnimation;
+
+    UPROPERTY(meta = (BindWidgetAnim), Transient)
+    UWidgetAnimation* ShowMenuAnimation;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
     USoundCue* StartGameSound;
@@ -51,6 +63,12 @@ private:
 
     UFUNCTION()
     void ExitGame();
+
+    UFUNCTION()
+    void ShowSettings();
+
+    UFUNCTION()
+    void ShowMainMenu();
 
     void CreateLevelItems();
     void OnLevelItemSelected(int32 Index);
