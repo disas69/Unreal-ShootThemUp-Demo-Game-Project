@@ -6,6 +6,7 @@
 #include "STUUtils.h"
 #include "Components/STUHealthComponent.h"
 #include "Components/STURespawnComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Player/STUBaseCharacter.h"
 #include "Player/STUPlayerController.h"
 #include "Player/STUPlayerState.h"
@@ -296,6 +297,9 @@ void ASTUGameModeBase::SetPlayerColor(const AController* Controller)
 
 void ASTUGameModeBase::GameOver()
 {
+    // Pause the game by calling the base method
+    Super::SetPause(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+    
     SetGameState(EGameState::Finished);
     
     for (APawn* Pawn : TActorRange<APawn>(GetWorld()))
