@@ -38,6 +38,9 @@ struct FWeaponImageData
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
     UTexture2D* CrossHairImage = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    float CrossHairScale = 1.0f;
 };
 
 UCLASS()
