@@ -1,4 +1,4 @@
-# Unreal Shooter Demo Project
+# Unreal Shooter Course Project
 
 A shooter game project made as part of the ["Unreal Engine: Complete Guide to C++ Development"](https://www.udemy.com/course/unrealengine/?couponCode=KEEPLEARNING) course.
 
