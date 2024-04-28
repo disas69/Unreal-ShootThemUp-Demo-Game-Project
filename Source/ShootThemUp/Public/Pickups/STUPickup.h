@@ -29,6 +29,9 @@ public:
     UPROPERTY(EditAnywhere, Category = "Pickup")
     float FloatingSpeed = 10.0f;
 
+    UPROPERTY(EditAnywhere, Category = "Pickup")
+    float RotationRate = 50.0f;
+
     UPROPERTY(EditAnywhere, Category = "Sound")
     USoundCue* PickupSound = nullptr;
 

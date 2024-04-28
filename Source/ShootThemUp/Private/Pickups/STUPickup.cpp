@@ -23,6 +23,10 @@ void ASTUPickup::Tick(float DeltaTime)
     FVector CurrentLocation = GetActorLocation();
     CurrentLocation.Z = InitialLocation.Z + FloatingOffset * FMath::Sin(FloatingSpeed * GetWorld()->TimeSeconds);
     SetActorLocation(CurrentLocation);
+
+    FRotator CurrentRotation = GetActorRotation();
+    CurrentRotation.Yaw += RotationRate * DeltaTime;
+    SetActorRotation(CurrentRotation);
 }
 
 void ASTUPickup::NotifyActorBeginOverlap(AActor* OtherActor)
