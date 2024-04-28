@@ -6,7 +6,9 @@
 #include "STUUtils.h"
 #include "Components/STUHealthComponent.h"
 #include "Components/STURespawnComponent.h"
+#include "Engine/PlayerStartPIE.h"
 #include "Kismet/GameplayStatics.h"
+#include "LevelObjects/STUPlayerStart.h"
 #include "Player/STUBaseCharacter.h"
 #include "Player/STUPlayerController.h"
 #include "Player/STUPlayerState.h"
@@ -31,7 +33,7 @@ void ASTUGameModeBase::StartPlay()
 
     CurrentRound = 1;
     StartRound();
-    
+
     SetGameState(EGameState::Gameplay);
 }
 
@@ -43,6 +45,52 @@ UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AContr
     }
 
     return Super::GetDefaultPawnClassForController_Implementation(InController);
+}
+
+AActor* ASTUGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
+{
+    const ASTUPlayerState* PlayerState = Cast<ASTUPlayerState>(Player->PlayerState);
+    if (PlayerState == nullptr)
+    {
+        return nullptr;
+    }
+
+    const UClass* PawnClass = GetDefaultPawnClassForController(Player);
+    const APawn* PawnToFit = PawnClass ? PawnClass->GetDefaultObject<APawn>() : nullptr;
+    
+    TArray<ASTUPlayerStart*> UnOccupiedStartPoints;
+    TArray<ASTUPlayerStart*> OccupiedStartPoints;
+    
+    for (TActorIterator<ASTUPlayerStart> It(GetWorld()); It; ++It)
+    {
+        ASTUPlayerStart* PlayerStart = *It;
+        if (PlayerState->GetTeamID() == PlayerStart->GetTeamID() || PlayerStart->GetTeamID() == -1)
+        {
+            FVector ActorLocation = PlayerStart->GetActorLocation();
+            const FRotator ActorRotation = PlayerStart->GetActorRotation();
+            if (!GetWorld()->EncroachingBlockingGeometry(PawnToFit, ActorLocation, ActorRotation))
+            {
+                UnOccupiedStartPoints.Add(PlayerStart);
+            }
+            else if (GetWorld()->FindTeleportSpot(PawnToFit, ActorLocation, ActorRotation))
+            {
+                OccupiedStartPoints.Add(PlayerStart);
+            }
+        }
+    }
+
+    ASTUPlayerStart* FoundPlayerStart = nullptr;
+    
+    if (UnOccupiedStartPoints.Num() > 0)
+    {
+        FoundPlayerStart = UnOccupiedStartPoints[FMath::RandRange(0, UnOccupiedStartPoints.Num() - 1)];
+    }
+    else if (OccupiedStartPoints.Num() > 0)
+    {
+        FoundPlayerStart = OccupiedStartPoints[FMath::RandRange(0, OccupiedStartPoints.Num() - 1)];
+    }
+
+    return FoundPlayerStart;
 }
 
 bool ASTUGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate)
@@ -64,7 +112,7 @@ bool ASTUGameModeBase::ClearPause()
     {
         SetGameState(EGameState::Gameplay);
     }
-    
+
     return bResult;
 }
 
@@ -104,7 +152,7 @@ void ASTUGameModeBase::InitPlayer(AController* Controller)
     {
         return;
     }
-    
+
     RestartPlayer(Controller);
 
     USTUHealthComponent* HealthComponent = FSTUUtils::GetActorComponent<USTUHealthComponent>(Controller->GetPawn());
@@ -148,8 +196,7 @@ void ASTUGameModeBase::SpawnPlayers()
         FActorSpawnParameters SpawnInfo;
         SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-        AAIController* AIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass, SpawnInfo);
-        InitPlayer(AIController);
+        GetWorld()->SpawnActor<AAIController>(AIControllerClass, SpawnInfo);
     }
 }
 
@@ -246,7 +293,7 @@ void ASTUGameModeBase::CreateTeams()
         {
             continue;
         }
-        
+
         ASTUPlayerState* PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
         if (PlayerState != nullptr)
         {
@@ -259,16 +306,18 @@ void ASTUGameModeBase::CreateTeams()
                 PlayerState->SetPlayerName("Bot");
             }
             PlayerState->SetTeamData(TeamID, GetTeamData(TeamID));
-            SetPlayerColor(It->Get());
             TeamID = (TeamID + 1) % GameData.Teams.Num();
         }
+
+        InitPlayer(Controller);
+        SetPlayerColor(Controller);
     }
 }
 
 FTeamData ASTUGameModeBase::GetTeamData(int32 TeamID) const
 {
     FTeamData Result;
-    
+
     if (TeamID >= 0 && TeamID < GameData.Teams.Num())
     {
         Result = GameData.Teams[TeamID];
@@ -299,9 +348,9 @@ void ASTUGameModeBase::GameOver()
 {
     // Pause the game by calling the base method
     Super::SetPause(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-    
+
     SetGameState(EGameState::Finished);
-    
+
     for (APawn* Pawn : TActorRange<APawn>(GetWorld()))
     {
         if (Pawn == nullptr)
@@ -318,7 +367,7 @@ void ASTUGameModeBase::GameOver()
             RespawnComponent->CancelRespawn();
         }
     }
-    
+
     LogPlayerStates();
 }
 
