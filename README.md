@@ -3,6 +3,7 @@
 A shooter game project made as part of the ["Unreal Engine: Complete Guide to C++ Development"](https://www.udemy.com/course/unrealengine/?couponCode=KEEPLEARNING) course.
 
 <img src="Screenshots/Screenshot_1.png" width = "950">
+<img src="Screenshots/Screenshot_3.png" width = "950">
 
 Features:
 - TPS character, camera and controls
