@@ -12,6 +12,7 @@ void UGameSettingsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     {
         // Set the overall scalability level to High
         Settings->SetOverallScalabilityLevel(2);
+        Settings->SetFrameRateLimit(60.0f);
         Settings->ApplySettings(false);
     }
 }
