@@ -41,7 +41,10 @@ protected:
     UInputDataConfig* InputDataConfig = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
-    float CameraMovementRate = 60.0f;
+    float CameraGamepadRotationRate = 75.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+    float CameraMouseSensitivityMultiplier = 0.8f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
     float SprintCameraFOV = 90.0f;
@@ -63,6 +66,9 @@ protected:
     virtual void StopPlayer() override;
 
 private:
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
+    bool bIsGamepadInputEnabled = false;
+    
     UFUNCTION()
     void Move(const FInputActionValue& Value);
 

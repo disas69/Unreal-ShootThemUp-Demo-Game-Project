@@ -72,12 +72,22 @@ void ASTUPlayerCharacter::Move(const FInputActionValue& Value)
 void ASTUPlayerCharacter::Look(const FInputActionValue& Value)
 {
     const FVector2D LookAxisVector = Value.Get<FVector2D>();
+    float Sensitivity = CameraZoomComponent->GetCameraSensitivity();
 
-    const float TurnAmount = LookAxisVector.X * CameraMovementRate * CameraZoomComponent->GetCameraSensitivity() * GetWorld()->GetDeltaSeconds();
-    AddControllerYawInput(TurnAmount);
-
-    const float LookAmount = LookAxisVector.Y * CameraMovementRate * CameraZoomComponent->GetCameraSensitivity() * GetWorld()->GetDeltaSeconds();
-    AddControllerPitchInput(LookAmount);
+    if (bIsGamepadInputEnabled)
+    {
+        const float TurnAmount = LookAxisVector.X * CameraGamepadRotationRate * Sensitivity * GetWorld()->GetDeltaSeconds();
+        AddControllerYawInput(TurnAmount);
+    
+        const float LookAmount = LookAxisVector.Y * CameraGamepadRotationRate * Sensitivity * GetWorld()->GetDeltaSeconds();
+        AddControllerPitchInput(LookAmount);
+    }
+    else
+    {
+        Sensitivity *= CameraMouseSensitivityMultiplier;
+        AddControllerYawInput(LookAxisVector.X * Sensitivity);
+        AddControllerPitchInput(LookAxisVector.Y * Sensitivity);
+    }
 }
 
 void ASTUPlayerCharacter::Sprint(const FInputActionValue& Value)
