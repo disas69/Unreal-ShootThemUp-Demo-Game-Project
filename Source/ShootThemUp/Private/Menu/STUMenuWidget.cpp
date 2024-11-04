@@ -3,8 +3,10 @@
 #include "Menu/STUMenuWidget.h"
 #include "STUGameInstance.h"
 #include "Components/Button.h"
+#include "Components/ComboBoxString.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Slider.h"
+#include "GameFramework/GameUserSettings.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Menu/STULevelItemWidget.h"
@@ -26,6 +28,41 @@ bool USTUMenuWidget::Initialize()
     if (SettingsButton != nullptr)
     {
         SettingsButton->OnClicked.AddDynamic(this, &USTUMenuWidget::ShowSettings);
+    }
+
+    if (ResolutionSettings != nullptr)
+    {
+        for (const auto& Resolution : ScreenResolutions)
+        {
+            ResolutionSettings->AddOption(Resolution.Key);
+        }
+
+        UGameUserSettings* UserSettings = UGameUserSettings::GetGameUserSettings();
+        if (UserSettings != nullptr)
+        {
+            const FIntPoint CurrentScreenResolution = UserSettings->GetScreenResolution();
+            FString CurrentScreenResolutionStr = FString::Printf(TEXT("%dx%d"), CurrentScreenResolution.X, CurrentScreenResolution.Y);
+            ResolutionSettings->SetSelectedOption(CurrentScreenResolutionStr);
+        }
+        
+        ResolutionSettings->OnSelectionChanged.AddDynamic(this, &USTUMenuWidget::OnResolutionSelected);
+    }
+
+    if (QualitySettings != nullptr)
+    {
+        for (const auto& Quality : QualityPresets)
+        {
+            QualitySettings->AddOption(Quality.Key);
+        }
+        
+        const UGameUserSettings* UserSettings = UGameUserSettings::GetGameUserSettings();
+        if (UserSettings != nullptr)
+        {
+            const int32 CurrentQualityLevel = UserSettings->GetOverallScalabilityLevel();
+            QualitySettings->SetSelectedIndex(CurrentQualityLevel);
+        }
+
+        QualitySettings->OnSelectionChanged.AddDynamic(this, &USTUMenuWidget::OnQualitySelected);
     }
 
     if (MusicVolumeSlider != nullptr)
@@ -116,11 +153,33 @@ void USTUMenuWidget::ShowSettings()
     PlayAnimation(ShowSettingsAnimation);
 
     GetWorld()->GetTimerManager().SetTimerForNextTick(
-    [&]
+        [&]
+        {
+            BackButton->IsFocusable = true;
+            BackButton->SetKeyboardFocus();
+        });
+}
+
+void USTUMenuWidget::OnResolutionSelected(FString SelectedItem, ESelectInfo::Type SelectionType)
+{
+    const FVector2D& Resolution = ScreenResolutions.FindRef(SelectedItem);
+    UGameUserSettings* UserSettings = UGameUserSettings::GetGameUserSettings();
+    if (UserSettings != nullptr)
     {
-        BackButton->IsFocusable = true;
-        BackButton->SetKeyboardFocus();
-    });
+        UserSettings->SetScreenResolution(FIntPoint(Resolution.X, Resolution.Y));
+        UserSettings->ApplySettings(false);
+    }
+}
+
+void USTUMenuWidget::OnQualitySelected(FString SelectedItem, ESelectInfo::Type SelectionType)
+{
+    const int32 QualityLevel = QualityPresets.FindRef(SelectedItem);
+    UGameUserSettings* UserSettings = UGameUserSettings::GetGameUserSettings();
+    if (UserSettings != nullptr)
+    {
+        UserSettings->SetOverallScalabilityLevel(QualityLevel);
+        UserSettings->ApplySettings(false);
+    }
 }
 
 void USTUMenuWidget::OnMusicVolumeChanged(float Value)
