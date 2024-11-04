@@ -119,8 +119,14 @@ private:
     UPROPERTY()
     AController* Controller = nullptr;
 
+    UPROPERTY()
+    UCameraShakeBase* CurrentCameraShake = nullptr;
+
     FAmmoData CurrentAmmo;
 
     void GetPlayerViewPoint(FVector& Location, FRotator& Rotation);
     AController* GetPlayerController();
+
+    void StartCameraShake(TSubclassOf<UCameraShakeBase> CameraShake, bool bIsSingleInstance = false);
+    void StopCameraShake(UCameraShakeBase* CameraShakeInstance);
 };

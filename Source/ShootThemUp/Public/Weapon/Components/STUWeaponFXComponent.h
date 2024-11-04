@@ -62,6 +62,9 @@ public:
     void PlayFireSound();
     void StopFireSound();
 
+    TSubclassOf<UCameraShakeBase> GetCameraShake() const { return CameraShake; }
+    bool IsCameraShakeSingleInstance() const { return bIsCameraShakeSingleInstance; }
+
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     FImpactData DefaultImpactEffectData;
@@ -83,6 +86,12 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
     USoundCue* NoAmmoSound = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+    TSubclassOf<UCameraShakeBase> CameraShake;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+    bool bIsCameraShakeSingleInstance = false;
 
 private:
     UPROPERTY()

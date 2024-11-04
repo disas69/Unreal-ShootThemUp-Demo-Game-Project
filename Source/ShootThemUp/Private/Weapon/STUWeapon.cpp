@@ -20,7 +20,7 @@ ASTUWeapon::ASTUWeapon()
 void ASTUWeapon::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     Character = Cast<ASTUBaseCharacter>(GetOwner());
     CurrentAmmo = DefaultAmmo;
 
@@ -32,12 +32,22 @@ void ASTUWeapon::StartFire()
     if (!IsAmmoEmpty())
     {
         WeaponFXComponent->PlayFireFX();
+
+        if (Character->IsPlayerControlled())
+        {
+            StartCameraShake(WeaponFXComponent->GetCameraShake(), WeaponFXComponent->IsCameraShakeSingleInstance());
+        }
     }
 }
 
 void ASTUWeapon::StopFire()
 {
     WeaponFXComponent->StopFireFX();
+
+    if (Character->IsPlayerControlled())
+    {
+        StopCameraShake(CurrentCameraShake);
+    }
 }
 
 void ASTUWeapon::FireInternal() {}
@@ -94,7 +104,7 @@ FTransform ASTUWeapon::GetMuzzleSocketTransform() const
 void ASTUWeapon::DecreaseAmmo()
 {
     CurrentAmmo.Bullets = FMath::Max(CurrentAmmo.Bullets - 1, 0);
-    
+
     if (IsClipEmpty())
     {
         StopFire();
@@ -145,10 +155,7 @@ void ASTUWeapon::OnEquipFinished()
     }
 }
 
-void ASTUWeapon::Aim(bool bAiming)
-{
-    
-}
+void ASTUWeapon::Aim(bool bAiming) {}
 
 void ASTUWeapon::Reload()
 {
@@ -187,4 +194,43 @@ AController* ASTUWeapon::GetPlayerController()
     }
 
     return Controller;
+}
+
+void ASTUWeapon::StartCameraShake(TSubclassOf<UCameraShakeBase> CameraShake, bool bIsSingleInstance)
+{
+    if (CurrentCameraShake != nullptr)
+    {
+        StopCameraShake(CurrentCameraShake);
+    }
+
+    if (CameraShake != nullptr)
+    {
+        APlayerController* PlayerController = Cast<APlayerController>(GetPlayerController());
+        if (PlayerController != nullptr && PlayerController->PlayerCameraManager != nullptr)
+        {
+            if (bIsSingleInstance)
+            {
+                PlayerController->PlayerCameraManager->StartCameraShake(CameraShake);
+            }
+            else
+            {
+                CurrentCameraShake = PlayerController->PlayerCameraManager->StartCameraShake(CameraShake);
+            }
+        }
+    }
+}
+
+void ASTUWeapon::StopCameraShake(UCameraShakeBase* CameraShakeInstance)
+{
+    if (CameraShakeInstance == nullptr)
+    {
+        return;
+    }
+
+    const APlayerController* PlayerController = Cast<APlayerController>(GetPlayerController());
+    if (PlayerController != nullptr && PlayerController->PlayerCameraManager != nullptr)
+    {
+        PlayerController->PlayerCameraManager->StopCameraShake(CameraShakeInstance);
+        CurrentCameraShake = nullptr;
+    }
 }
