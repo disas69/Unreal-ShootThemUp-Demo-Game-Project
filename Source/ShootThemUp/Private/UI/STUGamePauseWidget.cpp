@@ -22,6 +22,20 @@ bool USTUGamePauseWidget::Initialize()
     return bInit;
 }
 
+void USTUGamePauseWidget::SetVisibility(ESlateVisibility InVisibility)
+{
+    Super::SetVisibility(InVisibility);
+
+    if (InVisibility == ESlateVisibility::Visible)
+    {
+        GetWorld()->GetTimerManager().SetTimerForNextTick([&]
+        {
+            ContinueButton->IsFocusable = true;
+            ContinueButton->SetKeyboardFocus();
+        });
+    }
+}
+
 void USTUGamePauseWidget::ContinueGame()
 {
     ASTUGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASTUGameModeBase>();

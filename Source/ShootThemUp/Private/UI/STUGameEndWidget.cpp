@@ -27,8 +27,22 @@ bool USTUGameEndWidget::Initialize()
     {
         GameMode->GameStateChanged.AddUObject(this, &USTUGameEndWidget::OnGameStateChange);
     }
-    
+
     return bInit;
+}
+
+void USTUGameEndWidget::SetVisibility(ESlateVisibility InVisibility)
+{
+    Super::SetVisibility(InVisibility);
+
+    if (InVisibility == ESlateVisibility::Visible)
+    {
+        GetWorld()->GetTimerManager().SetTimerForNextTick([&]
+        {
+            RestartLevelButton->IsFocusable = true;
+            RestartLevelButton->SetKeyboardFocus();
+        });
+    }
 }
 
 void USTUGameEndWidget::OnGameStateChange(EGameState NewState)

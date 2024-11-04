@@ -68,6 +68,23 @@ bool USTUMenuWidget::Initialize()
     return bResult;
 }
 
+void USTUMenuWidget::NativeConstruct()
+{
+    Super::NativeConstruct();
+
+    GetWorld()->GetTimerManager().SetTimerForNextTick(
+        [&]
+        {
+            if (LevelItemWidgets.Num() > 0)
+            {
+                OnLevelItemFocused(0);
+            }
+
+            StartGameButton->IsFocusable = true;
+            StartGameButton->SetKeyboardFocus();
+        });
+}
+
 void USTUMenuWidget::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
 {
     Super::OnAnimationFinished_Implementation(Animation);
@@ -84,7 +101,7 @@ void USTUMenuWidget::StartGame()
     {
         return;
     }
-    
+
     PlayAnimation(LoadingAnimation);
     UGameplayStatics::PlaySound2D(GetWorld(), StartGameSound);
 }
@@ -97,6 +114,13 @@ void USTUMenuWidget::ExitGame()
 void USTUMenuWidget::ShowSettings()
 {
     PlayAnimation(ShowSettingsAnimation);
+
+    GetWorld()->GetTimerManager().SetTimerForNextTick(
+    [&]
+    {
+        BackButton->IsFocusable = true;
+        BackButton->SetKeyboardFocus();
+    });
 }
 
 void USTUMenuWidget::OnMusicVolumeChanged(float Value)
@@ -120,6 +144,18 @@ void USTUMenuWidget::OnSFXVolumeChanged(float Value)
 void USTUMenuWidget::ShowMainMenu()
 {
     PlayAnimation(ShowMenuAnimation);
+
+    GetWorld()->GetTimerManager().SetTimerForNextTick(
+        [&]
+        {
+            if (LevelItemWidgets.Num() > 0)
+            {
+                OnLevelItemFocused(0);
+            }
+
+            StartGameButton->IsFocusable = true;
+            StartGameButton->SetKeyboardFocus();
+        });
 }
 
 void USTUMenuWidget::CreateLevelItems()

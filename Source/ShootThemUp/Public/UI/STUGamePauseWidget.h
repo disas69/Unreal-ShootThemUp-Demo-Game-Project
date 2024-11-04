@@ -15,6 +15,7 @@ class SHOOTTHEMUP_API USTUGamePauseWidget : public USTUBaseWidget
 
 public:
     virtual bool Initialize() override;
+    virtual void SetVisibility(ESlateVisibility InVisibility) override;
 
 protected:
     UPROPERTY(meta = (BindWidget))

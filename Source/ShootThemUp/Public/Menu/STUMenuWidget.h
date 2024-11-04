@@ -57,6 +57,7 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
     USoundCue* StartGameSound;
 
+    virtual void NativeConstruct() override;
     virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
 
 private:
@@ -82,7 +83,7 @@ private:
 
     UFUNCTION()
     void ShowMainMenu();
-
+    
     void CreateLevelItems();
     void OnLevelItemSelected(int32 Index);
     void OnLevelItemFocused(int32 Index);

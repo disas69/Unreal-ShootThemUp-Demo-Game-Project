@@ -18,6 +18,7 @@ class SHOOTTHEMUP_API USTUGameEndWidget : public USTUBaseWidget
 
 public:
     virtual bool Initialize() override;
+    virtual void SetVisibility(ESlateVisibility InVisibility) override;
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
