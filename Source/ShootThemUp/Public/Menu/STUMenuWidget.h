@@ -71,9 +71,6 @@ protected:
 private:
     int32 SelectedIndex = -1;
 
-    TMap<FString, FVector2D> ScreenResolutions = {{"1920x1080", FVector2D(1920, 1080)}, {"1280x720", FVector2D(1280, 720)}, {"800x600", FVector2D(800, 600)}};
-    TMap<FString, int32> QualityPresets = {{"Low", 0}, {"Medium", 1}, {"High", 2}, {"Epic", 3}};
-
     UPROPERTY()
     TArray<USTULevelItemWidget*> LevelItemWidgets;
 
