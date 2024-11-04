@@ -15,6 +15,11 @@ void UGameSettingsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     UGameUserSettings* Settings = UGameUserSettings::GetGameUserSettings();
     if (Settings)
     {
+        // Set the screen resolution to the highest available
+        FVector2D HighestScreenResolution = ScreenResolutions["1920x1080"];
+        Settings->SetScreenResolution(FIntPoint(HighestScreenResolution.X, HighestScreenResolution.Y));
+        Settings->ApplyResolutionSettings(false);
+        
         // Set the overall scalability level to High
         Settings->SetOverallScalabilityLevel(2);
         Settings->SetFrameRateLimit(60.0f);
@@ -61,7 +66,7 @@ void UGameSettingsSubsystem::SetScreenResolution(const FString& Resolution) cons
     {
         const FVector2D& ResolutionValue = ScreenResolutions.FindRef(Resolution);
         UserSettings->SetScreenResolution(FIntPoint(ResolutionValue.X, ResolutionValue.Y));
-        UserSettings->ApplySettings(false);
+        UserSettings->ApplyResolutionSettings(false);
     }
 }
 
