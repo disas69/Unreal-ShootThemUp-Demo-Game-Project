@@ -66,7 +66,7 @@ void ASTUPlayerCharacter::Move(const FInputActionValue& Value)
     const FVector RightDirection = FRotationMatrix(CameraYawRotation).GetUnitAxis(EAxis::Y);
     AddMovementInput(RightDirection, MovementVector.X);
 
-    bIsMovingForward = MovementVector.Y > 0.0f && FMath::Abs(MovementVector.X) < 0.2f;
+    bIsMovingForward = MovementVector.Y > 0.0f && FMath::Abs(MovementVector.X) < 0.7f;
 }
 
 void ASTUPlayerCharacter::Look(const FInputActionValue& Value)
