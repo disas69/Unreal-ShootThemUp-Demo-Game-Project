@@ -67,6 +67,7 @@ void UGameSettingsSubsystem::SetScreenResolution(const FString& Resolution) cons
         const FVector2D& ResolutionValue = ScreenResolutions.FindRef(Resolution);
         UserSettings->SetScreenResolution(FIntPoint(ResolutionValue.X, ResolutionValue.Y));
         UserSettings->ApplyResolutionSettings(false);
+        UserSettings->ApplySettings(false);
     }
 }
 
