@@ -10,6 +10,7 @@
 #include "Input/InputDataConfig.h"
 #include "Weapon/STUWeaponComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/STUAimAssistComponent.h"
 #include "Components/STUCameraZoomComponent.h"
 
 ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -28,6 +29,7 @@ ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjectInitial
     CameraCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
     CameraZoomComponent = CreateDefaultSubobject<USTUCameraZoomComponent>("CameraZoomComponent");
+    AimAssistComponent = CreateDefaultSubobject<USTUAimAssistComponent>("AimAssistComponent");
 }
 
 void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -116,9 +118,16 @@ void ASTUPlayerCharacter::Fire(const FInputActionValue& Value)
 
 void ASTUPlayerCharacter::Aim(const FInputActionValue& Value)
 {
+    const bool bIsAiming = Value.Get<bool>();
+    
     if (WeaponComponent != nullptr)
     {
-        WeaponComponent->Aim(Value.Get<bool>());
+        WeaponComponent->Aim(bIsAiming);
+    }
+
+    if (AimAssistComponent != nullptr)
+    {
+        AimAssistComponent->SetIsAiming(bIsAiming);
     }
 }
 

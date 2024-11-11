@@ -6,6 +6,7 @@
 #include "Player/STUBaseCharacter.h"
 #include "STUPlayerCharacter.generated.h"
 
+class USTUAimAssistComponent;
 class USTUCameraZoomComponent;
 class USphereComponent;
 class USpringArmComponent;
@@ -36,6 +37,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTUCameraZoomComponent* CameraZoomComponent = nullptr;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+    USTUAimAssistComponent* AimAssistComponent = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputDataConfig* InputDataConfig = nullptr;
