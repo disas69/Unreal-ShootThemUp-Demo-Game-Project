@@ -16,7 +16,7 @@ void USTUAimAssistComponent::BeginPlay()
 void USTUAimAssistComponent::AssistAim() const
 {
     AActor* TargetActor = SphereTraceForTarget();
-    if (TargetActor != nullptr)
+    if (TargetActor != nullptr && (TargetPredicate == nullptr || TargetPredicate(TargetActor)))
     {
         APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
         if (PlayerController != nullptr)

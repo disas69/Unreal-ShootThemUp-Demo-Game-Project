@@ -30,6 +30,7 @@ public:
     TSubclassOf<AActor> TargetClass;
 
     FORCEINLINE void SetIsAiming(bool IsAiming) { bIsAiming = IsAiming; }
+    FORCEINLINE void SetTargetPredicate(const TFunction<bool(AActor*)>& Predicate) { TargetPredicate = Predicate; }
 
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -38,6 +39,7 @@ protected:
 
 private:
     bool bIsAiming = false;
+    TFunction<bool(AActor*)> TargetPredicate = nullptr;
 
     void AssistAim() const;
     AActor* SphereTraceForTarget() const;

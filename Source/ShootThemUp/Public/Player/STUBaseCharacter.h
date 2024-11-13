@@ -20,6 +20,8 @@ public:
 
     virtual void Tick(float DeltaTime) override;
 
+    int32 GetTeamID() const;
+
     UFUNCTION(BlueprintCallable, Category = "Movement")
     bool IsSprintingForward() const;
 

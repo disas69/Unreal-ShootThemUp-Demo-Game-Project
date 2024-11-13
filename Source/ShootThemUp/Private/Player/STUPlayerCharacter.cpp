@@ -125,10 +125,7 @@ void ASTUPlayerCharacter::Aim(const FInputActionValue& Value)
         WeaponComponent->Aim(bIsAiming);
     }
 
-    if (AimAssistComponent != nullptr)
-    {
-        AimAssistComponent->SetIsAiming(bIsAiming);
-    }
+    AimAssistComponent->SetIsAiming(bIsAiming);
 }
 
 void ASTUPlayerCharacter::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -147,6 +144,13 @@ void ASTUPlayerCharacter::BeginPlay()
 
     CameraCollision->OnComponentBeginOverlap.AddDynamic(this, &ASTUPlayerCharacter::OnCameraCollisionBeginOverlap);
     CameraCollision->OnComponentEndOverlap.AddDynamic(this, &ASTUPlayerCharacter::OnCameraCollisionEndOverlap);
+
+    // Set the target predicate for the aim assist component: only target characters that are not on the same team
+    AimAssistComponent->SetTargetPredicate([this](AActor* Actor)
+    {
+        ASTUBaseCharacter* BaseCharacter = Cast<ASTUBaseCharacter>(Actor);
+        return BaseCharacter != nullptr && BaseCharacter->GetTeamID() != GetTeamID();
+    });
 }
 
 void ASTUPlayerCharacter::OnHealthChanged(float NewHealth, float HealthDelta)
@@ -169,6 +173,8 @@ void ASTUPlayerCharacter::OnDeath()
     {
         Controller->ChangeState(NAME_Spectating);
     }
+
+    AimAssistComponent->SetIsAiming(false);
 }
 
 void ASTUPlayerCharacter::StartSprint()

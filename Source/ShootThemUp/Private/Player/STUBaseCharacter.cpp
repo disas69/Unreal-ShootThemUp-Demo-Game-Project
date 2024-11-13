@@ -5,6 +5,7 @@
 #include "Components/STUCharacterMovementComponent.h"
 #include "Components/STUHealthComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/STUPlayerState.h"
 #include "Sound/SoundCue.h"
 #include "Weapon/STUWeaponComponent.h"
 
@@ -48,6 +49,17 @@ void ASTUBaseCharacter::Tick(float DeltaTime)
     {
         WeaponComponent->StartFire();
     }
+}
+
+int32 ASTUBaseCharacter::GetTeamID() const
+{
+    const ASTUPlayerState* State = GetPlayerState<ASTUPlayerState>();
+    if (State != nullptr)
+    {
+        return State->GetTeamID();
+    }
+
+    return -1;
 }
 
 bool ASTUBaseCharacter::IsSprintingForward() const
