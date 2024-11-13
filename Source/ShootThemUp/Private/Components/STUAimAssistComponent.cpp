@@ -57,7 +57,7 @@ AActor* USTUAimAssistComponent::SphereTraceForTarget() const
     // Perform sphere trace (swept sphere) for targets
     if (GetWorld()->SweepSingleByChannel(HitResult, CameraLocation, TraceEnd, FQuat::Identity, ECC_Pawn, FCollisionShape::MakeSphere(TraceRadius), Params))
     {
-        DrawDebugSphere(GetWorld(), HitResult.Location, TraceRadius, 12, FColor::Green, false, 0.1f);
+        // DrawDebugSphere(GetWorld(), HitResult.Location, TraceRadius, 12, FColor::Green, false, 0.1f);
 
         // Check if the hit actor is of the specified target class
         AActor* HitActor = HitResult.GetActor();
@@ -67,7 +67,7 @@ AActor* USTUAimAssistComponent::SphereTraceForTarget() const
         }
     }
 
-    DrawDebugSphere(GetWorld(), TraceEnd, TraceRadius, 12, FColor::Green, false, 0.1f);
+    // DrawDebugSphere(GetWorld(), TraceEnd, TraceRadius, 12, FColor::Green, false, 0.1f);
     return nullptr;
 }
 
