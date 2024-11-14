@@ -3,6 +3,7 @@
 #include "Weapon/STUWeapon.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "Components/STUCameraZoomComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Player/STUBaseCharacter.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
@@ -155,7 +156,23 @@ void ASTUWeapon::OnEquipFinished()
     }
 }
 
-void ASTUWeapon::Aim(bool bAiming) {}
+void ASTUWeapon::Aim(bool bAiming)
+{
+    USTUCameraZoomComponent* CameraZoomComponent = GetOwner()->FindComponentByClass<USTUCameraZoomComponent>();
+    if (CameraZoomComponent != nullptr)
+    {
+        if (bAiming)
+        {
+            CameraZoomComponent->ZoomIn(AimCameraFOV);
+            CameraZoomComponent->SetCameraSensitivity(AimSensitivity);
+        }
+        else
+        {
+            CameraZoomComponent->ZoomOut();
+            CameraZoomComponent->ResetCameraSensitivity();
+        }
+    }
+}
 
 void ASTUWeapon::Reload()
 {

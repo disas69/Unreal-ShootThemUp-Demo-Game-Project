@@ -94,6 +94,12 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     float BulletSpread = 1.5f;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
+    float AimCameraFOV = 60.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
+    float AimSensitivity = 0.6f;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     FAmmoData DefaultAmmo;
 

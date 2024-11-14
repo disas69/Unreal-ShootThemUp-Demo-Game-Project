@@ -30,7 +30,7 @@ public:
     TSubclassOf<AActor> TargetClass;
 
     FORCEINLINE void SetIsAiming(bool IsAiming) { bIsAiming = IsAiming; }
-    FORCEINLINE void SetTargetPredicate(const TFunction<bool(AActor*)>& Predicate) { TargetPredicate = Predicate; }
+    FORCEINLINE void SetTargetPredicate(TFunction<bool(AActor*)> Predicate) { TargetPredicate = Predicate; }
 
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
