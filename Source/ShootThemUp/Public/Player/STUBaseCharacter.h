@@ -43,6 +43,9 @@ public:
 protected:
     bool bIsMovingForward = false;
 
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    void TurnInPlace();
+    
     UFUNCTION()
     virtual void OnHealthChanged(float NewHealth, float HealthDelta);
 
@@ -55,7 +58,7 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTUWeaponComponent* WeaponComponent = nullptr;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation") 
     UAnimMontage* DeathAnimation = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
@@ -69,6 +72,14 @@ protected:
 private:
     bool bIsSprinting = false;
     bool bIsFireInProgress = false;
+
+    float CharacterYaw = 0.0f;
+    float LastCharacterYaw = 0.0f;
+    float RotationCurveValue = 0.0f;
+    float LastRotationCurveValue = 0.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    float RootYawOffset = 0.0f;
 
     void EnableRagdollPhysics() const;
 };
