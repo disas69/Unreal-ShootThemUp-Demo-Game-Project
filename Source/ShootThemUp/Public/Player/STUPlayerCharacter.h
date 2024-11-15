@@ -61,7 +61,8 @@ protected:
 
     UFUNCTION()
     void OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-    
+
+    virtual void TurnInPlace() override;
     virtual void BeginPlay() override;
     virtual void OnHealthChanged(float NewHealth, float HealthDelta) override;
     virtual void OnDeath() override;
@@ -70,6 +71,8 @@ protected:
     virtual void StopPlayer() override;
 
 private:
+    bool bIsAiming = false;
+    
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
     bool bIsGamepadInputEnabled = false;
     

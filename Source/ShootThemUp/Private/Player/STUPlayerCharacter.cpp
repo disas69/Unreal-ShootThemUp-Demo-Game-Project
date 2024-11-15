@@ -118,7 +118,7 @@ void ASTUPlayerCharacter::Fire(const FInputActionValue& Value)
 
 void ASTUPlayerCharacter::Aim(const FInputActionValue& Value)
 {
-    const bool bIsAiming = Value.Get<bool>();
+    bIsAiming = Value.Get<bool>();
     
     if (WeaponComponent != nullptr)
     {
@@ -136,6 +136,24 @@ void ASTUPlayerCharacter::OnCameraCollisionBeginOverlap(UPrimitiveComponent* Ove
 void ASTUPlayerCharacter::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
     UpdateCameraCollision();
+}
+
+void ASTUPlayerCharacter::TurnInPlace()
+{
+    if (bIsAiming)
+    {
+        RootYawOffset = 0.0f;
+        
+        CharacterYaw = GetControlRotation().Yaw;
+        LastCharacterYaw = CharacterYaw;
+    
+        RotationCurveValue = 0.0f;
+        LastRotationCurveValue = 0.0f;
+    }
+    else
+    {
+        Super::TurnInPlace();
+    }
 }
 
 void ASTUPlayerCharacter::BeginPlay()

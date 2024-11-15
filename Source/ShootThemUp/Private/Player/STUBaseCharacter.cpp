@@ -32,7 +32,7 @@ void ASTUBaseCharacter::TurnInPlace()
         
         CharacterYaw = GetControlRotation().Yaw;
         LastCharacterYaw = CharacterYaw;
-
+    
         RotationCurveValue = 0.0f;
         LastRotationCurveValue = 0.0f;
     }
@@ -40,12 +40,12 @@ void ASTUBaseCharacter::TurnInPlace()
     {
         LastCharacterYaw = CharacterYaw;
         CharacterYaw = GetControlRotation().Yaw;
-
+    
         const float DeltaYaw = CharacterYaw - LastCharacterYaw;
         RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - DeltaYaw);
-
-        UE_LOG(LogTemp, Warning, TEXT("CharacterYaw: %f, RootYawOffset: %f"), CharacterYaw, RootYawOffset);
-
+    
+        // UE_LOG(LogTemp, Warning, TEXT("CharacterYaw: %f, RootYawOffset: %f"), CharacterYaw, RootYawOffset);
+    
         UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
         if (AnimInstance != nullptr)
         {
@@ -55,7 +55,7 @@ void ASTUBaseCharacter::TurnInPlace()
                 LastRotationCurveValue = RotationCurveValue;
                 RotationCurveValue = AnimInstance->GetCurveValue(TEXT("Rotation"));
                 const float DeltaRotation = RotationCurveValue - LastRotationCurveValue;
-
+    
                 // RootYawOffset > 0 means turning left, and vice versa
                 if (RootYawOffset > 0.0f)
                 {
@@ -65,7 +65,7 @@ void ASTUBaseCharacter::TurnInPlace()
                 {
                     RootYawOffset += DeltaRotation;
                 }
-
+    
                 const float AbsRootYawOffset = FMath::Abs(RootYawOffset);
                 if (AbsRootYawOffset > 90.0f)
                 {
@@ -94,6 +94,9 @@ void ASTUBaseCharacter::BeginPlay()
     HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
     HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
     WeaponComponent->Initialize();
+
+    CharacterYaw = GetControlRotation().Yaw;
+    LastCharacterYaw = CharacterYaw;
 }
 
 void ASTUBaseCharacter::Tick(float DeltaTime)

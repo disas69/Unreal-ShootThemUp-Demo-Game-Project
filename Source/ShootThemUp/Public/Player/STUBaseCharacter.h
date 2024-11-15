@@ -42,15 +42,10 @@ public:
 
 protected:
     bool bIsMovingForward = false;
-
-    UFUNCTION(BlueprintCallable, Category = "Movement")
-    void TurnInPlace();
-    
-    UFUNCTION()
-    virtual void OnHealthChanged(float NewHealth, float HealthDelta);
-
-    UFUNCTION()
-    virtual void OnDeath();
+    float CharacterYaw = 0.0f;
+    float LastCharacterYaw = 0.0f;
+    float RotationCurveValue = 0.0f;
+    float LastRotationCurveValue = 0.0f;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTUHealthComponent* HealthComponent = nullptr;
@@ -67,19 +62,23 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
     USoundCue* DeathSound = nullptr;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    float RootYawOffset = 0.0f;
+
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    virtual void TurnInPlace();
+    
+    UFUNCTION()
+    virtual void OnHealthChanged(float NewHealth, float HealthDelta);
+
+    UFUNCTION()
+    virtual void OnDeath();
+
     virtual void BeginPlay() override;
 
 private:
     bool bIsSprinting = false;
     bool bIsFireInProgress = false;
-
-    float CharacterYaw = 0.0f;
-    float LastCharacterYaw = 0.0f;
-    float RotationCurveValue = 0.0f;
-    float LastRotationCurveValue = 0.0f;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-    float RootYawOffset = 0.0f;
-
+    
     void EnableRagdollPhysics() const;
 };
