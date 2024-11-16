@@ -4,7 +4,7 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "Components/STUCameraZoomComponent.h"
-#include "Engine/DamageEvents.h"
+#include "Components/TimelineComponent.h"
 #include "Player/STUBaseCharacter.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
 
@@ -16,6 +16,7 @@ ASTUWeapon::ASTUWeapon()
     SetRootComponent(WeaponMesh);
 
     WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFX");
+    RecoilTimeline = CreateDefaultSubobject<UTimelineComponent>("RecoilTimeline");
 }
 
 void ASTUWeapon::BeginPlay()
@@ -26,6 +27,10 @@ void ASTUWeapon::BeginPlay()
     CurrentAmmo = DefaultAmmo;
 
     WeaponFXComponent->Initialize(WeaponMesh, MuzzleSocketName);
+
+    FOnTimelineFloat TimelineCallback;
+    TimelineCallback.BindUFunction(this, FName("UpdateRecoil"));
+    RecoilTimeline->AddInterpFloat(RecoilCurve, TimelineCallback);
 }
 
 void ASTUWeapon::StartFire()
@@ -187,6 +192,11 @@ void ASTUWeapon::Reload()
 bool ASTUWeapon::IsFullAmmo() const
 {
     return CurrentAmmo.Bullets == DefaultAmmo.Bullets;
+}
+
+void ASTUWeapon::UpdateRecoil(float Value)
+{
+    RecoilValue = Value;
 }
 
 void ASTUWeapon::GetPlayerViewPoint(FVector& Location, FRotator& Rotation)

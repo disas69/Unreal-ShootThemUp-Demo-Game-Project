@@ -1,6 +1,8 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Weapon/STULauncherWeapon.h"
+
+#include "Components/TimelineComponent.h"
 #include "Weapon/STUProjectile.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
 
@@ -42,5 +44,7 @@ void ASTULauncherWeapon::FireInternal()
     }
 
     WeaponFXComponent->PlayFireSound();
+    RecoilTimeline->PlayFromStart();
+    
     DecreaseAmmo();
 }

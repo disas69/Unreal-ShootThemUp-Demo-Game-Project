@@ -1,6 +1,8 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Weapon/STURifleWeapon.h"
+
+#include "Components/TimelineComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
 
@@ -43,6 +45,8 @@ void ASTURifleWeapon::FireInternal()
     {
         WeaponFXComponent->PlayImpactFX(HitResult);
     }
+
+    RecoilTimeline->PlayFromStart();
 
     FPointDamageEvent DamageEvent;
     DamageEvent.HitInfo = HitResult;

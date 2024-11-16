@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "STUWeapon.generated.h"
 
+class UTimelineComponent;
 class ASTUBaseCharacter;
 class USTUWeaponFXComponent;
 class ASTUGameHUD;
@@ -70,6 +71,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Weapon")
     FWeaponImageData& GetWeaponImageData() { return WeaponImageData; }
 
+    FORCEINLINE float GetRecoilValue() const { return RecoilValue; }
+
     bool AddAmmo(int32 ClipsAmount);
     void OnEquipFinished();
 
@@ -94,6 +97,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
     float BulletSpread = 1.5f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+    UCurveFloat* RecoilCurve = nullptr;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Camera")
     float AimCameraFOV = 60.0f;
 
@@ -108,6 +114,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
     USTUWeaponFXComponent* WeaponFXComponent = nullptr;
+
+    UPROPERTY(VisibleAnywhere, Category = "Weapon")
+    UTimelineComponent* RecoilTimeline = nullptr;
     
     virtual void BeginPlay() override;
     virtual void FireInternal();
@@ -129,6 +138,10 @@ private:
     UCameraShakeBase* CurrentCameraShake = nullptr;
 
     FAmmoData CurrentAmmo;
+    float RecoilValue = 0.0f;
+
+    UFUNCTION()
+    void UpdateRecoil(float Value);
 
     void GetPlayerViewPoint(FVector& Location, FRotator& Rotation);
     AController* GetPlayerController();

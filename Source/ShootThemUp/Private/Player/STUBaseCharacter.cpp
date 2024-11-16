@@ -102,7 +102,7 @@ void ASTUBaseCharacter::BeginPlay()
 void ASTUBaseCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-
+    
     // Stop sprinting if the character is firing
     if (bIsSprinting && bIsFireInProgress)
     {
@@ -152,6 +152,18 @@ float ASTUBaseCharacter::GetMovementDirectionAngle() const
 
     // Convert the angle to degrees and multiply by the direction
     return FMath::RadiansToDegrees(Angle) * Direction;
+}
+
+FTransform ASTUBaseCharacter::GetWeaponRecoilTransform() const
+{
+    if (WeaponComponent != nullptr)
+    {
+        const float RecoilValue = WeaponComponent->GetWeaponRecoil();
+        const FVector Offset = FVector(0.0f, RecoilValue, RecoilValue * -0.5f);
+        return FTransform(Offset);
+    }
+
+    return FTransform();
 }
 
 void ASTUBaseCharacter::SetPlayerColor(FLinearColor TeamColor) const

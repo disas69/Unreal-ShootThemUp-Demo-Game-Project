@@ -81,6 +81,16 @@ void USTUWeaponComponent::Aim(bool bAiming)
     }
 }
 
+float USTUWeaponComponent::GetWeaponRecoil() const
+{
+    if (CurrentWeapon != nullptr)
+    {
+        return CurrentWeapon->GetRecoilValue();
+    }
+
+    return 0.0f;
+}
+
 void USTUWeaponComponent::Reload()
 {
     if (CurrentWeapon != nullptr)

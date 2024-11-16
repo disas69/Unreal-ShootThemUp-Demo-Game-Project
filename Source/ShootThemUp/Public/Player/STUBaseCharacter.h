@@ -28,6 +28,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Movement")
     float GetMovementDirectionAngle() const;
 
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
+    FTransform GetWeaponRecoilTransform() const;
+
     void SetPlayerColor(FLinearColor TeamColor) const;
 
     void StartFire();

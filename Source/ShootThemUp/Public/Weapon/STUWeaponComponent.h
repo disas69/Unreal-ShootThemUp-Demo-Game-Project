@@ -59,6 +59,7 @@ public:
 
     bool AddAmmo(TSubclassOf<ASTUWeapon> WeaponType, int32 ClipsAmount);
     void Aim(bool bAiming);
+    float GetWeaponRecoil() const;
 
     virtual void StartFire();
     virtual void StopFire();
