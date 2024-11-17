@@ -9,9 +9,9 @@ void USTUDamageTextWidget::SetDamageText(const FString& Text) const
     DamageText->SetText(FSTUTextUtils::TextFromString(Text));
 }
 
-void USTUDamageTextWidget::Show()
+void USTUDamageTextWidget::Show(bool bAnimate)
 {
-    Super::Show();
+    Super::Show(bAnimate);
 
     FTimerHandle TimerHandle;
     GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &USTUDamageTextWidget::RemoveFromParent, LifeTime);

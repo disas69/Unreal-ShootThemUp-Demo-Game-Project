@@ -7,6 +7,11 @@
 
 USTUGameSettingsSubsystem* USTUGameSettingsSubsystem::GetGameSettingsSubsystem(const UObject* ContextObject)
 {
+    if (!ContextObject || !ContextObject->GetWorld() || !ContextObject->GetWorld()->GetGameInstance())
+    {
+        return nullptr;
+    }
+    
     return ContextObject->GetWorld()->GetGameInstance()->GetSubsystem<USTUGameSettingsSubsystem>();
 }
 

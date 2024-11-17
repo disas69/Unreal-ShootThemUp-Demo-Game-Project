@@ -14,7 +14,7 @@ class SHOOTTHEMUP_API USTUBaseWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-    virtual void Show();
+    virtual void Show(bool bAnimate = true);
 
 protected:
     UPROPERTY(meta = (BindWidgetAnim), Transient)

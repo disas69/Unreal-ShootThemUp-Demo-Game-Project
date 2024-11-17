@@ -21,5 +21,5 @@ public:
 
     void SetDamageText(const FString& Text) const;
 
-    virtual void Show() override;
+    virtual void Show(bool bAnimate = true) override;
 };

@@ -24,6 +24,9 @@ public:
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<USTUBaseWidget> SettingsWidgetClass;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     TSubclassOf<USTULevelItemWidget> LevelItemWidgetClass;
 
     UPROPERTY(meta = (BindWidget))
@@ -38,29 +41,8 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UButton* SettingsButton;
 
-    UPROPERTY(meta = (BindWidget))
-    UComboBoxString* ResolutionSettings;
-    
-    UPROPERTY(meta = (BindWidget))
-    UComboBoxString* QualitySettings;
-
-    UPROPERTY(meta = (BindWidget))
-    USlider* MusicVolumeSlider;
-
-    UPROPERTY(meta = (BindWidget))
-    USlider* SFXVolumeSlider;
-
-    UPROPERTY(meta = (BindWidget))
-    UButton* BackButton;
-
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* LoadingAnimation;
-
-    UPROPERTY(meta = (BindWidgetAnim), Transient)
-    UWidgetAnimation* ShowSettingsAnimation;
-
-    UPROPERTY(meta = (BindWidgetAnim), Transient)
-    UWidgetAnimation* ShowMenuAnimation;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
     USoundCue* StartGameSound;
@@ -82,21 +64,6 @@ private:
 
     UFUNCTION()
     void ShowSettings();
-
-    UFUNCTION()
-    void OnResolutionSelected(FString SelectedItem, ESelectInfo::Type SelectionType);
-
-    UFUNCTION()
-    void OnQualitySelected(FString SelectedItem, ESelectInfo::Type SelectionType);
-
-    UFUNCTION()
-    void OnMusicVolumeChanged(float Value);
-
-    UFUNCTION()
-    void OnSFXVolumeChanged(float Value);
-
-    UFUNCTION()
-    void ShowMainMenu();
 
     void CreateLevelItems();
     void OnLevelItemSelected(int32 Index);

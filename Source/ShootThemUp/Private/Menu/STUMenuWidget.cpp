@@ -1,20 +1,20 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Menu/STUMenuWidget.h"
-#include "STUGameSettingsSubsystem.h"
 #include "STUGameInstance.h"
 #include "Components/Button.h"
 #include "Components/ComboBoxString.h"
 #include "Components/HorizontalBox.h"
-#include "Components/Slider.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Menu/STULevelItemWidget.h"
+#include "Menu/STUMenuSettingsWidget.h"
 #include "Sound/SoundCue.h"
 
 bool USTUMenuWidget::Initialize()
 {
     const bool bResult = Super::Initialize();
+    
     if (StartGameButton != nullptr)
     {
         StartGameButton->OnClicked.AddDynamic(this, &USTUMenuWidget::StartGame);
@@ -28,61 +28,6 @@ bool USTUMenuWidget::Initialize()
     if (SettingsButton != nullptr)
     {
         SettingsButton->OnClicked.AddDynamic(this, &USTUMenuWidget::ShowSettings);
-    }
-
-    USTUGameSettingsSubsystem* GameSettingsSubsystem = USTUGameSettingsSubsystem::GetGameSettingsSubsystem(this);
-    if (GameSettingsSubsystem != nullptr)
-    {
-        if (ResolutionSettings != nullptr)
-        {
-            for (const auto& Resolution : GameSettingsSubsystem->GetScreenResolutions())
-            {
-                ResolutionSettings->AddOption(Resolution.Key);
-            }
-
-            ResolutionSettings->SetSelectedOption(GameSettingsSubsystem->GetCurrentScreenResolution());
-            ResolutionSettings->OnSelectionChanged.AddDynamic(this, &USTUMenuWidget::OnResolutionSelected);
-        }
-
-        if (QualitySettings != nullptr)
-        {
-            for (const auto& Quality : GameSettingsSubsystem->GetQualityPresets())
-            {
-                QualitySettings->AddOption(Quality.Key);
-            }
-        
-            QualitySettings->SetSelectedOption(GameSettingsSubsystem->GetCurrentQualityPreset());
-            QualitySettings->OnSelectionChanged.AddDynamic(this, &USTUMenuWidget::OnQualitySelected);
-        }
-    }
-
-    if (MusicVolumeSlider != nullptr)
-    {
-        MusicVolumeSlider->OnValueChanged.AddDynamic(this, &USTUMenuWidget::OnMusicVolumeChanged);
-    }
-
-    if (SFXVolumeSlider != nullptr)
-    {
-        SFXVolumeSlider->OnValueChanged.AddDynamic(this, &USTUMenuWidget::OnSFXVolumeChanged);
-    }
-
-    const USTUGameInstance* GameInstance = GetGameInstance<USTUGameInstance>();
-    if (GameInstance != nullptr)
-    {
-        if (MusicVolumeSlider != nullptr)
-        {
-            MusicVolumeSlider->SetValue(GameInstance->GetMusicVolume());
-        }
-
-        if (SFXVolumeSlider != nullptr)
-        {
-            SFXVolumeSlider->SetValue(GameInstance->GetSFXVolume());
-        }
-    }
-
-    if (BackButton != nullptr)
-    {
-        BackButton->OnClicked.AddDynamic(this, &USTUMenuWidget::ShowMainMenu);
     }
 
     CreateLevelItems();
@@ -141,67 +86,12 @@ void USTUMenuWidget::ExitGame()
 
 void USTUMenuWidget::ShowSettings()
 {
-    PlayAnimation(ShowSettingsAnimation);
-
-    GetWorld()->GetTimerManager().SetTimerForNextTick(
-        [&]
-        {
-            BackButton->IsFocusable = true;
-            BackButton->SetKeyboardFocus();
-        });
-}
-
-void USTUMenuWidget::OnResolutionSelected(FString SelectedItem, ESelectInfo::Type SelectionType)
-{
-    USTUGameSettingsSubsystem* GameSettingsSubsystem = USTUGameSettingsSubsystem::GetGameSettingsSubsystem(this);
-    if (GameSettingsSubsystem != nullptr)
+    USTUMenuSettingsWidget* MenuSettingsWidget = CreateWidget<USTUMenuSettingsWidget>(GetWorld(), SettingsWidgetClass);
+    if (MenuSettingsWidget != nullptr)
     {
-        GameSettingsSubsystem->SetScreenResolution(SelectedItem);
+        MenuSettingsWidget->AddToViewport();
+        RemoveFromParent();
     }
-}
-
-void USTUMenuWidget::OnQualitySelected(FString SelectedItem, ESelectInfo::Type SelectionType)
-{
-    USTUGameSettingsSubsystem* GameSettingsSubsystem = USTUGameSettingsSubsystem::GetGameSettingsSubsystem(this);
-    if (GameSettingsSubsystem != nullptr)
-    {
-        GameSettingsSubsystem->SetQualityPreset(SelectedItem);
-    }
-}
-
-void USTUMenuWidget::OnMusicVolumeChanged(float Value)
-{
-    const USTUGameInstance* GameInstance = GetGameInstance<USTUGameInstance>();
-    if (GameInstance != nullptr)
-    {
-        GameInstance->SetMusicVolume(Value);
-    }
-}
-
-void USTUMenuWidget::OnSFXVolumeChanged(float Value)
-{
-    const USTUGameInstance* GameInstance = GetGameInstance<USTUGameInstance>();
-    if (GameInstance != nullptr)
-    {
-        GameInstance->SetSFXVolume(Value);
-    }
-}
-
-void USTUMenuWidget::ShowMainMenu()
-{
-    PlayAnimation(ShowMenuAnimation);
-
-    GetWorld()->GetTimerManager().SetTimerForNextTick(
-        [&]
-        {
-            if (LevelItemWidgets.Num() > 0)
-            {
-                OnLevelItemFocused(0);
-            }
-
-            StartGameButton->IsFocusable = true;
-            StartGameButton->SetKeyboardFocus();
-        });
 }
 
 void USTUMenuWidget::CreateLevelItems()
