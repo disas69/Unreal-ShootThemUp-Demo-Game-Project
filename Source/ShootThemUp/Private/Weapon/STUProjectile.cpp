@@ -31,6 +31,7 @@ void ASTUProjectile::Launch(const FVector& LaunchDirection, float Damage, float 
 
     SphereComponent->IgnoreActorWhenMoving(GetOwner(), true);
 
+    MovementComponent->HomingTargetComponent = TryGetHomingTarget();
     MovementComponent->Velocity = MoveDirection * MovementComponent->InitialSpeed;
     MovementComponent->Activate();
 
@@ -59,6 +60,28 @@ AController* ASTUProjectile::GetOwnerController() const
     if (Pawn != nullptr)
     {
         return Pawn->GetController();
+    }
+
+    return nullptr;
+}
+
+USceneComponent* ASTUProjectile::TryGetHomingTarget() const
+{
+    FHitResult HitResult;
+    const FVector StartTrace = GetActorLocation();
+    const FVector EndTrace = StartTrace + MoveDirection * AutoAimDistance;
+
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(this);
+    Params.AddIgnoredActor(GetOwner());
+
+    if (GetWorld()->SweepSingleByChannel(HitResult, StartTrace, EndTrace, FQuat::Identity, ECC_Pawn, FCollisionShape::MakeSphere(AutoAimRadius), Params))
+    {
+        AActor* HitActor = HitResult.GetActor();
+        if (HitActor != nullptr && HitActor->IsA(AutoAimTargetClass))
+        {
+            return HitActor->GetRootComponent();
+        }
     }
 
     return nullptr;

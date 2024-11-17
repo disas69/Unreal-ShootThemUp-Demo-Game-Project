@@ -26,9 +26,18 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
     UProjectileMovementComponent* MovementComponent = nullptr;
-
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
     float LifeSpanSeconds = 5.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
+    TSubclassOf<AActor> AutoAimTargetClass;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
+    float AutoAimDistance = 3000.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile")
+    float AutoAimRadius = 100.0f;
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
     USTUWeaponFXComponent* WeaponFXComponent = nullptr;
@@ -44,4 +53,5 @@ private:
     float DamageRadius = 0.0f;
 
     AController* GetOwnerController() const;
+    USceneComponent* TryGetHomingTarget() const;
 };
