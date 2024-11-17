@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "GameSettingsSubsystem.generated.h"
+#include "STUGameSettingsSubsystem.generated.h"
 
 UCLASS()
-class SHOOTTHEMUP_API UGameSettingsSubsystem : public UGameInstanceSubsystem
+class SHOOTTHEMUP_API USTUGameSettingsSubsystem : public UGameInstanceSubsystem
 {
     GENERATED_BODY()
 
 public:
-    static UGameSettingsSubsystem* GetGameSettingsSubsystem(const UObject* ContextObject);
+    static USTUGameSettingsSubsystem* GetGameSettingsSubsystem(const UObject* ContextObject);
     
     virtual void Initialize(FSubsystemCollectionBase& Collection) override;
     virtual void Deinitialize() override;

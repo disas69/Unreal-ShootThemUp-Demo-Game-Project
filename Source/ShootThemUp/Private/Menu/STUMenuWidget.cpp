@@ -1,7 +1,7 @@
 // Shoot Them Up demo game project. Evgenii Esaulenko, 2024
 
 #include "Menu/STUMenuWidget.h"
-#include "GameSettingsSubsystem.h"
+#include "STUGameSettingsSubsystem.h"
 #include "STUGameInstance.h"
 #include "Components/Button.h"
 #include "Components/ComboBoxString.h"
@@ -30,7 +30,7 @@ bool USTUMenuWidget::Initialize()
         SettingsButton->OnClicked.AddDynamic(this, &USTUMenuWidget::ShowSettings);
     }
 
-    UGameSettingsSubsystem* GameSettingsSubsystem = UGameSettingsSubsystem::GetGameSettingsSubsystem(this);
+    USTUGameSettingsSubsystem* GameSettingsSubsystem = USTUGameSettingsSubsystem::GetGameSettingsSubsystem(this);
     if (GameSettingsSubsystem != nullptr)
     {
         if (ResolutionSettings != nullptr)
@@ -153,7 +153,7 @@ void USTUMenuWidget::ShowSettings()
 
 void USTUMenuWidget::OnResolutionSelected(FString SelectedItem, ESelectInfo::Type SelectionType)
 {
-    UGameSettingsSubsystem* GameSettingsSubsystem = UGameSettingsSubsystem::GetGameSettingsSubsystem(this);
+    USTUGameSettingsSubsystem* GameSettingsSubsystem = USTUGameSettingsSubsystem::GetGameSettingsSubsystem(this);
     if (GameSettingsSubsystem != nullptr)
     {
         GameSettingsSubsystem->SetScreenResolution(SelectedItem);
@@ -162,7 +162,7 @@ void USTUMenuWidget::OnResolutionSelected(FString SelectedItem, ESelectInfo::Typ
 
 void USTUMenuWidget::OnQualitySelected(FString SelectedItem, ESelectInfo::Type SelectionType)
 {
-    UGameSettingsSubsystem* GameSettingsSubsystem = UGameSettingsSubsystem::GetGameSettingsSubsystem(this);
+    USTUGameSettingsSubsystem* GameSettingsSubsystem = USTUGameSettingsSubsystem::GetGameSettingsSubsystem(this);
     if (GameSettingsSubsystem != nullptr)
     {
         GameSettingsSubsystem->SetQualityPreset(SelectedItem);
