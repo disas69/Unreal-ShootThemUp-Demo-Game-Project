@@ -37,7 +37,6 @@ void USTUMenuWidget::NativeConstruct()
     GetWorld()->GetTimerManager().SetTimerForNextTick(
         [&]
         {
-            StartGameButton->IsFocusable = true;
             StartGameButton->SetKeyboardFocus();
         });
 }

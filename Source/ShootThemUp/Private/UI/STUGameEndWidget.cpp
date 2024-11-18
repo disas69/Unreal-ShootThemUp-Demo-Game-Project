@@ -39,7 +39,6 @@ void USTUGameEndWidget::SetVisibility(ESlateVisibility InVisibility)
     {
         GetWorld()->GetTimerManager().SetTimerForNextTick([&]
         {
-            RestartLevelButton->IsFocusable = true;
             RestartLevelButton->SetKeyboardFocus();
         });
     }

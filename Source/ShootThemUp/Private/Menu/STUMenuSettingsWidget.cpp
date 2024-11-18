@@ -77,7 +77,6 @@ void USTUMenuSettingsWidget::NativeConstruct()
     GetWorld()->GetTimerManager().SetTimerForNextTick(
     [&]
     {
-        BackButton->IsFocusable = true;
         BackButton->SetKeyboardFocus();
     });
 }

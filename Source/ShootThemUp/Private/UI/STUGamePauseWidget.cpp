@@ -30,7 +30,6 @@ void USTUGamePauseWidget::SetVisibility(ESlateVisibility InVisibility)
     {
         GetWorld()->GetTimerManager().SetTimerForNextTick([&]
         {
-            ContinueButton->IsFocusable = true;
             ContinueButton->SetKeyboardFocus();
         });
     }

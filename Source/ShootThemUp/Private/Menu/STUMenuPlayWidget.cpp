@@ -46,7 +46,6 @@ void USTUMenuPlayWidget::NativeConstruct()
                 OnLevelItemFocused(0);
             }
     
-            StartGameButton->IsFocusable = true;
             StartGameButton->SetKeyboardFocus();
         });
 }
