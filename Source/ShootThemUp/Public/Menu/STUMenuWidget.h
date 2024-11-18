@@ -6,11 +6,6 @@
 #include "UI/STUBaseWidget.h"
 #include "STUMenuWidget.generated.h"
 
-class UComboBoxString;
-class USlider;
-class USoundCue;
-class USTULevelItemWidget;
-class UHorizontalBox;
 class UButton;
 
 UCLASS()
@@ -24,13 +19,10 @@ public:
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-    TSubclassOf<USTUBaseWidget> SettingsWidgetClass;
+    TSubclassOf<USTUBaseWidget> PlayWidgetClass;
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-    TSubclassOf<USTULevelItemWidget> LevelItemWidgetClass;
-
-    UPROPERTY(meta = (BindWidget))
-    UHorizontalBox* LevelItemsBox;
+    TSubclassOf<USTUBaseWidget> SettingsWidgetClass;
 
     UPROPERTY(meta = (BindWidget))
     UButton* StartGameButton;
@@ -40,22 +32,10 @@ protected:
 
     UPROPERTY(meta = (BindWidget))
     UButton* SettingsButton;
-
-    UPROPERTY(meta = (BindWidgetAnim), Transient)
-    UWidgetAnimation* LoadingAnimation;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
-    USoundCue* StartGameSound;
-
+    
     virtual void NativeConstruct() override;
-    virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
 
 private:
-    int32 SelectedIndex = -1;
-
-    UPROPERTY()
-    TArray<USTULevelItemWidget*> LevelItemWidgets;
-
     UFUNCTION()
     void StartGame();
 
@@ -64,10 +44,4 @@ private:
 
     UFUNCTION()
     void ShowSettings();
-
-    void CreateLevelItems();
-    void OnLevelItemSelected(int32 Index);
-    void OnLevelItemFocused(int32 Index);
-
-    void LoadSelectedLevel();
 };
