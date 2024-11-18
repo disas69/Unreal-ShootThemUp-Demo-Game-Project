@@ -38,17 +38,17 @@ void USTUMenuPlayWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-    // GetWorld()->GetTimerManager().SetTimerForNextTick(
-    //     [&]
-    //     {
-    //         if (LevelItemWidgets.Num() > 0)
-    //         {
-    //             OnLevelItemFocused(0);
-    //         }
-    //
-    //         StartGameButton->IsFocusable = true;
-    //         StartGameButton->SetKeyboardFocus();
-    //     });
+    GetWorld()->GetTimerManager().SetTimerForNextTick(
+        [&]
+        {
+            if (LevelItemWidgets.Num() > 0)
+            {
+                OnLevelItemFocused(0);
+            }
+    
+            StartGameButton->IsFocusable = true;
+            StartGameButton->SetKeyboardFocus();
+        });
 }
 
 void USTUMenuPlayWidget::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
