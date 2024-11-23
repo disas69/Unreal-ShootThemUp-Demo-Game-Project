@@ -6,7 +6,7 @@
 #include "UI/STUBaseWidget.h"
 #include "STUMenuWidget.generated.h"
 
-class UButton;
+class USTUButtonWidget;
 
 UCLASS()
 class SHOOTTHEMUP_API USTUMenuWidget : public USTUBaseWidget
@@ -25,13 +25,13 @@ protected:
     TSubclassOf<USTUBaseWidget> SettingsWidgetClass;
 
     UPROPERTY(meta = (BindWidget))
-    UButton* StartGameButton;
+    USTUButtonWidget* StartGameButton = nullptr;
 
     UPROPERTY(meta = (BindWidget))
-    UButton* ExitGameButton;
+    USTUButtonWidget* ExitGameButton = nullptr;
 
     UPROPERTY(meta = (BindWidget))
-    UButton* SettingsButton;
+    USTUButtonWidget* SettingsButton = nullptr;
     
     virtual void NativeConstruct() override;
 

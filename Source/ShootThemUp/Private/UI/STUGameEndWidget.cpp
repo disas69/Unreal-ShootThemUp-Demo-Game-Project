@@ -7,27 +7,12 @@
 #include "Components/VerticalBox.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/STUPlayerState.h"
+#include "UI/STUButtonWidget.h"
 #include "UI/STUPlayerStatsWidget.h"
 
 bool USTUGameEndWidget::Initialize()
 {
     const bool bInit = Super::Initialize();
-    if (RestartLevelButton != nullptr)
-    {
-        RestartLevelButton->OnClicked.AddDynamic(this, &USTUGameEndWidget::RestartLevel);
-    }
-
-    if (ExitButton != nullptr)
-    {
-        ExitButton->OnClicked.AddDynamic(this, &USTUGameEndWidget::ExitLevel);
-    }
-
-    ASTUGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASTUGameModeBase>();
-    if (GameMode)
-    {
-        GameMode->GameStateChanged.AddUObject(this, &USTUGameEndWidget::OnGameStateChange);
-    }
-
     return bInit;
 }
 
@@ -37,10 +22,28 @@ void USTUGameEndWidget::SetVisibility(ESlateVisibility InVisibility)
 
     if (InVisibility == ESlateVisibility::Visible)
     {
-        GetWorld()->GetTimerManager().SetTimerForNextTick([&]
-        {
-            RestartLevelButton->SetKeyboardFocus();
-        });
+        RestartButton->SetFocus(true);
+    }
+}
+
+void USTUGameEndWidget::NativeConstruct()
+{
+    Super::NativeConstruct();
+
+    if (RestartButton != nullptr && RestartButton->Get() != nullptr)
+    {
+        RestartButton->Get()->OnClicked.AddDynamic(this, &USTUGameEndWidget::RestartLevel);
+    }
+
+    if (ExitButton != nullptr && ExitButton->Get() != nullptr)
+    {
+        ExitButton->Get()->OnClicked.AddDynamic(this, &USTUGameEndWidget::ExitLevel);
+    }
+
+    ASTUGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASTUGameModeBase>();
+    if (GameMode)
+    {
+        GameMode->GameStateChanged.AddUObject(this, &USTUGameEndWidget::OnGameStateChange);
     }
 }
 
@@ -71,10 +74,7 @@ void USTUGameEndWidget::DisplayPlayersStats()
     }
 
     // Sort by kills
-    PlayerStates.Sort([](const ASTUPlayerState& A, const ASTUPlayerState& B)
-    {
-        return A.GetKillsNum() > B.GetKillsNum();
-    });
+    PlayerStates.Sort([](const ASTUPlayerState& A, const ASTUPlayerState& B) { return A.GetKillsNum() > B.GetKillsNum(); });
 
     for (const ASTUPlayerState* PlayerState : PlayerStates)
     {

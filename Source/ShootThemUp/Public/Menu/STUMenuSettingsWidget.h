@@ -6,7 +6,7 @@
 #include "UI/STUBaseWidget.h"
 #include "STUMenuSettingsWidget.generated.h"
 
-class UButton;
+class USTUButtonWidget;
 class USlider;
 class UComboBoxString;
 
@@ -32,7 +32,7 @@ public:
     USlider* SFXVolumeSlider;
 
     UPROPERTY(meta = (BindWidget))
-    UButton* BackButton;
+    USTUButtonWidget* BackButton = nullptr;
 
     UFUNCTION()
     virtual bool Initialize() override;

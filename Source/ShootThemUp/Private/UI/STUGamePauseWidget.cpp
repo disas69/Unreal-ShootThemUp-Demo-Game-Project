@@ -4,21 +4,11 @@
 #include "STUGameInstance.h"
 #include "STUGameModeBase.h"
 #include "Components/Button.h"
+#include "UI/STUButtonWidget.h"
 
 bool USTUGamePauseWidget::Initialize()
 {
     const bool bInit = Super::Initialize();
-
-    if (ContinueButton != nullptr)
-    {
-        ContinueButton->OnClicked.AddDynamic(this, &USTUGamePauseWidget::ContinueGame);
-    }
-
-    if (ExitButton != nullptr)
-    {
-        ExitButton->OnClicked.AddDynamic(this, &USTUGamePauseWidget::ExitGame);
-    }
-
     return bInit;
 }
 
@@ -28,10 +18,22 @@ void USTUGamePauseWidget::SetVisibility(ESlateVisibility InVisibility)
 
     if (InVisibility == ESlateVisibility::Visible)
     {
-        GetWorld()->GetTimerManager().SetTimerForNextTick([&]
-        {
-            ContinueButton->SetKeyboardFocus();
-        });
+        ContinueButton->SetFocus(true);
+    }
+}
+
+void USTUGamePauseWidget::NativeConstruct()
+{
+    Super::NativeConstruct();
+
+    if (ContinueButton->Get() != nullptr)
+    {
+        ContinueButton->Get()->OnClicked.AddDynamic(this, &USTUGamePauseWidget::ContinueGame);
+    }
+
+    if (ExitButton->Get() != nullptr)
+    {
+        ExitButton->Get()->OnClicked.AddDynamic(this, &USTUGamePauseWidget::ExitGame);
     }
 }
 

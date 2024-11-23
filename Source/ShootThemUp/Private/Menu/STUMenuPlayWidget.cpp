@@ -8,19 +8,26 @@
 #include "Menu/STULevelItemWidget.h"
 #include "Menu/STUMenuWidget.h"
 #include "Sound/SoundCue.h"
+#include "UI/STUButtonWidget.h"
 
 bool USTUMenuPlayWidget::Initialize()
 {
     const bool bResult = Super::Initialize();
+    return bResult;
+}
 
-    if (StartGameButton != nullptr)
+void USTUMenuPlayWidget::NativeConstruct()
+{
+    Super::NativeConstruct();
+    
+    if (StartGameButton != nullptr && StartGameButton->Get() != nullptr)
     {
-        StartGameButton->OnClicked.AddDynamic(this, &USTUMenuPlayWidget::StartGame);
+        StartGameButton->Get()->OnClicked.AddDynamic(this, &USTUMenuPlayWidget::StartGame);
     }
 
-    if (BackButton != nullptr)
+    if (BackButton != nullptr && BackButton->Get() != nullptr)
     {
-        BackButton->OnClicked.AddDynamic(this, &USTUMenuPlayWidget::OpenMenu);
+        BackButton->Get()->OnClicked.AddDynamic(this, &USTUMenuPlayWidget::OpenMenu);
     }
 
     CreateLevelItems();
@@ -31,13 +38,6 @@ bool USTUMenuPlayWidget::Initialize()
         OnLevelItemFocused(0);
     }
 
-    return bResult;
-}
-
-void USTUMenuPlayWidget::NativeConstruct()
-{
-    Super::NativeConstruct();
-
     GetWorld()->GetTimerManager().SetTimerForNextTick(
         [&]
         {
@@ -46,7 +46,7 @@ void USTUMenuPlayWidget::NativeConstruct()
                 OnLevelItemFocused(0);
             }
     
-            StartGameButton->SetKeyboardFocus();
+            StartGameButton->SetFocus(true);
         });
 }
 

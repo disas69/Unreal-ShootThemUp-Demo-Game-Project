@@ -6,7 +6,7 @@
 #include "STUBaseWidget.h"
 #include "STUGamePauseWidget.generated.h"
 
-class UButton;
+class USTUButtonWidget;
 
 UCLASS()
 class SHOOTTHEMUP_API USTUGamePauseWidget : public USTUBaseWidget
@@ -19,10 +19,12 @@ public:
 
 protected:
     UPROPERTY(meta = (BindWidget))
-    UButton* ContinueButton;
+    USTUButtonWidget* ContinueButton = nullptr;
 
     UPROPERTY(meta = (BindWidget))
-    UButton* ExitButton;
+    USTUButtonWidget* ExitButton = nullptr;
+
+    virtual void NativeConstruct() override;
 
 private:
     UFUNCTION()

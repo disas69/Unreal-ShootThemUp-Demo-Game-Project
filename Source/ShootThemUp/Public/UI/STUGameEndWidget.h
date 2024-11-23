@@ -7,7 +7,7 @@
 #include "STUGameModeBase.h"
 #include "STUGameEndWidget.generated.h"
 
-class UButton;
+class USTUButtonWidget;
 class USTUPlayerStatsWidget;
 class UVerticalBox;
 
@@ -28,10 +28,12 @@ protected:
     UVerticalBox* PlayerStatsBox;
 
     UPROPERTY(meta = (BindWidget))
-    UButton* RestartLevelButton;
+    USTUButtonWidget* RestartButton = nullptr;
 
     UPROPERTY(meta = (BindWidget))
-    UButton* ExitButton;
+    USTUButtonWidget* ExitButton = nullptr;
+
+    virtual void NativeConstruct() override;
 
 private:
     void OnGameStateChange(EGameState NewState);

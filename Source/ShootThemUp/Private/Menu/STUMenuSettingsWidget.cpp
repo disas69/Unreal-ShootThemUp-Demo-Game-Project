@@ -7,10 +7,17 @@
 #include "Components/ComboBoxString.h"
 #include "Components/Slider.h"
 #include "Menu/STUMenuWidget.h"
+#include "UI/STUButtonWidget.h"
 
 bool USTUMenuSettingsWidget::Initialize()
 {
     const bool bResult = Super::Initialize();
+    return bResult;
+}
+
+void USTUMenuSettingsWidget::NativeConstruct()
+{
+    Super::NativeConstruct();
 
     USTUGameSettingsSubsystem* GameSettingsSubsystem = USTUGameSettingsSubsystem::GetGameSettingsSubsystem(this);
     if (GameSettingsSubsystem != nullptr)
@@ -62,22 +69,15 @@ bool USTUMenuSettingsWidget::Initialize()
         }
     }
 
-    if (BackButton != nullptr)
+    if (BackButton != nullptr && BackButton->Get() != nullptr)
     {
-        BackButton->OnClicked.AddDynamic(this, &USTUMenuSettingsWidget::ShowMainMenu);
+        BackButton->Get()->OnClicked.AddDynamic(this, &USTUMenuSettingsWidget::ShowMainMenu);
     }
-
-    return bResult;
-}
-
-void USTUMenuSettingsWidget::NativeConstruct()
-{
-    Super::NativeConstruct();
 
     GetWorld()->GetTimerManager().SetTimerForNextTick(
     [&]
     {
-        BackButton->SetKeyboardFocus();
+        BackButton->SetFocus(true);
     });
 }
 

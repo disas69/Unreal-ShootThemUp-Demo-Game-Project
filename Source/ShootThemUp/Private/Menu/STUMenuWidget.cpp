@@ -7,26 +7,11 @@
 #include "Menu/STULevelItemWidget.h"
 #include "Menu/STUMenuPlayWidget.h"
 #include "Menu/STUMenuSettingsWidget.h"
+#include "UI/STUButtonWidget.h"
 
 bool USTUMenuWidget::Initialize()
 {
     const bool bResult = Super::Initialize();
-
-    if (StartGameButton != nullptr)
-    {
-        StartGameButton->OnClicked.AddDynamic(this, &USTUMenuWidget::StartGame);
-    }
-
-    if (ExitGameButton != nullptr)
-    {
-        ExitGameButton->OnClicked.AddDynamic(this, &USTUMenuWidget::ExitGame);
-    }
-
-    if (SettingsButton != nullptr)
-    {
-        SettingsButton->OnClicked.AddDynamic(this, &USTUMenuWidget::ShowSettings);
-    }
-
     return bResult;
 }
 
@@ -34,10 +19,25 @@ void USTUMenuWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
+    if (StartGameButton != nullptr && StartGameButton->Get() != nullptr)
+    {
+        StartGameButton->Get()->OnClicked.AddDynamic(this, &USTUMenuWidget::StartGame);
+    }
+
+    if (ExitGameButton != nullptr && ExitGameButton->Get() != nullptr)
+    {
+        ExitGameButton->Get()->OnClicked.AddDynamic(this, &USTUMenuWidget::ExitGame);
+    }
+
+    if (SettingsButton != nullptr && SettingsButton->Get() != nullptr)
+    {
+        SettingsButton->Get()->OnClicked.AddDynamic(this, &USTUMenuWidget::ShowSettings);
+    }
+
     GetWorld()->GetTimerManager().SetTimerForNextTick(
         [&]
         {
-            StartGameButton->SetKeyboardFocus();
+            StartGameButton->SetFocus(true);
         });
 }
 

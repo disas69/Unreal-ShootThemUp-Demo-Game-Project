@@ -6,7 +6,7 @@
 #include "UI/STUBaseWidget.h"
 #include "STUMenuPlayWidget.generated.h"
 
-class UButton;
+class USTUButtonWidget;
 class USTULevelItemWidget;
 class UHorizontalBox;
 
@@ -29,10 +29,10 @@ public:
     UWidgetAnimation* LoadingAnimation;
 
     UPROPERTY(meta = (BindWidget))
-    UButton* StartGameButton;
+    USTUButtonWidget* StartGameButton = nullptr;
 
     UPROPERTY(meta = (BindWidget))
-    UButton* BackButton;
+    USTUButtonWidget* BackButton = nullptr;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
     USoundCue* StartGameSound;
