@@ -43,6 +43,11 @@ public:
     virtual void TurnOff() override;
     virtual void Reset() override;
 
+    void SetInsideLevelBounds(bool bIsInside) { bIsInsideLevelBounds = bIsInside; }
+
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    bool GetInsideLevelBounds() const { return bIsInsideLevelBounds; }
+
 protected:
     bool bIsMovingForward = false;
     float CharacterYaw = 0.0f;
@@ -82,6 +87,7 @@ protected:
 private:
     bool bIsSprinting = false;
     bool bIsFireInProgress = false;
+    bool bIsInsideLevelBounds = false;
     
     void EnableRagdollPhysics() const;
 };
