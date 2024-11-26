@@ -34,6 +34,25 @@ void USTULevelItemWidget::SetSelected(bool bIsSelected) const
 void USTULevelItemWidget::SetFocused(bool bIsFocused) const
 {
     Frame->SetVisibility(bIsFocused ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+
+    if (bIsFocused)
+    {
+        SelectLevelButton->SetKeyboardFocus();
+    }
+}
+
+void USTULevelItemWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+    Super::NativeTick(MyGeometry, InDeltaTime);
+
+    if (SelectLevelButton->HasKeyboardFocus())
+    {
+        Frame->SetVisibility(ESlateVisibility::Visible);
+    }
+    else
+    {
+        Frame->SetVisibility(ESlateVisibility::Hidden);
+    }
 }
 
 void USTULevelItemWidget::SelectLevel()

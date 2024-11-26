@@ -19,11 +19,6 @@ bool USTUMenuPlayWidget::Initialize()
 void USTUMenuPlayWidget::NativeConstruct()
 {
     Super::NativeConstruct();
-    
-    if (StartGameButton != nullptr && StartGameButton->Get() != nullptr)
-    {
-        StartGameButton->Get()->OnClicked.AddDynamic(this, &USTUMenuPlayWidget::StartGame);
-    }
 
     if (BackButton != nullptr && BackButton->Get() != nullptr)
     {
@@ -32,12 +27,6 @@ void USTUMenuPlayWidget::NativeConstruct()
 
     CreateLevelItems();
 
-    if (LevelItemWidgets.Num() > 0)
-    {
-        OnLevelItemSelected(0);
-        OnLevelItemFocused(0);
-    }
-
     GetWorld()->GetTimerManager().SetTimerForNextTick(
         [&]
         {
@@ -45,8 +34,6 @@ void USTUMenuPlayWidget::NativeConstruct()
             {
                 OnLevelItemFocused(0);
             }
-    
-            StartGameButton->SetFocus(true);
         });
 }
 
@@ -97,6 +84,8 @@ void USTUMenuPlayWidget::OnLevelItemSelected(int32 Index)
         const bool bIsSelected = SelectedIndex == i;
         LevelItemWidgets[i]->SetSelected(bIsSelected);
     }
+
+    StartGame();
 }
 
 void USTUMenuPlayWidget::OnLevelItemFocused(int32 Index)

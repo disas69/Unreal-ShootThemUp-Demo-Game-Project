@@ -41,6 +41,8 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UButton* SelectLevelButton;
 
+    virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
 private:
     int32 LevelIndex = -1;
     

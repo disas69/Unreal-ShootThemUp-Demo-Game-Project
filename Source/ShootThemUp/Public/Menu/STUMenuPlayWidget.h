@@ -29,9 +29,6 @@ public:
     UWidgetAnimation* LoadingAnimation;
 
     UPROPERTY(meta = (BindWidget))
-    USTUButtonWidget* StartGameButton = nullptr;
-
-    UPROPERTY(meta = (BindWidget))
     USTUButtonWidget* BackButton = nullptr;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
